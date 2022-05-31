@@ -13,14 +13,14 @@ Hypothesisへようこそ！
   finding edge cases in your code you wouldn't have thought to look for. It is
   stable, powerful and easy to add to any existing test suite.
 
-Hypothesis <https://hypothesis.works>`_ は、書くのが簡単で、実行するとより強力なユニットテストを作成するための Python ライブラリで、あなたが探すことを思いつかなかったコードのエッジケースを見つけます。
+`Hypothesis <https://hypothesis.works>`_ は、書くのが簡単で、実行するとより強力なユニットテストを作成するための Python ライブラリで、あなたが探すことを思いつかなかったコードのエッジケースを見つけます。
 このライブラリは安定しており、強力で、既存のテストスイートに簡単に追加することができます。
 
 ..
   It works by letting you write tests that assert that something should be true
   for every case, not just the ones you happen to think of.
 
-このテストは、あなたが思いついたケースだけでなく、あらゆるケースで何かが真であることを主張するテストを書くことができます。
+このテストは、あなたが思いついたケースだけでなく、あらゆるケースで何かが真であることをアサートするテストを書くことができます。
 
 ..
   Think of a normal unit test as being something like the following:
@@ -74,7 +74,7 @@ Hypothesisを使うと、このようなテストが書けるようになりま�
   regardless of what the world throws at you. Examples of such guarantees
   might be:
 
-この形式のテストを書くには、通常、コードが保証すべきこと、つまり、世の中に何が起ころうとも常に真であるべき性質を決定することが必要です。
+この形式のテストを書くには、通常、コードが保証すべきこと、つまり、世の中に何が起ころうとも常に真であるべき属性（プロパティ）を決定することが必要です。
 このような保証の例としては、次のようなものがあります。
 
 ..

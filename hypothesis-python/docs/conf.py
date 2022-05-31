@@ -65,7 +65,7 @@ def setup(app):
     sys.modules["xps"] = mod
 
 
-language = None
+language = "ja"
 
 exclude_patterns = ["_build"]
 
