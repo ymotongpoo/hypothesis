@@ -1,21 +1,40 @@
-=================
-Quick start guide
-=================
+..
+  =================
+  Quick start guide
+  =================
 
-This document should talk you through everything you need to get started with
-Hypothesis.
+===================
+クイックスタートガイド
+===================
 
-----------
-An example
-----------
+..
+  This document should talk you through everything you need to get started with
+  Hypothesis.
 
-Suppose we've written a :wikipedia:`run length encoding <Run-length_encoding>`
-system and we want to test it out.
+このドキュメントでは、Hypothesisを使い始めるために必要なすべてのことを説明します。
 
-We have the following code which I took straight from the
-`Rosetta Code <https://rosettacode.org/wiki/Run-length_encoding>`_ wiki (OK, I
-removed some commented out code and fixed the formatting, but there are no
-functional modifications):
+..
+  ----------
+  An example
+  ----------
+
+----
+例
+----
+
+..
+  Suppose we've written a :wikipedia:`run length encoding <Run-length_encoding>`
+  system and we want to test it out.
+
+例えば、:wikipedia:`連長圧縮 <Run-length_encoding>` システムを書き、それをテストしてみたいとします。
+
+..
+  We have the following code which I took straight from the
+  `Rosetta Code <https://rosettacode.org/wiki/Run-length_encoding>`_ wiki (OK, I
+  removed some commented out code and fixed the formatting, but there are no
+  functional modifications):
+
+`Rosetta Code <https://rosettacode.org/wiki/Run-length_encoding>`_ ウィキ (OK、コメントアウトされたコードを削除し、フォーマットを修正しましたが、機能的な修正はありません):
 
 
 .. code:: python
@@ -44,16 +63,23 @@ functional modifications):
           q += character * count
       return q
 
+..
+  We want to write a test for this that will check some invariant of these
+  functions.
 
-We want to write a test for this that will check some invariant of these
-functions.
+これらの関数の不変量をチェックするようなテストを書きたいのです。
 
-The invariant one tends to try when you've got this sort of encoding /
-decoding is that if you encode something and then decode it then you get the same
-value back.
+..
+  The invariant one tends to try when you've got this sort of encoding /
+  decoding is that if you encode something and then decode it then you get the same
+  value back.
 
-Let's see how you'd do that with Hypothesis:
+このようなエンコード／デコードを行う場合、何かをエンコードした後にデコードすると、同じ値が返ってくるという不変性があります。
 
+..
+  Let's see how you'd do that with Hypothesis:
+
+Hypothesisでどうやるか、見てみましょう。
 
 .. code:: python
 
@@ -65,17 +91,29 @@ Let's see how you'd do that with Hypothesis:
   def test_decode_inverts_encode(s):
       assert decode(encode(s)) == s
 
-(For this example we'll just let pytest discover and run the test. We'll cover
-other ways you could have run it later).
+..
+  (For this example we'll just let pytest discover and run the test. We'll cover
+  other ways you could have run it later).
 
-The text function returns what Hypothesis calls a search strategy. An object
-with methods that describe how to generate and simplify certain kinds of
-values. The :func:`@given <hypothesis.given>` decorator then takes our test
-function and turns it into a
-parametrized one which, when called, will run the test function over a wide
-range of matching data from that strategy.
+（この例では pytest にテストを発見させ、実行させるだけです。後で他の実行方法もカバーします。）
 
-Anyway, this test immediately finds a bug in the code:
+..
+  The text function returns what Hypothesis calls a search strategy. An object
+  with methods that describe how to generate and simplify certain kinds of
+  values. The :func:`@given <hypothesis.given>` decorator then takes our test
+  function and turns it into a
+  parametrized one which, when called, will run the test function over a wide
+  range of matching data from that strategy.
+
+``text()`` 関数は、Hypothesisが検索ストラテジーと呼ぶものを返します。
+ある種の値を生成して単純化する方法を記述したメソッドを持つオブジェクトです。
+:func:`@given <hypothesis.given>` デコレータはテスト関数を受け取り、それをパラメータ化したものに変換します。
+このデコレータが呼ばれると、テスト関数がそのストラテジーにマッチするデータの広い範囲に対して実行されます。
+
+..
+  Anyway, this test immediately finds a bug in the code:
+
+とにかく、このテストはすぐにコードのバグを発見してくれます。
 
 .. code::
 
@@ -83,12 +121,18 @@ Anyway, this test immediately finds a bug in the code:
 
   UnboundLocalError: local variable 'character' referenced before assignment
 
-Hypothesis correctly points out that this code is simply wrong if called on
-an empty string.
+..
+  Hypothesis correctly points out that this code is simply wrong if called on
+  an empty string.
 
-If we fix that by just adding the following code to the beginning of our ``encode`` function
-then Hypothesis tells us the code is correct (by doing nothing as you'd expect
-a passing test to).
+Hypothesisは、このコードが空の文字列で呼ばれた場合、単に間違っていることを正しく指摘しています。
+
+..
+  If we fix that by just adding the following code to the beginning of our ``encode`` function
+  then Hypothesis tells us the code is correct (by doing nothing as you'd expect
+  a passing test to).
+
+もし、次のコードを ``encode`` 関数の先頭に追加してそれを修正すれば、Hypothesis はそのコードが正しいことを教えてくれます（パスするテストに期待されるようなことは何もしません）。
 
 .. code:: python
 
@@ -96,8 +140,11 @@ a passing test to).
     if not input_string:
         return []
 
-If we wanted to make sure this example was always checked we could add it in
-explicitly by using the :func:`@example <hypothesis.example>` decorator:
+..
+  If we wanted to make sure this example was always checked we could add it in
+  explicitly by using the :func:`@example <hypothesis.example>` decorator:
+
+もし、この例を常にチェックするようにしたければ、 :func:`@example <hypothesis.example>` デコレーターを使って、明示的に追加することができます。
 
 .. code:: python
 
@@ -109,15 +156,23 @@ explicitly by using the :func:`@example <hypothesis.example>` decorator:
   def test_decode_inverts_encode(s):
       assert decode(encode(s)) == s
 
-This can be useful to show other developers (or your future self) what kinds
-of data are valid inputs, or to ensure that particular edge cases such as
-``""`` are tested every time.  It's also great for regression tests because
-although Hypothesis will :doc:`remember failing examples <database>`,
-we don't recommend distributing that database.
+..
+  This can be useful to show other developers (or your future self) what kinds
+  of data are valid inputs, or to ensure that particular edge cases such as
+  ``""`` are tested every time.  It's also great for regression tests because
+  although Hypothesis will :doc:`remember failing examples <database>`,
+  we don't recommend distributing that database.
 
-It's also worth noting that both :func:`@example <hypothesis.example>` and
-:func:`@given <hypothesis.given>` support keyword arguments as
-well as positional. The following would have worked just as well:
+これは他の開発者（または将来の自分）に、どのような種類のデータが有効な入力であるかを示したり、 ``""`` のような特定のエッジケースが毎回テストされることを確認したりするのに便利でしょう。
+また、リグレッションテストにも最適です。なぜならHypothesisは :doc:`失敗した例を記憶しますが <database>` 、そのデータベースを配布することは推奨しないからです。
+
+..
+  It's also worth noting that both :func:`@example <hypothesis.example>` and
+  :func:`@given <hypothesis.given>` support keyword arguments as
+  well as positional. The following would have worked just as well:
+
+また、 :func:`@example <hypothesis.example>` と :func:`@given <hypothesis.given>` は実引数だけでなく、キーワード引数もサポートしていることに注目に値します。
+次のようにしても同じように動作したことでしょう。
 
 .. code:: python
 
@@ -126,8 +181,12 @@ well as positional. The following would have worked just as well:
   def test_decode_inverts_encode(s):
       assert decode(encode(s)) == s
 
-Suppose we had a more interesting bug and forgot to reset the count
-each time. Say we missed a line in our ``encode`` method:
+..
+  Suppose we had a more interesting bug and forgot to reset the count
+  each time. Say we missed a line in our ``encode`` method:
+
+もっと面白いバグがあって、毎回カウントをリセットするのを忘れたとします。
+例えば、 ``encode`` メソッドで1行を見逃したとします。
 
 .. code:: python
 
@@ -140,7 +199,7 @@ each time. Say we missed a line in our ``encode`` method:
               if prev:
                   entry = (prev, count)
                   lst.append(entry)
-              # count = 1  # Missing reset operation
+              # count = 1  # リセットするのを忘れている
               prev = character
           else:
               count += 1
@@ -148,18 +207,26 @@ each time. Say we missed a line in our ``encode`` method:
       lst.append(entry)
       return lst
 
-Hypothesis quickly informs us of the following example:
+..
+  Hypothesis quickly informs us of the following example:
+
+Hypothesisはすぐに次のような例を知らせてくれます。
 
 .. code::
 
   Falsifying example: test_decode_inverts_encode(s='001')
 
-Note that the example provided is really quite simple. Hypothesis doesn't just
-find *any* counter-example to your tests, it knows how to simplify the examples
-it finds to produce small easy to understand ones. In this case, two identical
-values are enough to set the count to a number different from one, followed by
-another distinct value which should have reset the count but in this case
-didn't.
+..
+  Note that the example provided is really quite simple. Hypothesis doesn't just
+  find *any* counter-example to your tests, it knows how to simplify the examples
+  it finds to produce small easy to understand ones. In this case, two identical
+  values are enough to set the count to a number different from one, followed by
+  another distinct value which should have reset the count but in this case
+  didn't.
+
+提供された例は実にシンプルであることに注意してください。
+Hypothesisは単にテストに対する反例を見つけるだけでなく、見つけた例をいかに単純化して理解しやすい小さなものにするかも知っています。
+この場合、カウントを1とは異なる数に設定するには、2つの同じ値で十分であり、その後にカウントをリセットするはずの別の明確な値が続くが、この場合はリセットされません。
 
 ----------
 Installing
