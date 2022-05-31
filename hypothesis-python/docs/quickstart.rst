@@ -3,9 +3,9 @@
   Quick start guide
   =================
 
-===================
+=======================
 クイックスタートガイド
-===================
+=======================
 
 ..
   This document should talk you through everything you need to get started with
