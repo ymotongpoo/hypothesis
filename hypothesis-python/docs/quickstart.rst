@@ -228,36 +228,62 @@ Hypothesisはすぐに次のような例を知らせてくれます。
 Hypothesisは単にテストに対する反例を見つけるだけでなく、見つけた例をいかに単純化して理解しやすい小さなものにするかも知っています。
 この場合、カウントを1とは異なる数に設定するには、2つの同じ値で十分であり、その後にカウントをリセットするはずの別の明確な値が続くが、この場合はリセットされません。
 
-----------
-Installing
-----------
+..
+  ----------
+  Installing
+  ----------
 
-Hypothesis is :pypi:`available on PyPI as "hypothesis" <hypothesis>`. You can install it with:
+------------
+インストール
+------------
+
+..
+  Hypothesis is :pypi:`available on PyPI as "hypothesis" <hypothesis>`. You can install it with:
+
+Hypothesisは :pypi:`PyPIで "hypothesis" で取得でき <hypothesis>` ます。
+次のコマンドでインストールできます。
 
 .. code:: bash
 
   pip install hypothesis
 
-You can install the dependencies for :doc:`optional extensions <extras>` with
-e.g. ``pip install hypothesis[pandas,django]``.
+..
+  You can install the dependencies for :doc:`optional extensions <extras>` with
+  e.g. ``pip install hypothesis[pandas,django]``.
 
-If you want to install directly from the source code (e.g. because you want to
-make changes and install the changed version), check out the instructions in
-:gh-file:`CONTRIBUTING.rst`.
+:doc:`追加の拡張 <extras>` の依存関係をインストールするには、例えば ``pip install hypothesis[pandas,django]`` とします。
+
+..
+  If you want to install directly from the source code (e.g. because you want to
+  make changes and install the changed version), check out the instructions in
+  :gh-file:`CONTRIBUTING.rst`.
+
+もし、ソースコードから直接インストールしたい場合（例えば、変更を加えて変更後のバージョンをインストールしたい場合など）は、 :gh-file:`CONTRIBUTING.rst` の説明を確認してください。
+
+..
+  -------------
+  Running tests
+  -------------
 
 -------------
-Running tests
+テストの実行
 -------------
 
-In our example above we just let pytest discover and run our tests, but we could
-also have run it explicitly ourselves:
+..
+  In our example above we just let pytest discover and run our tests, but we could
+  also have run it explicitly ourselves:
+
+上記の例では、pytest にテストを発見させ実行させていますが、自分自身で明示的に実行させることも可能です。
 
 .. code:: python
 
   if __name__ == "__main__":
       test_decode_inverts_encode()
 
-We could also have done this as a :class:`python:unittest.TestCase`:
+..
+  We could also have done this as a :class:`python:unittest.TestCase`:
+
+また、これを :class:`python:unittest.TestCase` として行うこともできるでしょう。
 
 .. code:: python
 
@@ -273,24 +299,40 @@ We could also have done this as a :class:`python:unittest.TestCase`:
   if __name__ == "__main__":
       unittest.main()
 
-A detail: This works because Hypothesis ignores any arguments it hasn't been
-told to provide (positional arguments start from the right), so the self
-argument to the test is simply ignored and works as normal. This also means
-that Hypothesis will play nicely with other ways of parameterizing tests. e.g
-it works fine if you use pytest fixtures for some arguments and Hypothesis for
-others.
+..
+  A detail: This works because Hypothesis ignores any arguments it hasn't been
+  told to provide (positional arguments start from the right), so the self
+  argument to the test is simply ignored and works as normal. This also means
+  that Hypothesis will play nicely with other ways of parameterizing tests. e.g
+  it works fine if you use pytest fixtures for some arguments and Hypothesis for
+  others.
+
+詳細です。これは、Hypothesisが提供するように指示されていない引数を無視する（位置引数は右から始まる）ので、テストへのself引数は単に無視され、通常通り動作します。
+これはまた、Hypothesisが他のテストのパラメータ化方法とうまく連携することを意味します。
+例えば、いくつかの引数にpytest fixturesを使い、他の引数にHypothesisを使ってもうまく動作します。
+
+..
+  -------------
+  Writing tests
+  -------------
 
 -------------
-Writing tests
+テストを書く
 -------------
 
-A test in Hypothesis consists of two parts: A function that looks like a normal
-test in your test framework of choice but with some additional arguments, and
-a :func:`@given <hypothesis.given>` decorator that specifies
-how to provide those arguments.
+..
+  A test in Hypothesis consists of two parts: A function that looks like a normal
+  test in your test framework of choice but with some additional arguments, and
+  a :func:`@given <hypothesis.given>` decorator that specifies
+  how to provide those arguments.
 
-Here are some other examples of how you could use that:
+Hypothesisのテストは2つの部分から成ります。
+テストフレームワークの通常のテストのように見えますが、いくつかの追加引数を持つ関数と、それらの引数をどのように提供するかを指定する :func:`@given <hypothesis.given>` デコレーターの2つです。
 
+..
+  Here are some other examples of how you could use that:
+
+他にもこんな使い方があります。
 
 .. code:: python
 
@@ -326,31 +368,58 @@ Here are some other examples of how you could use that:
         assert isinstance(t[1], str)
 
 
-Note that as we saw in the above example you can pass arguments to :func:`@given <hypothesis.given>`
-either as positional or as keywords.
+..
+  Note that as we saw in the above example you can pass arguments to :func:`@given <hypothesis.given>`
+  either as positional or as keywords.
 
---------------
-Where to start
---------------
+上記の例で見たように、 :func:`@given <hypothesis.given>` には位置指定やキーワードで引数を渡すことができることに注意してください。
 
-You should now know enough of the basics to write some tests for your code
-using Hypothesis. The best way to learn is by doing, so go have a try.
+..
+  --------------
+  Where to start
+  --------------
 
-If you're stuck for ideas for how to use this sort of test for your code, here
-are some good starting points:
+----------------
+どこから始めるか
+----------------
 
-1. Try just calling functions with appropriate arbitrary data and see if they
-   crash. You may be surprised how often this works. e.g. note that the first
-   bug we found in the encoding example didn't even get as far as our
-   assertion: It crashed because it couldn't handle the data we gave it, not
-   because it did the wrong thing.
-2. Look for duplication in your tests. Are there any cases where you're testing
-   the same thing with multiple different examples? Can you generalise that to
-   a single test using Hypothesis?
-3. `This piece is designed for an F# implementation
-   <https://fsharpforfunandprofit.com/posts/property-based-testing-2/>`_, but
-   is still very good advice which you may find helps give you good ideas for
-   using Hypothesis.
+..
+  You should now know enough of the basics to write some tests for your code
+  using Hypothesis. The best way to learn is by doing, so go have a try.
 
-If you have any trouble getting started, don't feel shy about
-:doc:`asking for help <community>`.
+これで、Hypothesisを使って自分のコードのテストを書くための基礎は十分わかったはずです。
+実際にやってみることが一番の学習方法ですので、ぜひ試してみてください。
+
+..
+  If you're stuck for ideas for how to use this sort of test for your code, here
+  are some good starting points:
+
+もしあなたが、自分のコードにこの種のテストを使う方法に困っているなら、ここに良い出発点をいくつか挙げておきます。
+
+..
+  1. Try just calling functions with appropriate arbitrary data and see if they
+     crash. You may be surprised how often this works. e.g. note that the first
+     bug we found in the encoding example didn't even get as far as our
+     assertion: It crashed because it couldn't handle the data we gave it, not
+     because it did the wrong thing.
+  2. Look for duplication in your tests. Are there any cases where you're testing
+     the same thing with multiple different examples? Can you generalise that to
+     a single test using Hypothesis?
+  3. `This piece is designed for an F# implementation
+     <https://fsharpforfunandprofit.com/posts/property-based-testing-2/>`_, but
+     is still very good advice which you may find helps give you good ideas for
+     using Hypothesis.
+
+1. 適当な任意のデータで関数を呼び出してみて、クラッシュするかどうか見てみてください。
+   例えば、エンコーディングの例で見つけた最初のバグは、私たちのアサーションまで到達していないことに注意してください。
+   このバグがクラッシュしたのは、私たちが与えたデータを処理できなかったからであり、間違ったことをしたからではありません。
+2. テストに重複がないかを確認します。同じことを複数の異なる例でテストしているケースはないでしょうか？
+   それをHypothesisを使った1つのテストに一般化できますか？
+3. `この記事はF#の実装のために書かれたものです <https://fsharpforfunandprofit.com/posts/property-based-testing-2/>`_。
+   しかし、Hypothesisを使うための良いアイデアを与えてくれる、とても良いアドバイスです。
+
+..
+  If you have any trouble getting started, don't feel shy about
+  :doc:`asking for help <community>`.
+
+もし、使い始めてみて何か問題があれば、恥ずかしがらずに :doc:`質問してみて <community>` ください。
