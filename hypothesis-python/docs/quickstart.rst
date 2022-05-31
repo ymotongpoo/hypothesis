@@ -34,8 +34,7 @@
   removed some commented out code and fixed the formatting, but there are no
   functional modifications):
 
-次のコードは `Rosetta Code <https://rosettacode.org/wiki/Run-length_encoding>`_ ウィキから持ってきました。
- (OK、コメントアウトされたコードを削除し、フォーマットを修正しましたが、機能的な修正はありません):
+次のコードは `Rosetta Code <https://rosettacode.org/wiki/Run-length_encoding>`_ ウィキから持ってきました。（OK、コメントアウトされたコードを削除し、フォーマットを修正しましたが、機能的な修正はありません）:
 
 
 .. code:: python
