@@ -1,26 +1,49 @@
-=============================
-Details and advanced features
-=============================
+..
+  =============================
+  Details and advanced features
+  =============================
 
-This is an account of slightly less common Hypothesis features that you don't need
-to get started but will nevertheless make your life easier.
+===================
+詳細と高度な機能
+===================
 
+..
+  This is an account of slightly less common Hypothesis features that you don't need
+  to get started but will nevertheless make your life easier.
 
-----------------------
-Additional test output
-----------------------
+このページでは、Hypothesisの機能のうち、使い始めには必要ないけれども、生活を便利にするような、ちょっとマイナーな機能について説明します。
 
-Normally the output of a failing test will look something like:
+..
+  ----------------------
+  Additional test output
+  ----------------------
+
+-----------------
+追加テスト出力
+-----------------
+
+..
+  Normally the output of a failing test will look something like:
+
+通常、失敗したテストの出力は次のようなものになります。
 
 .. code::
 
     Falsifying example: test_a_thing(x=1, y="foo")
 
-With the ``repr`` of each keyword argument being printed.
+..
+  With the ``repr`` of each keyword argument being printed.
 
-Sometimes this isn't enough, either because you have a value with a
-``__repr__()`` method that isn't very descriptive or because you need to see the output of some
-intermediate steps of your test. That's where the ``note`` function comes in:
+各キーワード引数の ``repr`` が表示されます。
+
+..
+  Sometimes this isn't enough, either because you have a value with a
+  ``__repr__()`` method that isn't very descriptive or because you need to see the output of some
+  intermediate steps of your test. That's where the ``note`` function comes in:
+
+時にはこれだけでは不十分な場合もあります。
+それは、 ``__repr__()`` メソッドを持つ値があまり説明的でない場合や、テストの中間段階の出力を確認する必要がある場合です。
+そこで、 ``note`` 関数の出番です。
 
 .. autofunction:: hypothesis.note
 
@@ -43,8 +66,11 @@ intermediate steps of your test. That's where the ``note`` function comes in:
     Shuffle: [1, 0]
     ls != ls2
 
-The note is printed for the minimal failing example of the test in order to include any
-additional information you might need in your test.
+..
+  The note is printed for the minimal failing example of the test in order to include any
+  additional information you might need in your test.
+
+メモには、テストに必要な追加情報を盛り込むための、最小限の失敗例が表示されています。
 
 
 .. _statistics:
