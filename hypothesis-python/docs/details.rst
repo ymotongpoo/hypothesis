@@ -813,23 +813,39 @@ Hypothesisのサンプル生成は非決定論的なテストに使えますが�
 .. autofunction:: hypothesis.register_random
 
 
+.... _type-inference:
+
+..
+  -------------------
+  Inferred strategies
+  -------------------
+
 .. _type-inference:
 
--------------------
-Inferred strategies
--------------------
+-----------------------
+推論されたストラテジー
+-----------------------
 
-In some cases, Hypothesis can work out what to do when you omit arguments.
-This is based on introspection, *not* magic, and therefore has well-defined
-limits.
+..
+  In some cases, Hypothesis can work out what to do when you omit arguments.
+  This is based on introspection, *not* magic, and therefore has well-defined
+  limits.
 
-:func:`~hypothesis.strategies.builds` will check the signature of the
-``target`` (using :func:`~python:inspect.signature`).
-If there are required arguments with type annotations and
-no strategy was passed to :func:`~hypothesis.strategies.builds`,
-:func:`~hypothesis.strategies.from_type` is used to fill them in.
-You can also pass the value ``...`` (``Ellipsis``) as a keyword
-argument, to force this inference for arguments with a default value.
+場合によっては、Hypothesisは引数を省略したときに何をすべきかを考え出すことができます。
+これはイントロスペクションに基づくもので、*マジックではありません* 、したがって、よく定義された限界があります。
+
+..
+  :func:`~hypothesis.strategies.builds` will check the signature of the
+  ``target`` (using :func:`~python:inspect.signature`).
+  If there are required arguments with type annotations and
+  no strategy was passed to :func:`~hypothesis.strategies.builds`,
+  :func:`~hypothesis.strategies.from_type` is used to fill them in.
+  You can also pass the value ``...`` (``Ellipsis``) as a keyword
+  argument, to force this inference for arguments with a default value.
+
+:func:`~hypothesis.strategies.builds` は ``target`` のシグネチャをチェックします（:func:`~python:inspect.signature` を使用します）。
+もし型アノテーションを持つ必須の引数があり、 :func:`~hypothesis.strategies.builds` にストラテジーが渡されなかった場合には、 :func:`~hypothesis.strategies.from_type` を使用して、その値を埋めることができます。
+また、キーワード引数として ``...`` (``Ellipsis``) という値を渡すことで、デフォルト値を持つ引数に対して、この推論を強制的に行うことができます。
 
 .. code-block:: pycon
 
@@ -841,26 +857,35 @@ argument, to force this inference for arguments with a default value.
 
 .. data:: hypothesis.infer
 
-:func:`@given <hypothesis.given>` does not perform any implicit inference
-for required arguments, as this would break compatibility with pytest fixtures.
-``...`` (:obj:`python:Ellipsis`), can be used as a keyword argument to explicitly fill
-in an argument from its type annotation.  You can also use the ``hypothesis.infer``
-alias if writing a literal ``...`` seems too weird.
+..
+  :func:`@given <hypothesis.given>` does not perform any implicit inference
+  for required arguments, as this would break compatibility with pytest fixtures.
+  ``...`` (:obj:`python:Ellipsis`), can be used as a keyword argument to explicitly fill
+  in an argument from its type annotation.  You can also use the ``hypothesis.infer``
+  alias if writing a literal ``...`` seems too weird.
+
+:func:`@given <hypothesis.given>` は pytest フィクスチャとの互換性が失われるため、必須の引数に対して暗黙の推論を行いません。
+``...`` （:obj:`python:Ellipsis`）はキーワード引数として、型アノテーションから明示的に引数を埋めるために使用することができます。
+また、リテラルで ``...`` を書くことに違和感がある場合は、 ``hypothesis.infer`` というエイリアスも使用することができます。
+
 
 .. code:: python
 
-    @given(a=...)  # or @given(a=infer)
+    @given(a=...)  # または @given(a=infer)
     def test(a: int):
         pass
 
 
-    # is equivalent to
+    # これは次と同値
     @given(a=from_type(int))
     def test(a):
         pass
 
 
-``@given(...)`` can also be specified to fill all arguments from their type annotations.
+..
+  ``@given(...)`` can also be specified to fill all arguments from their type annotations.
+
+``@given(...)`` は、すべての引数を型アノテーションから埋めるために指定することもできます。
 
 .. code:: python
 
@@ -874,23 +899,35 @@ alias if writing a literal ``...`` seems too weird.
     def test(a, b):
         pass
 
+..
+  ~~~~~~~~~~~
+  Limitations
+  ~~~~~~~~~~~
 
-~~~~~~~~~~~
-Limitations
-~~~~~~~~~~~
+~~~~~~~~
+制約
+~~~~~~~~
 
-Hypothesis does not inspect :pep:`484` type comments at runtime.  While
-:func:`~hypothesis.strategies.from_type` will work as usual, inference in
-:func:`~hypothesis.strategies.builds` and :func:`@given <hypothesis.given>`
-will only work if you manually create the ``__annotations__`` attribute
-(e.g. by using ``@annotations(...)`` and ``@returns(...)`` decorators).
+..
+  Hypothesis does not inspect :pep:`484` type comments at runtime.  While
+  :func:`~hypothesis.strategies.from_type` will work as usual, inference in
+  :func:`~hypothesis.strategies.builds` and :func:`@given <hypothesis.given>`
+  will only work if you manually create the ``__annotations__`` attribute
+  (e.g. by using ``@annotations(...)`` and ``@returns(...)`` decorators).
 
-The :mod:`python:typing` module changes between different Python releases,
-including at minor versions.  These
-are all supported on a best-effort basis,
-but you may encounter problems.  Please report them to us, and consider
-updating to a newer version of Python as a workaround.
+Hypothesis は実行時に :pep:`484` 型のコメントを検査しません。
+:func:`~hypothesis.strategies.from_type` は通常通り動作しますが、 :func:`~hypothesis.strategies.builds` と :func:`@given <hypothesis.given>` の推論は ``__annotations__`` 属性を（``@annotations(...) `` と ``@returns(...) ``デコレータなどを用いて）手動で作成した場合のみ動作します。
 
+..
+  The :mod:`python:typing` module changes between different Python releases,
+  including at minor versions.  These
+  are all supported on a best-effort basis,
+  but you may encounter problems.  Please report them to us, and consider
+  updating to a newer version of Python as a workaround.
+
+:mod:`python:typing` モジュールは、マイナーバージョンを含む、異なる Python のリリースの間で変更されます。
+これらはすべてベストエフォートでサポートされていますが、問題に遭遇する可能性があります。
+それらを私たちに報告し、回避策としてより新しいバージョンのPythonにアップデートすることを検討してください。
 
 .. _our-type-hints:
 
