@@ -75,15 +75,26 @@
 
 .. _statistics:
 
----------------
-Test statistics
----------------
+..
+  ---------------
+  Test statistics
+  ---------------
 
-If you are using :pypi:`pytest` you can see a number of statistics about the executed tests
-by passing the command line argument ``--hypothesis-show-statistics``. This will include
-some general statistics about the test:
+-------------
+テスト統計
+-------------
 
-For example if you ran the following with ``--hypothesis-show-statistics``:
+..
+  If you are using :pypi:`pytest` you can see a number of statistics about the executed tests
+  by passing the command line argument ``--hypothesis-show-statistics``. This will include
+  some general statistics about the test:
+
+:pypi:`pytest` を使用している場合、コマンドライン引数 ``--hypothesis-show-statistics`` を渡すことで、実行したテストに関するいくつかの統計情報を見ることができます。これにはテストに関する一般的な統計情報が含まれます。
+
+..
+  For example if you ran the following with ``--hypothesis-show-statistics``:
+
+例えば、 ``--hypothesis-show-statistics`` で以下を実行した場合。
 
 .. code-block:: python
 
@@ -95,7 +106,10 @@ For example if you ran the following with ``--hypothesis-show-statistics``:
       pass
 
 
-You would see:
+..
+  You would see:
+
+次のような結果となります。
 
 .. code-block:: none
 
@@ -104,13 +118,22 @@ You would see:
         - 100 passing examples, 0 failing examples, 0 invalid examples
     - Stopped because settings.max_examples=100
 
-The final "Stopped because" line is particularly important to note: It tells you the
-setting value that determined when the test should stop trying new examples. This
-can be useful for understanding the behaviour of your tests. Ideally you'd always want
-this to be :obj:`~hypothesis.settings.max_examples`.
+..
+  The final "Stopped because" line is particularly important to note: It tells you the
+  setting value that determined when the test should stop trying new examples. This
+  can be useful for understanding the behaviour of your tests. Ideally you'd always want
+  this to be :obj:`~hypothesis.settings.max_examples`.
 
-In some cases (such as filtered and recursive strategies) you will see events mentioned
-which describe some aspect of the data generation:
+最後の "Stopped because..." の行は特に重要です。
+これは、テストが新しい例の試行をいつ停止すべきかを決定する設定値です。
+これはテストの挙動を理解するのに役立ちます。
+理想的には、常に :obj:`~hypothesis.settings.max_examples` としたいところです。
+
+..
+  In some cases (such as filtered and recursive strategies) you will see events mentioned
+  which describe some aspect of the data generation:
+
+場合によっては（フィルタリングや再帰的戦略など）、データ生成のある側面を説明するイベントが表示されることもあります。
 
 .. code-block:: python
 
@@ -121,7 +144,10 @@ which describe some aspect of the data generation:
   def test_even_integers(i):
       pass
 
-You would see something like:
+..
+  You would see something like:
+
+これは次のような出力になります。
 
 .. code-block:: none
 
@@ -135,7 +161,10 @@ You would see something like:
           * 10.71%, Aborted test because unable to satisfy integers().filter(lambda x: x % 2 == 0)
     - Stopped because settings.max_examples=100
 
-You can also mark custom events in a test using the ``event`` function:
+..
+  You can also mark custom events in a test using the ``event`` function:
+
+また、 ``event`` 関数を使用すると、テスト内でカスタムイベントをマークすることができます。
 
 .. autofunction:: hypothesis.event
 
@@ -149,7 +178,9 @@ You can also mark custom events in a test using the ``event`` function:
       event(f"i mod 3 = {i%3}")
 
 
-You will then see output like:
+.. You will then see output like:
+
+このコードは次のような結果となります。
 
 .. code-block:: none
 
@@ -166,24 +197,39 @@ You will then see output like:
           * 15.91%, i mod 3 = 1
     - Stopped because settings.max_examples=100
 
-Arguments to ``event`` can be any hashable type, but two events will be considered the same
-if they are the same when converted to a string with :obj:`python:str`.
+..
+  Arguments to ``event`` can be any hashable type, but two events will be considered the same
+  if they are the same when converted to a string with :obj:`python:str`.
 
-------------------
-Making assumptions
-------------------
+イベント ``event`` の引数には任意のハッシュ可能な型を指定することができますが、 :obj:`python:str` で文字列に変換したときに同じであれば、2つのイベントは同じものとみなされます。
 
-Sometimes Hypothesis doesn't give you exactly the right sort of data you want - it's
-mostly of the right shape, but some examples won't work and you don't want to care about
-them. You *can* just ignore these by aborting the test early, but this runs the risk of
-accidentally testing a lot less than you think you are. Also it would be nice to spend
-less time on bad examples - if you're running 100 examples per test (the default) and
-it turns out 70 of those examples don't match your needs, that's a lot of wasted time.
+..
+  ------------------
+  Making assumptions
+  ------------------
+
+--------------
+仮説を立てる
+--------------
+
+..
+  Sometimes Hypothesis doesn't give you exactly the right sort of data you want - it's
+  mostly of the right shape, but some examples won't work and you don't want to care about
+  them. You *can* just ignore these by aborting the test early, but this runs the risk of
+  accidentally testing a lot less than you think you are. Also it would be nice to spend
+  less time on bad examples - if you're running 100 examples per test (the default) and
+  it turns out 70 of those examples don't match your needs, that's a lot of wasted time.
+
+Hypothesisは時々、あなたが望む正しい種類のデータを与えないことがあります - それはほとんど正しい形をしていますが、いくつかの例は動作しませんし、あなたはそれらを気にしたくありません。
+テストを早期に中止してこれらを無視することもできますが、この場合、誤って自分が考えているよりもずっと少ない量のテストを行ってしまう危険性があります。
+また、悪いサンプルに費やす時間を減らすほうが良いです。1回のテストで100のサンプルを実行し（デフォルト）、そのうちの70のサンプルがあなたのニーズにマッチしないことがわかった場合、それは多くの時間を浪費することになります。
 
 .. autofunction:: hypothesis.assume
 
-For example suppose you had the following test:
+..
+  For example suppose you had the following test:
 
+たとえば次のようなテストがあったとします。
 
 .. code:: python
 
@@ -192,19 +238,27 @@ For example suppose you had the following test:
       assert x == -(-x)
 
 
-Running this gives us:
+.. Running this gives us:
+
+これを実行すると次のような結果が得られます。
 
 .. code::
 
   Falsifying example: test_negation_is_self_inverse(x=float('nan'))
   AssertionError
 
-This is annoying. We know about `NaN <https://docs.python.org/3/library/math.html>`__
-and don't really care about it, but as soon as Hypothesis
-finds a NaN example it will get distracted by that and tell us about it. Also
-the test will fail and we want it to pass.
+..
+  This is annoying. We know about `NaN <https://docs.python.org/3/library/math.html>`__
+  and don't really care about it, but as soon as Hypothesis
+  finds a NaN example it will get distracted by that and tell us about it. Also
+  the test will fail and we want it to pass.
 
-So let's block off this particular example:
+これは迷惑な話です。私たちは `NaN <https://docs.python.org/3/library/math.html>`__ について知っていて、それを本当に気にしていませんが、Hypothesis が NaN の例を見つけるとすぐにそれに気を取られて、それについて私たちに教えてくれます。また、テストは失敗するでしょうし、私たちはそれをパスさせたいのです。
+
+..
+  So let's block off this particular example:
+
+そこで、この特殊な例を封印しましょう。
 
 .. code:: python
 
@@ -216,12 +270,21 @@ So let's block off this particular example:
       assume(not isnan(x))
       assert x == -(-x)
 
-And this passes without a problem.
+..
+  And this passes without a problem.
 
-In order to avoid the easy trap where you assume a lot more than you intended, Hypothesis
-will fail a test when it can't find enough examples passing the assumption.
+そして、これは問題なくパスします。
 
-If we'd written:
+..
+  In order to avoid the easy trap where you assume a lot more than you intended, Hypothesis
+  will fail a test when it can't find enough examples passing the assumption.
+
+意図した以上に多くのことを仮定してしまうという安易な罠を避けるため、Hypothesisは仮定を満たす十分な例を見つけることができない場合、テストに失敗することにしています。
+
+..
+  If we'd written:
+
+このように書いた場合
 
 .. code:: python
 
@@ -230,22 +293,35 @@ If we'd written:
       assume(False)
       assert x == -(-x)
 
-Then on running we'd have got the exception:
+..
+  Then on running we'd have got the exception:
+
+そうすれば、実行中に例外が発生するでしょう。
 
 .. code::
 
   Unsatisfiable: Unable to satisfy assumptions of hypothesis test_negation_is_self_inverse_for_non_nan. Only 0 examples considered satisfied assumptions
 
-~~~~~~~~~~~~~~~~~~~
-How good is assume?
-~~~~~~~~~~~~~~~~~~~
+..
+  ~~~~~~~~~~~~~~~~~~~
+  How good is assume?
+  ~~~~~~~~~~~~~~~~~~~
 
-Hypothesis has an adaptive exploration strategy to try to avoid things which falsify
-assumptions, which should generally result in it still being able to find examples in
-hard to find situations.
+~~~~~~~~~~~~~~~~~~~~~~
+仮定の精度はどれくらいか
+~~~~~~~~~~~~~~~~~~~~~~
 
-Suppose we had the following:
+..
+  Hypothesis has an adaptive exploration strategy to try to avoid things which falsify
+  assumptions, which should generally result in it still being able to find examples in
+  hard to find situations.
 
+Hypothesisは、仮定を否定するものを避けようとする適応的な探索戦略を持っており、その結果、一般に見つけにくい状況でも例を見つけることができるはずです。
+
+..
+  Suppose we had the following:
+
+次のようなコードがあったとします。
 
 .. code:: python
 
@@ -253,26 +329,46 @@ Suppose we had the following:
   def test_sum_is_positive(xs):
       assert sum(xs) > 0
 
-Unsurprisingly this fails and gives the falsifying example ``[]``.
+..
+  Unsurprisingly this fails and gives the falsifying example ``[]``.
 
-Adding ``assume(xs)`` to this removes the trivial empty example and gives us ``[0]``.
+当然のことながら、これは失敗し、失敗する例 ``[]`` が得られます。
 
-Adding ``assume(all(x > 0 for x in xs))`` and it passes: the sum of a list of
-positive integers is positive.
+..
+  Adding ``assume(xs)`` to this removes the trivial empty example and gives us ``[0]``.
 
-The reason that this should be surprising is not that it doesn't find a
-counter-example, but that it finds enough examples at all.
+これに ``assume(xs)`` を加えることで、空のリストの例を取り除き、 ``[0]`` を得ることができます。
 
-In order to make sure something interesting is happening, suppose we wanted to
-try this for long lists. e.g. suppose we added an ``assume(len(xs) > 10)`` to it.
-This should basically never find an example: a naive strategy would find fewer
-than one in a thousand examples, because if each element of the list is
-negative with probability one-half, you'd have to have ten of these go the right
-way by chance. In the default configuration Hypothesis gives up long before
-it's tried 1000 examples (by default it tries 200).
+..
+  Adding ``assume(all(x > 0 for x in xs))`` and it passes: the sum of a list of
+  positive integers is positive.
 
-Here's what happens if we try to run this:
+``assume(all(x > 0 for x in xs))`` を追加すると、パスします。正の整数のリストの合計は正になるからです。
 
+..
+  The reason that this should be surprising is not that it doesn't find a
+  counter-example, but that it finds enough examples at all.
+
+これが驚くべきことである理由は、反例が見つからないからではなく、十分な例がまったく見つかるからです。
+
+..
+  In order to make sure something interesting is happening, suppose we wanted to
+  try this for long lists. e.g. suppose we added an ``assume(len(xs) > 10)`` to it.
+  This should basically never find an example: a naive strategy would find fewer
+  than one in a thousand examples, because if each element of the list is
+  negative with probability one-half, you'd have to have ten of these go the right
+  way by chance. In the default configuration Hypothesis gives up long before
+  it's tried 1000 examples (by default it tries 200).
+
+何か面白いことが起こっていることを確認するために、長いリストに対してこれを試したいとします。
+例えば、これに ``assume(len(xs) > 10)`` を追加したとします。
+これは基本的に例を見つけることができないはずです。なぜなら、もしリストの各要素が2分の1の確率で負であれば、偶然に10個の要素が正である必要があるからです。
+デフォルトの設定では、Hypothesisは1000回の例を試す前に諦めてしまいます（デフォルトでは200回試します）。
+
+..
+  Here's what happens if we try to run this:
+
+これを実行すると、次のようになります。
 
 .. code:: python
 
@@ -284,7 +380,9 @@ Here's what happens if we try to run this:
       assert sum(xs) > 0
 
 
-In: ``test_sum_is_positive()``
+.. In: ``test_sum_is_positive()``
+
+``test_sum_is_positive()`` の中では次のような例が試されます。
 
 .. code:: python
 
@@ -295,34 +393,60 @@ In: ``test_sum_is_positive()``
   [13, 26, 8, 3, 4, 76, 6, 14, 20, 27, 21, 32, 14, 42, 9, 24, 33, 9, 5, 15, ...]
   [2, 1, 2, 2, 3, 10, 12, 11, 21, 11, 1, 16]
 
-As you can see, Hypothesis doesn't find *many* examples here, but it finds some - enough to
-keep it happy.
+..
+  As you can see, Hypothesis doesn't find *many* examples here, but it finds some - enough to
+  keep it happy.
 
-In general if you *can* shape your strategies better to your tests you should - for example
-:py:func:`integers(1, 1000) <hypothesis.strategies.integers>` is a lot better than
-``assume(1 <= x <= 1000)``, but ``assume`` will take you a long way if you can't.
+このように、Hypothesisは *多く* の例を見つけることはできませんが、いくつかの例を見つけることができます。
+しかし、十分な数でしょう。
 
----------------------
-Defining strategies
----------------------
+..
+  In general if you *can* shape your strategies better to your tests you should - for example
+  :py:func:`integers(1, 1000) <hypothesis.strategies.integers>` is a lot better than
+  ``assume(1 <= x <= 1000)``, but ``assume`` will take you a long way if you can't.
 
-The type of object that is used to explore the examples given to your test
-function is called a :class:`~hypothesis.strategies.SearchStrategy`.
-These are created using the functions
-exposed in the :mod:`hypothesis.strategies` module.
+一般的に、テストに適した戦略を立てることが *できる* のであれば、そうすべきです。
+例えば :py:func:`integers(1, 1000) <hypothesis.strategies.integers>` は ``assume(1 <= x <= 1000)`` よりもずっと良いのですが、もし使えないのであれば ``assume`` は長い道のりを歩むことになります。
 
-Many of these strategies expose a variety of arguments you can use to customize
-generation. For example for integers you can specify ``min`` and ``max`` values of
-integers you want.
-If you want to see exactly what a strategy produces you can ask for an example:
+..
+  ---------------------
+  Defining strategies
+  ---------------------
+
+----------------------------
+戦略（ストラテジー）を定義する
+----------------------------
+
+..
+  The type of object that is used to explore the examples given to your test
+  function is called a :class:`~hypothesis.strategies.SearchStrategy`.
+  These are created using the functions
+  exposed in the :mod:`hypothesis.strategies` module.
+
+テスト関数に与えられたサンプルを探索するために使用されるオブジェクトの種類は :class:`~hypothesis.strategies.SearchStrategy` と呼ばれます。
+これらは :mod:`hypothesis.strategies` モジュールで公開されている関数を使用して作成されます。
+
+..
+  Many of these strategies expose a variety of arguments you can use to customize
+  generation. For example for integers you can specify ``min`` and ``max`` values of
+  integers you want.
+  If you want to see exactly what a strategy produces you can ask for an example:
+
+これらのストラテジーの多くは、生成をカスタマイズするための様々な引数を公開しています。
+例えば、整数の場合、 ``min`` と ``max`` を指定することができます。
+もし、あるストラテジーがどのようなものを生成するのか知りたい場合は、例を要求することができます。
 
 .. code-block:: pycon
 
     >>> integers(min_value=0, max_value=10).example()
     1
 
-Many strategies are built out of other strategies. For example, if you want
-to define a tuple you need to say what goes in each element:
+..
+  Many strategies are built out of other strategies. For example, if you want
+  to define a tuple you need to say what goes in each element:
+
+多くのストラテジーは、他のストラテジーから構築されています。
+例えば、タプルを定義したい場合、各要素に何が入るかを言う必要があります。
 
 .. code-block:: pycon
 
@@ -330,7 +454,10 @@ to define a tuple you need to say what goes in each element:
     >>> tuples(integers(), integers()).example()
     (-24597, 12566)
 
-Further details are :doc:`available in a separate document <data>`.
+..
+  Further details are :doc:`available in a separate document <data>`.
+
+詳細は :doc:`別の文書 <data>` に記載されています。
 
 ------------------------------------
 The gory details of given parameters
