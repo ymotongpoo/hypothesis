@@ -636,33 +636,57 @@ T-PBT は、完全にランダムである代わりに、探索ベースのコ�
 好奇心旺盛な方のために、Hypothesisの最初の実装は、行き詰まってして局所最大値を延々と変異させることを避けるために、シミュレーテッドアニーリングに触発されたいくつかの戦術で、変異ファザーによるヒルクライム探索を使用しています。
 
 
+.... _custom-function-execution:
+
+..
+  -------------------------
+  Custom function execution
+  -------------------------
+
 .. _custom-function-execution:
 
 -------------------------
-Custom function execution
+カスタム関数の実行
 -------------------------
 
-Hypothesis provides you with a hook that lets you control how it runs
-examples.
+..
+  Hypothesis provides you with a hook that lets you control how it runs
+  examples.
 
-This lets you do things like set up and tear down around each example, run
-examples in a subprocess, transform coroutine tests into normal tests, etc.
-For example, :class:`~hypothesis.extra.django.TransactionTestCase` in the
-Django extra runs each example in a separate database transaction.
+Hypothesisは、例の実行方法を制御するためのフックを提供しています。
 
-The way this works is by introducing the concept of an executor. An executor
-is essentially a function that takes a block of code and run it. The default
-executor is:
+..
+  This lets you do things like set up and tear down around each example, run
+  examples in a subprocess, transform coroutine tests into normal tests, etc.
+  For example, :class:`~hypothesis.extra.django.TransactionTestCase` in the
+  Django extra runs each example in a separate database transaction.
+
+これによって、各例に対するセットアップとティアダウン、サブプロセスでの例の実行、コルーチンテストから通常のテストへの変換、といったことができるようになります。
+例えば、 Django extra の :class:`~hypothesis.extra.django.TransactionTestCase` は、各例を個別のデータベーストランザクションで実行します。
+
+..
+  The way this works is by introducing the concept of an executor. An executor
+  is essentially a function that takes a block of code and run it. The default
+  executor is:
+
+この仕組みは、エグゼキューターという概念を導入することで実現されています。
+エグゼキューターとは、基本的にコードのブロックを受け取り、それを実行する関数のことです。
+デフォルトのエグゼキューターは次のようになっています。
 
 .. code:: python
 
     def default_executor(function):
         return function()
 
-You define executors by defining a method ``execute_example`` on a class. Any
-test methods on that class with :func:`@given <hypothesis.given>` used on them will use
-``self.execute_example`` as an executor with which to run tests. For example,
-the following executor runs all its code twice:
+..
+  You define executors by defining a method ``execute_example`` on a class. Any
+  test methods on that class with :func:`@given <hypothesis.given>` used on them will use
+  ``self.execute_example`` as an executor with which to run tests. For example,
+  the following executor runs all its code twice:
+
+あるクラスに対して ``execute_example`` というメソッドを定義することで、エグゼキューターを定義することができます。
+そのクラスの :func:`@given <hypothesis.given>` を持つテストメソッドは、 ``self.execute_example`` をエグゼキューターとして使用し、テストを実行することができるようになります。
+例えば、以下のエグゼキューターでは、すべてのコードが2回実行されます。
 
 .. code:: python
 
@@ -678,12 +702,20 @@ the following executor runs all its code twice:
             f()
             return f()
 
-Note: The functions you use in map, etc. will run *inside* the executor. i.e.
-they will not be called until you invoke the function passed to ``execute_example``.
+..
+  Note: The functions you use in map, etc. will run *inside* the executor. i.e.
+  they will not be called until you invoke the function passed to ``execute_example``.
 
-An executor must be able to handle being passed a function which returns None,
-otherwise it won't be able to run normal test cases. So for example the following
-executor is invalid:
+注意: map などで使用する関数は、エグゼキュータの *内部* で動作します。
+つまり、 ``execute_example`` に渡された関数を呼び出すまでは呼び出されません。
+
+..
+  An executor must be able to handle being passed a function which returns None,
+  otherwise it won't be able to run normal test cases. So for example the following
+  executor is invalid:
+
+エグゼキューターは、Noneを返す関数を渡されたときにそれを処理できなければならず、そうでなければ通常のテストケースを実行することはできません。
+ですから、例えば次のようなエグゼキュータは無効です。
 
 .. code:: python
 
@@ -694,7 +726,10 @@ executor is invalid:
         def execute_example(self, f):
             return f()()
 
-and should be rewritten as:
+..
+  and should be rewritten as:
+
+これは次のように書き直す必要があります。
 
 .. code:: python
 
@@ -708,12 +743,15 @@ and should be rewritten as:
                 result = result()
             return result
 
+..
+  An alternative hook is provided for use by test runner extensions such as
+  :pypi:`pytest-trio`, which cannot use the ``execute_example`` method.
+  This is **not** recommended for end-users - it is better to write a complete
+  test function directly, perhaps by using a decorator to perform the same
+  transformation before applying :func:`@given <hypothesis.given>`.
 
-An alternative hook is provided for use by test runner extensions such as
-:pypi:`pytest-trio`, which cannot use the ``execute_example`` method.
-This is **not** recommended for end-users - it is better to write a complete
-test function directly, perhaps by using a decorator to perform the same
-transformation before applying :func:`@given <hypothesis.given>`.
+代替のフックは :pypi:`pytest-trio` のようなテストランナー拡張で使用するために提供されており、 ``execute_example`` メソッドを使用することはできません。
+これはエンドユーザーには **お勧めしません**。完全なテスト関数を直接書いて、 :func:`@given <hypothesis.given>` を適用する前に、同じ変換を行うデコレータを使用した方がよいでしょう。
 
 .. code:: python
 
@@ -723,33 +761,54 @@ transformation before applying :func:`@given <hypothesis.given>`.
         ...
 
 
-    # Illustrative code, inside the pytest-trio plugin
+    # pytest-trio プラグイン内での説明的なコード
     test.hypothesis.inner_test = lambda x: trio.run(test, x)
 
-For authors of test runners however, assigning to the ``inner_test`` attribute
-of the ``hypothesis`` attribute of the test will replace the interior test.
+..
+  For authors of test runners however, assigning to the ``inner_test`` attribute
+  of the ``hypothesis`` attribute of the test will replace the interior test.
+
+しかし、テストランナーの作者にとっては、テストの ``hypothesis`` 属性の ``inner_test`` 属性に代入すると、内部のテストが置き換わります。
+
+..
+  .. note::
+      The new ``inner_test`` must accept and pass through all the ``*args``
+      and ``**kwargs`` expected by the original test.
 
 .. note::
-    The new ``inner_test`` must accept and pass through all the ``*args``
-    and ``**kwargs`` expected by the original test.
+    新しい ``inner_test`` は、元のテストが期待するすべての ``*args`` と ``**kwargs`` を受け入れ、通過させなければなりません。
 
-If the end user has also specified a custom executor using the
-``execute_example`` method, it - and all other execution-time logic - will
-be applied to the *new* inner test assigned by the test runner.
+..
+  If the end user has also specified a custom executor using the
+  ``execute_example`` method, it - and all other execution-time logic - will
+  be applied to the *new* inner test assigned by the test runner.
 
+エンドユーザーが ``execute_example`` メソッドを使ってカスタムエグゼキューターを指定した場合、そのメソッドと他のすべての実行時ロジックは、テストランナーによって割り当てられた *新しい* 内部テストに適用されます。
+
+..
+  --------------------------------
+  Making random code deterministic
+  --------------------------------
 
 --------------------------------
-Making random code deterministic
+ランダムなコードを決定論的にする
 --------------------------------
 
-While Hypothesis' example generation can be used for nondeterministic tests,
-debugging anything nondeterministic is usually a very frustrating exercise.
-To make things worse, our example *shrinking* relies on the same input
-causing the same failure each time - though we show the un-shrunk failure
-and a decent error message if it doesn't.
+..
+  While Hypothesis' example generation can be used for nondeterministic tests,
+  debugging anything nondeterministic is usually a very frustrating exercise.
+  To make things worse, our example *shrinking* relies on the same input
+  causing the same failure each time - though we show the un-shrunk failure
+  and a decent error message if it doesn't.
 
-By default, Hypothesis will handle the global ``random`` and ``numpy.random``
-random number generators for you, and you can register others:
+Hypothesisのサンプル生成は非決定論的なテストに使えますが、非決定論的なもののデバッグは通常とてもフラストレーションの溜まる作業です。
+さらに悪いことに、私たちの例の *収縮* は、毎回同じ入力が同じ失敗を引き起こすことに依存しています。（そうでない場合は、収縮されない失敗と適切なエラーメッセージを表示はするのですが。）
+
+..
+  By default, Hypothesis will handle the global ``random`` and ``numpy.random``
+  random number generators for you, and you can register others:
+
+デフォルトでは、Hypothesisはグローバルな乱数生成器 ``random`` と ``numpy.random`` をあなたに代わって処理し、他の乱数生成器を登録することができます。
 
 .. autofunction:: hypothesis.register_random
 
