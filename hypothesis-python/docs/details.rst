@@ -72,13 +72,14 @@
 
 メモには、テストに必要な追加情報を盛り込むための、最小限の失敗例が表示されています。
 
-
-.. _statistics:
+.... _statistics:
 
 ..
   ---------------
   Test statistics
   ---------------
+
+.. _statistics:
 
 -------------
 テスト統計
@@ -307,9 +308,9 @@ Hypothesisは時々、あなたが望む正しい種類のデータを与えな�
   How good is assume?
   ~~~~~~~~~~~~~~~~~~~
 
-~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 仮定の精度はどれくらいか
-~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ..
   Hypothesis has an adaptive exploration strategy to try to avoid things which falsify
@@ -413,9 +414,9 @@ Hypothesisは、仮定を否定するものを避けようとする適応的な�
   Defining strategies
   ---------------------
 
-----------------------------
+------------------------------
 戦略（ストラテジー）を定義する
-----------------------------
+------------------------------
 
 ..
   The type of object that is used to explore the examples given to your test
@@ -459,17 +460,29 @@ Hypothesisは、仮定を否定するものを避けようとする適応的な�
 
 詳細は :doc:`別の文書 <data>` に記載されています。
 
+..
+  ------------------------------------
+  The gory details of given parameters
+  ------------------------------------
+
 ------------------------------------
-The gory details of given parameters
+与えられたパラメータの泥臭い詳細
 ------------------------------------
 
 .. autofunction:: hypothesis.given
 
-The :func:`@given <hypothesis.given>` decorator may be used to specify
-which arguments of a function should be parametrized over. You can use
-either positional or keyword arguments, but not a mixture of both.
+..
+  The :func:`@given <hypothesis.given>` decorator may be used to specify
+  which arguments of a function should be parametrized over. You can use
+  either positional or keyword arguments, but not a mixture of both.
 
-For example all of the following are valid uses:
+:func:`@given <hypothesis.given>` デコレーターを使用して、関数のどの引数をパラメーター化するかを指定することができます。
+実引数とキーワード引数のどちらかを使用することができますが、両方を混在させることはできません。
+
+..
+  For example all of the following are valid uses:
+
+例えば、次のような使い方はすべて有効です。
 
 .. code:: python
 
@@ -508,7 +521,10 @@ For example all of the following are valid uses:
       def test_a_thing(self, x):
           pass
 
-The following are not:
+..
+  The following are not:
+
+下記のような使い方はできません。　
 
 .. code:: python
 
@@ -532,53 +548,92 @@ The following are not:
       pass
 
 
-The rules for determining what are valid uses of ``given`` are as follows:
+..
+  The rules for determining what are valid uses of ``given`` are as follows:
 
-1. You may pass any keyword argument to ``given``.
-2. Positional arguments to ``given`` are equivalent to the rightmost named
-   arguments for the test function.
-3. Positional arguments may not be used if the underlying test function has
-   varargs, arbitrary keywords, or keyword-only arguments.
-4. Functions tested with ``given`` may not have any defaults.
+``given`` の有効な使い方を決定するルールは以下のとおりです。
 
-The reason for the "rightmost named arguments" behaviour is so that
-using :func:`@given <hypothesis.given>` with instance methods works: ``self``
-will be passed to the function as normal and not be parametrized over.
+..
+  1. You may pass any keyword argument to ``given``.
+  2. Positional arguments to ``given`` are equivalent to the rightmost named
+     arguments for the test function.
+  3. Positional arguments may not be used if the underlying test function has
+     varargs, arbitrary keywords, or keyword-only arguments.
+  4. Functions tested with ``given`` may not have any defaults.
 
-The function returned by given has all the same arguments as the original
-test, minus those that are filled in by :func:`@given <hypothesis.given>`.
-Check :ref:`the notes on framework compatibility <framework-compatibility>`
-to see how this affects other testing libraries you may be using.
+1. ``given`` には、任意のキーワード引数を渡すことができます。
+2. ``given`` への位置引数は、テスト関数の右端の名前付き引数と同じです。
+3. 実引数は、テスト関数が可変長引数や任意のキーワード、キーワードだけの引数を持っている場合には使用することができません。
+4. ``given`` でテストされる関数は、いかなるデフォルトも持つことはできません。
 
+..
+  The reason for the "rightmost named arguments" behaviour is so that
+  using :func:`@given <hypothesis.given>` with instance methods works: ``self``
+  will be passed to the function as normal and not be parametrized over.
+
+「右端の名前付き引数」の動作は、インスタンスメソッドで :func:`@given <hypothesis.given>` を使用したときに動作するようにするためです。
+``self`` は通常通り関数に渡され、パラメータ化されることはありません。
+
+..
+  The function returned by given has all the same arguments as the original
+  test, minus those that are filled in by :func:`@given <hypothesis.given>`.
+  Check :ref:`the notes on framework compatibility <framework-compatibility>`
+  to see how this affects other testing libraries you may be using.
+
+given が返す関数はオリジナルのテストと同じ引数を持ちますが、 :func:`@given <hypothesis.given>` によって埋められる引数は除かれます。
+このことが、あなたが使用している他のテストライブラリにどのような影響を与えるかについては、 :ref:`フレームワークの互換性に関するノート <framework-compatibility>` を参照してください。
+
+
+.... _targeted-search:
+
+..
+  ---------------------------
+  Targeted example generation
+  ---------------------------
 
 .. _targeted-search:
 
----------------------------
-Targeted example generation
----------------------------
+-----------------------
+標的型サンプル生成
+-----------------------
 
-Targeted property-based testing combines the advantages of both search-based
-and property-based testing.  Instead of being completely random, T-PBT uses
-a search-based component to guide the input generation towards values that
-have a higher probability of falsifying a property.  This explores the input
-space more effectively and requires fewer tests to find a bug or achieve a
-high confidence in the system being tested than random PBT.
-(`Löscher and Sagonas <http://proper.softlab.ntua.gr/Publications.html>`__)
+..
+  Targeted property-based testing combines the advantages of both search-based
+  and property-based testing.  Instead of being completely random, T-PBT uses
+  a search-based component to guide the input generation towards values that
+  have a higher probability of falsifying a property.  This explores the input
+  space more effectively and requires fewer tests to find a bug or achieve a
+  high confidence in the system being tested than random PBT.
+  (`Löscher and Sagonas <http://proper.softlab.ntua.gr/Publications.html>`__)
 
-This is not *always* a good idea - for example calculating the search metric
-might take time better spent running more uniformly-random test cases, or your
-target metric might accidentally lead Hypothesis *away* from bugs - but if
-there is a natural metric like "floating-point error", "load factor" or
-"queue length", we encourage you to experiment with targeted testing.
+
+標的型属性ベーステスト（Targeted property-based testing: T-PBT）は、探索ベースのテストと属性ベースのテストの両方の利点を兼ね備えています。
+T-PBT は、完全にランダムである代わりに、探索ベースのコンポーネントを使用して、属性にたいして失敗する確率がより高い値に向かって入力生成を誘導します。
+これにより、入力空間をより効果的に探索し、ランダムなPBTよりも少ないテスト回数でバグを発見したり、テスト対象のシステムに対して高い信頼性を実現したりすることができます。（ `Löscher and Sagonas <http://proper.softlab.ntua.gr/Publications.html>`__ ）
+
+..
+  This is not *always* a good idea - for example calculating the search metric
+  might take time better spent running more uniformly-random test cases, or your
+  target metric might accidentally lead Hypothesis *away* from bugs - but if
+  there is a natural metric like "floating-point error", "load factor" or
+  "queue length", we encourage you to experiment with targeted testing.
+
+これは常に良いアイデアというわけではありません。
+例えば、検索指標を計算することは、より均一でランダムなテストケースを実行する上で効率の良い時間を費やしかたをするかもしれませんし、標的型指標は偶然にHypothesisをバグから *離れた* 方向に導くかもしれません。
+しかし、もし「浮動小数点エラー」「負荷率」「キュー長」などの自然指標があるならば、標的型テストの実験をすることを推奨します。
 
 .. autofunction:: hypothesis.target
 
-We recommend that users also skim the papers introducing targeted PBT;
-from `ISSTA 2017 <http://proper.softlab.ntua.gr/papers/issta2017.pdf>`__
-and `ICST 2018 <http://proper.softlab.ntua.gr/papers/icst2018.pdf>`__.
-For the curious, the initial implementation in Hypothesis uses hill-climbing
-search via a mutating fuzzer, with some tactics inspired by simulated
-annealing to avoid getting stuck and endlessly mutating a local maximum.
+..
+  We recommend that users also skim the papers introducing targeted PBT;
+  from `ISSTA 2017 <http://proper.softlab.ntua.gr/papers/issta2017.pdf>`__
+  and `ICST 2018 <http://proper.softlab.ntua.gr/papers/icst2018.pdf>`__.
+  For the curious, the initial implementation in Hypothesis uses hill-climbing
+  search via a mutating fuzzer, with some tactics inspired by simulated
+  annealing to avoid getting stuck and endlessly mutating a local maximum.
+
+標的型PBTを紹介する論文にも目を通すことをお勧めします。 `ISSTA 2017 <http://proper.softlab.ntua.gr/papers/issta2017.pdf>`__ と `ICST 2018 <http://proper.softlab.ntua.gr/papers/icst2018.pdf>`__ らがそれらの論文です。
+好奇心旺盛な方のために、Hypothesisの最初の実装は、行き詰まってして局所最大値を延々と変異させることを避けるために、シミュレーテッドアニーリングに触発されたいくつかの戦術で、変異ファザーによるヒルクライム探索を使用しています。
 
 
 .. _custom-function-execution:
