@@ -1,100 +1,191 @@
+..
+  =============================
+  What you can generate and how
+  =============================
+
 =============================
-What you can generate and how
+何を、どのように生成するか
 =============================
 
+..
 *Most things should be easy to generate and everything should be possible.*
 
-To support this principle Hypothesis provides strategies for most built-in
-types with arguments to constrain or adjust the output, as well as higher-order
-strategies that can be composed to generate more complex types.
+*ほとんどのものが簡単に生成でき、すべてが可能であるべきです。
 
-This document is a guide to what strategies are available for generating data
-and how to build them. Strategies have a variety of other important internal
-features, such as how they simplify, but the data they can generate is the only
-public part of their API.
+..
+  To support this principle Hypothesis provides strategies for most built-in
+  types with arguments to constrain or adjust the output, as well as higher-order
+  strategies that can be composed to generate more complex types.
 
-~~~~~~~~~~~~~~~
-Core strategies
-~~~~~~~~~~~~~~~
+この原則を支えるために、Hypothesisは出力を制約したり調整するための引数を持つほとんどの組み込み型用のストラテジーと、より複雑な型を生成するために組み合わせることができる高次のストラテジーを提供します。
 
-Functions for building strategies are all available in the hypothesis.strategies
-module. The salient functions from it are as follows:
+..
+  This document is a guide to what strategies are available for generating data
+  and how to build them. Strategies have a variety of other important internal
+  features, such as how they simplify, but the data they can generate is the only
+  public part of their API.
+
+このドキュメントは、データを生成するためにどのようなストラテジーが利用可能で、どのように構築するのかについてのガイドです。
+ストラテジーには、どのように簡略化するかなど、他にも様々な重要な内部機能がありますが、生成できるデータはAPIの中で唯一公開されている部分です。
+
+..
+  ~~~~~~~~~~~~~~~
+  Core strategies
+  ~~~~~~~~~~~~~~~
+
+~~~~~~~~~~~~~~~~~~~
+コアストラテジー
+~~~~~~~~~~~~~~~~~~~
+
+..
+  Functions for building strategies are all available in the hypothesis.strategies
+  module. The salient functions from it are as follows:
+
+ストラテジーを構築するための関数は、すべて ``hypothesis.strategy`` モジュールで利用可能です。
+特に注目すべき関数は以下の通りです。
 
 .. automodule:: hypothesis.strategies
   :members:
   :exclude-members: SearchStrategy
 
+..
+  ~~~~~~~~~~~~~~~~~~~~~~
+  Provisional strategies
+  ~~~~~~~~~~~~~~~~~~~~~~
+
 ~~~~~~~~~~~~~~~~~~~~~~
-Provisional strategies
+暫定的なストラテジー
 ~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: hypothesis.provisional
   :members:
   :exclude-members: DomainNameStrategy
 
+..
+  .. _shrinking:
+
+..
+  ~~~~~~~~~
+  Shrinking
+  ~~~~~~~~~
+
 .. _shrinking:
 
 ~~~~~~~~~
-Shrinking
+収縮
 ~~~~~~~~~
 
-When using strategies it is worth thinking about how the data *shrinks*.
-Shrinking is the process by which Hypothesis tries to produce human readable
-examples when it finds a failure - it takes a complex example and turns it
-into a simpler one.
+..
+  When using strategies it is worth thinking about how the data *shrinks*.
+  Shrinking is the process by which Hypothesis tries to produce human readable
+  examples when it finds a failure - it takes a complex example and turns it
+  into a simpler one.
 
-Each strategy defines an order in which it shrinks - you won't usually need to
-care about this much, but it can be worth being aware of as it can affect what
-the best way to write your own strategies is.
+ストラテジーを使うとき、データがどのように *収縮（shrink）* されるかを考えることは価値があります。
+収縮とは、Hypothesisが失敗を発見したときに、人間が読めるような例を作ろうとするプロセスで、複雑な例をより単純なものに変えるのです。
 
-The exact shrinking behaviour is not a guaranteed part of the API, but it
-doesn't change that often and when it does it's usually because we think the
-new way produces nicer examples.
+..
+  Each strategy defines an order in which it shrinks - you won't usually need to
+  care about this much, but it can be worth being aware of as it can affect what
+  the best way to write your own strategies is.
 
-Possibly the most important one to be aware of is
-:func:`~hypothesis.strategies.one_of`, which has a preference for values
-produced by strategies earlier in its argument list. Most of the others should
-largely "do the right thing" without you having to think about it.
+各ストラテジーは収縮する順番を定義します。
+通常はあまり気にする必要はありませんが、ストラテジーの書き方に影響を与えるので、意識しておくとよいでしょう。
 
+..
+  The exact shrinking behaviour is not a guaranteed part of the API, but it
+  doesn't change that often and when it does it's usually because we think the
+  new way produces nicer examples.
 
-~~~~~~~~~~~~~~~~~~~
-Adapting strategies
-~~~~~~~~~~~~~~~~~~~
+正確な収縮動作はAPIで保証されているわけではありませんが、それほど頻繁に変更されるわけではなく、変更される場合はたいてい、新しい方法の方がより良いサンプルを生成できると考えられるからです。
 
-Often it is the case that a strategy doesn't produce exactly what you want it
-to and you need to adapt it. Sometimes you can do this in the test, but this
-hurts reuse because you then have to repeat the adaption in every test.
+..
+  Possibly the most important one to be aware of is
+  :func:`~hypothesis.strategies.one_of`, which has a preference for values
+  produced by strategies earlier in its argument list. Most of the others should
+  largely "do the right thing" without you having to think about it.
 
-Hypothesis gives you ways to build strategies from other strategies given
-functions for transforming the data.
+おそらく最も注意しなければならないのは :func:`~hypothesis.strategies.one_of` で、これは引数リストの早い段階でストラテジーによって生成された値を優先します。
+他のほとんどは、特に考えなくても「正しいことをする」はずです。
 
--------
-Mapping
--------
+..
+  ~~~~~~~~~~~~~~~~~~~
+  Adapting strategies
+  ~~~~~~~~~~~~~~~~~~~
 
-``map`` is probably the easiest and most useful of these to use. If you have a
-strategy ``s`` and a function ``f``, then an example ``s.map(f).example()`` is
-``f(s.example())``, i.e. we draw an example from ``s`` and then apply ``f`` to it.
+~~~~~~~~~~~~~~~~~~~~~
+ストラテジーの適応
+~~~~~~~~~~~~~~~~~~~~~
 
-e.g.:
+..
+  Often it is the case that a strategy doesn't produce exactly what you want it
+  to and you need to adapt it. Sometimes you can do this in the test, but this
+  hurts reuse because you then have to repeat the adaption in every test.
+
+あるストラテジーが思い通りにならないことがよくあり、その戦略を適応させる必要があります。
+テスト中にこれを行うこともできますが、その場合、すべてのテストで適応を繰り返さなければならないため、再利用に支障をきたします。
+
+..
+  Hypothesis gives you ways to build strategies from other strategies given
+  functions for transforming the data.
+
+Hypothesisは、データを変換するための関数が与えられた他のストラテジーからストラテジーを構築する方法を与えます。
+
+..
+  -------
+  Mapping
+  -------
+
+----------------
+マッピング
+----------------
+
+..
+  ``map`` is probably the easiest and most useful of these to use. If you have a
+  strategy ``s`` and a function ``f``, then an example ``s.map(f).example()`` is
+  ``f(s.example())``, i.e. we draw an example from ``s`` and then apply ``f`` to it.
+
+``map`` はおそらくこれらの中で最も使いやすく、便利なものです。
+ストラテジー ``s`` と関数 ``f`` があれば、例 ``s.map(f).example()`` は ``f(s.example())`` となる。
+つまり、 ``s`` から例を描き、それに ``f`` を適用するのである。
+
+..
+  e.g.:
+
+たとえば、次のような形で使えます。
 
 .. code-block:: pycon
 
     >>> lists(integers()).map(sorted).example()
     [-25527, -24245, -23118, -93, -70, -7, 0, 39, 40, 65, 88, 112, 6189, 9480, 19469, 27256, 32526, 1566924430]
 
-Note that many things that you might use mapping for can also be done with
-:func:`~hypothesis.strategies.builds`, and if you find yourself indexing
-into a tuple within ``.map()`` it's probably time to use that instead.
+..
+  Note that many things that you might use mapping for can also be done with
+  :func:`~hypothesis.strategies.builds`, and if you find yourself indexing
+  into a tuple within ``.map()`` it's probably time to use that instead.
 
-.. _filtering:
+マッピングを使用する多くのことは :func:`~hypothesis.strategies.builds` でも可能であることに注意してください。
+もし ``.map()`` の中でタプルのインデックスを作成しているのであれば、その代わりにマッピングを使用することをお勧めします。
 
----------
-Filtering
----------
+..
+  .. _filtering:
 
-``filter`` lets you reject some examples. ``s.filter(f).example()`` is some
-example of ``s`` such that ``f(example)`` is truthy.
+..
+  ---------
+  Filtering
+  ---------
+
+----------------
+フィルタリング
+----------------
+
+..
+  ``filter`` lets you reject some examples. ``s.filter(f).example()`` is some
+  example of ``s`` such that ``f(example)`` is truthy.
+
+``filter`` では、いくつかの例を拒否することができます。
+``s.filter(f).example()`` は、 ``f(example)`` が常に真になるような例です。
+
 
 .. code-block:: pycon
 
@@ -103,8 +194,11 @@ example of ``s`` such that ``f(example)`` is truthy.
     >>> integers().filter(lambda x: x > 11).example()
     23324
 
-It's important to note that ``filter`` isn't magic and if your condition is too
-hard to satisfy then this can fail:
+..
+  It's important to note that ``filter`` isn't magic and if your condition is too
+  hard to satisfy then this can fail:
+
+注意すべきは、 ``filter`` は魔法ではないので、条件を満たすのが難しすぎる場合は失敗する可能性があるということです。
 
 .. code-block:: pycon
 
@@ -113,12 +207,19 @@ hard to satisfy then this can fail:
         ...
     hypothesis.errors.Unsatisfiable: Could not find any valid examples in 20 tries
 
-In general you should try to use ``filter`` only to avoid corner cases that you
-don't want rather than attempting to cut out a large chunk of the search space.
+..
+  In general you should try to use ``filter`` only to avoid corner cases that you
+  don't want rather than attempting to cut out a large chunk of the search space.
 
-A technique that often works well here is to use map to first transform the data
-and then use ``filter`` to remove things that didn't work out. So for example if
-you wanted pairs of integers (x,y) such that x < y you could do the following:
+一般に、 ``filter`` は、探索空間の大きな塊を切り取ろうとするのではなく、望まないコーナーケースを避けるためにのみ使用するようにすべきです。
+
+..
+  A technique that often works well here is to use map to first transform the data
+  and then use ``filter`` to remove things that didn't work out. So for example if
+  you wanted pairs of integers (x,y) such that x < y you could do the following:
+
+ここでよく使われるテクニックは、まず map を使ってデータを変換し、次に ``filter`` を使ってうまくいかないものを削除する、というものです。
+例えば、 x < y となるような整数 (x,y) のペアが必要な場合、以下のようにすることができます。
 
 
 .. code-block:: pycon

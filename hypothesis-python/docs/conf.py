@@ -40,7 +40,7 @@ master_doc = "index"
 
 # General information about the project.
 project = "Hypothesis"
-author = "David R. MacIver"
+author = "David R. MacIver, Yoshi Yamaguchi (translation)"
 copyright = f"2013-{datetime.datetime.utcnow().year}, {author}"
 
 _d = {}
