@@ -230,38 +230,67 @@ Hypothesisがテストを実行している間、何が起こっているかを�
     >>> child.deadline is None
     True
 
+..
+  ----------------
+  Default settings
+  ----------------
+
 ----------------
-Default settings
+デフォルト設定
 ----------------
 
-At any given point in your program there is a current default settings,
-available as ``settings.default``. As well as being a settings object in its own
-right, all newly created settings objects which are not explicitly based off
-another settings are based off the default, so will inherit any values that are
-not explicitly set from it.
+..
+  At any given point in your program there is a current default settings,
+  available as ``settings.default``. As well as being a settings object in its own
+  right, all newly created settings objects which are not explicitly based off
+  another settings are based off the default, so will inherit any values that are
+  not explicitly set from it.
 
-You can change the defaults by using profiles.
+プログラムの任意の時点に、現在のデフォルトの設定があり、 ``settings.default`` として提供されています。
+それ自体が設定オブジェクトであると同時に、他の設定を明示的に継承していない、新しく作成されたすべての設定オブジェクトは、デフォルトをベースにしているので、明示的に設定されていない値はすべてデフォルトから継承されます。
+
+..
+  You can change the defaults by using profiles.
+
+プロファイルを使用することで、デフォルトを変更することができます。
+
+.... _settings_profiles:
+..
+  ~~~~~~~~~~~~~~~~~
+  Settings profiles
+  ~~~~~~~~~~~~~~~~~
 
 .. _settings_profiles:
 
-~~~~~~~~~~~~~~~~~
-Settings profiles
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
+設定プロファイル
+~~~~~~~~~~~~~~~~~~
 
-Depending on your environment you may want different default settings.
-For example: during development you may want to lower the number of examples
-to speed up the tests. However, in a CI environment you may want more examples
-so you are more likely to find bugs.
+..
+  Depending on your environment you may want different default settings.
+  For example: during development you may want to lower the number of examples
+  to speed up the tests. However, in a CI environment you may want more examples
+  so you are more likely to find bugs.
 
-Hypothesis allows you to define different settings profiles. These profiles
-can be loaded at any time.
+環境によっては、異なるデフォルト設定が必要な場合があります。
+例えば、開発時にはテストのスピードを上げるためにサンプル数を少なくしたいかもしれません。しかし、CI環境では、バグを発見しやすくするためにサンプル数を増やしたいと思うかもしれません。
+
+..
+  Hypothesis allows you to define different settings profiles. These profiles
+  can be loaded at any time.
+
+Hypothesisでは、様々な設定プロファイルを定義することができます。
+これらのプロファイルは、いつでも読み込むことができます。
 
 .. automethod:: hypothesis.settings.register_profile
 .. automethod:: hypothesis.settings.get_profile
 .. automethod:: hypothesis.settings.load_profile
 
-Loading a profile changes the default settings but will not change the behaviour
-of tests that explicitly change the settings.
+..
+  Loading a profile changes the default settings but will not change the behaviour
+  of tests that explicitly change the settings.
+
+プロファイルを読み込むとデフォルトの設定は変更されますが、明示的に設定を変更したテストの動作は変更されません。
 
 .. code-block:: pycon
 
@@ -273,18 +302,27 @@ of tests that explicitly change the settings.
     >>> settings().max_examples
     1000
 
-Instead of loading the profile and overriding the defaults you can retrieve profiles for
-specific tests.
+..
+  Instead of loading the profile and overriding the defaults you can retrieve profiles for
+  specific tests.
+
+プロファイルを読み込んでデフォルトを上書きする代わりに、特定のテストのプロファイルを取得することができます。
 
 .. code-block:: pycon
 
     >>> settings.get_profile("ci").max_examples
     1000
 
-Optionally, you may define the environment variable to load a profile for you.
-This is the suggested pattern for running your tests on CI.
-The code below should run in a `conftest.py` or any setup/initialization section of your test suite.
-If this variable is not defined the Hypothesis defined defaults will be loaded.
+..
+  Optionally, you may define the environment variable to load a profile for you.
+  This is the suggested pattern for running your tests on CI.
+  The code below should run in a `conftest.py` or any setup/initialization section of your test suite.
+  If this variable is not defined the Hypothesis defined defaults will be loaded.
+
+オプションで、プロファイルを読み込むための環境変数を定義することができます。
+これは CI 上でテストを実行するための推奨パターンです。
+以下のコードは `conftest.py` やテストスイートの setup/initialization セクションで実行されるはずです。
+この変数が定義されていない場合、Hypothesisで定義されたデフォルトが読み込まれます。
 
 .. code-block:: pycon
 
@@ -295,8 +333,11 @@ If this variable is not defined the Hypothesis defined defaults will be loaded.
     >>> settings.register_profile("debug", max_examples=10, verbosity=Verbosity.verbose)
     >>> settings.load_profile(os.getenv(u"HYPOTHESIS_PROFILE", "default"))
 
-If you are using the hypothesis pytest plugin and your profiles are registered
-by your conftest you can load one with the command line option ``--hypothesis-profile``.
+..
+  If you are using the hypothesis pytest plugin and your profiles are registered
+  by your conftest you can load one with the command line option ``--hypothesis-profile``.
+
+Hypothesis pytest プラグインを使用していて、プロファイルがconftestによって登録されている場合、コマンドラインオプション ``--hypothesis-profile`` でプロファイルを読み込むことができます。
 
 .. code:: bash
 

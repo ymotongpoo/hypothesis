@@ -915,8 +915,8 @@ Hypothesisのサンプル生成は非決定論的なテストに使えますが�
   will only work if you manually create the ``__annotations__`` attribute
   (e.g. by using ``@annotations(...)`` and ``@returns(...)`` decorators).
 
-Hypothesis は実行時に :pep:`484` 型のコメントを検査しません。
-:func:`~hypothesis.strategies.from_type` は通常通り動作しますが、 :func:`~hypothesis.strategies.builds` と :func:`@given <hypothesis.given>` の推論は ``__annotations__`` 属性を（``@annotations(...) `` と ``@returns(...) ``デコレータなどを用いて）手動で作成した場合のみ動作します。
+Hypothesisは実行時に :pep:`484` 型のコメントを検査しません。
+:func:`~hypothesis.strategies.from_type` は通常通り動作しますが、 :func:`~hypothesis.strategies.builds` と :func:`@given <hypothesis.given>` の推論は ``__annotations__`` 属性を（ ``@annotations(...)`` と ``@returns(...)`` デコレータなどを用いて）手動で作成した場合のみ動作します。
 
 ..
   The :mod:`python:typing` module changes between different Python releases,
@@ -979,7 +979,7 @@ Hypothesisをインストールして、 :pypi:`mypy` 0.590+、あるいは他�
   We will fix these, and require correspondingly newer versions of Mypy for type
   hinting, as the ecosystem improves.
 
-:func:`~hypothesis.strategies.deferred` 、:func:`~hypothesis.strategies.recursive` 、 :func:`~hypothesis.strategies.one_of` 、 :func:`~hypothesis.strategies.dictionaries` 、 :func:`~hypothesis.strategies.fixed_dictionaries` によって生成される例の型を推測することには問題があることが知られています。
+:func:`~hypothesis.strategies.deferred` 、 :func:`~hypothesis.strategies.recursive` 、 :func:`~hypothesis.strategies.one_of` 、 :func:`~hypothesis.strategies.dictionaries` 、 :func:`~hypothesis.strategies.fixed_dictionaries` によって生成される例の型を推測することには問題があることが知られています。
 エコシステムの改善に伴い、これらを修正し、型ヒントに対応するmypyの新しいバージョンを要求する予定です。
 
 ..
