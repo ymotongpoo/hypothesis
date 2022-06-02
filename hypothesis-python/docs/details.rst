@@ -72,7 +72,8 @@
 
 メモには、テストに必要な追加情報を盛り込むための、最小限の失敗例が表示されています。
 
-.... _statistics:
+..
+  .. _statistics:
 
 ..
   ---------------
@@ -584,7 +585,8 @@ given が返す関数はオリジナルのテストと同じ引数を持ちま�
 このことが、あなたが使用している他のテストライブラリにどのような影響を与えるかについては、 :ref:`フレームワークの互換性に関するノート <framework-compatibility>` を参照してください。
 
 
-.... _targeted-search:
+..
+  .. _targeted-search:
 
 ..
   ---------------------------
@@ -636,7 +638,8 @@ T-PBT は、完全にランダムである代わりに、探索ベースのコ�
 好奇心旺盛な方のために、Hypothesisの最初の実装は、行き詰まってして局所最大値を延々と変異させることを避けるために、シミュレーテッドアニーリングに触発されたいくつかの戦術で、変異ファザーによるヒルクライム探索を使用しています。
 
 
-.... _custom-function-execution:
+..
+  .. _custom-function-execution:
 
 ..
   -------------------------
@@ -813,7 +816,8 @@ Hypothesisのサンプル生成は非決定論的なテストに使えますが�
 .. autofunction:: hypothesis.register_random
 
 
-.... _type-inference:
+..
+  .. _type-inference:
 
 ..
   -------------------
@@ -915,8 +919,8 @@ Hypothesisのサンプル生成は非決定論的なテストに使えますが�
   will only work if you manually create the ``__annotations__`` attribute
   (e.g. by using ``@annotations(...)`` and ``@returns(...)`` decorators).
 
-Hypothesis は実行時に :pep:`484` 型のコメントを検査しません。
-:func:`~hypothesis.strategies.from_type` は通常通り動作しますが、 :func:`~hypothesis.strategies.builds` と :func:`@given <hypothesis.given>` の推論は ``__annotations__`` 属性を（``@annotations(...) `` と ``@returns(...) ``デコレータなどを用いて）手動で作成した場合のみ動作します。
+Hypothesisは実行時に :pep:`484` 型のコメントを検査しません。
+:func:`~hypothesis.strategies.from_type` は通常通り動作しますが、 :func:`~hypothesis.strategies.builds` と :func:`@given <hypothesis.given>` の推論は ``__annotations__`` 属性を（ ``@annotations(...)`` と ``@returns(...)`` デコレータなどを用いて）手動で作成した場合のみ動作します。
 
 ..
   The :mod:`python:typing` module changes between different Python releases,
@@ -929,7 +933,8 @@ Hypothesis は実行時に :pep:`484` 型のコメントを検査しません。
 これらはすべてベストエフォートでサポートされていますが、問題に遭遇する可能性があります。
 それらを私たちに報告し、回避策としてより新しいバージョンのPythonにアップデートすることを検討してください。
 
-.... _our-type-hints:
+..
+  .. _our-type-hints:
 
 ..
   ------------------------------
@@ -979,7 +984,7 @@ Hypothesisをインストールして、 :pypi:`mypy` 0.590+、あるいは他�
   We will fix these, and require correspondingly newer versions of Mypy for type
   hinting, as the ecosystem improves.
 
-:func:`~hypothesis.strategies.deferred` 、:func:`~hypothesis.strategies.recursive` 、 :func:`~hypothesis.strategies.one_of` 、 :func:`~hypothesis.strategies.dictionaries` 、 :func:`~hypothesis.strategies.fixed_dictionaries` によって生成される例の型を推測することには問題があることが知られています。
+:func:`~hypothesis.strategies.deferred` 、 :func:`~hypothesis.strategies.recursive` 、 :func:`~hypothesis.strategies.one_of` 、 :func:`~hypothesis.strategies.dictionaries` 、 :func:`~hypothesis.strategies.fixed_dictionaries` によって生成される例の型を推測することには問題があることが知られています。
 エコシステムの改善に伴い、これらを修正し、型ヒントに対応するmypyの新しいバージョンを要求する予定です。
 
 ..
@@ -1037,7 +1042,8 @@ Hypothesis風の型ヒントの書き方
     継承したり、比較したり、型ヒントの外では一切使用しないでください。
     この型のオブジェクトを作成するための唯一の方法は、 :mod:`hypothesis.strategies` モジュールが提供する関数を使用することです!
 
-.... _pytest-plugin:
+..
+  .. _pytest-plugin:
 
 ..
   ----------------------------
@@ -1094,7 +1100,8 @@ Hypothesisには :pypi:`pytest` との統合を改善するための小さなプ
     使用するために何もする必要は全くありません。
 
 
-.... _fuzz_one_input:
+..
+  .. _fuzz_one_input:
 
 ..
   -------------------------

@@ -1,15 +1,29 @@
+..
+  ========
+  Settings
+  ========
+
 ========
-Settings
+設定
 ========
 
-Hypothesis tries to have good defaults for its behaviour, but sometimes that's
-not enough and you need to tweak it.
+..
+  Hypothesis tries to have good defaults for its behaviour, but sometimes that's
+  not enough and you need to tweak it.
 
-The mechanism for doing this is the :class:`~hypothesis.settings` object.
-You can set up a :func:`@given <hypothesis.given>` based test to use this using a settings
-decorator:
+Hypothesisは、その動作のために良いデフォルト値にしようとしていますが、時にはそれが十分ではなく、微調整が必要な場合があります。
 
-:func:`@given <hypothesis.given>` invocation is as follows:
+..
+  The mechanism for doing this is the :class:`~hypothesis.settings` object.
+  You can set up a :func:`@given <hypothesis.given>` based test to use this using a settings
+  decorator:
+
+これを実現するための仕組みが :class:`~hypothesis.settings` オブジェクトです。
+これを使用するために、settings デコレーターを使用して :func:`@given <hypothesis.given>` ベースのテストを設定することができます。
+
+.. :func:`@given <hypothesis.given>` invocation is as follows:
+
+:func:`@given <hypothesis.given>` の呼び出しは次の通りです。
 
 .. code:: python
 
@@ -21,11 +35,17 @@ decorator:
     def test_this_thoroughly(x):
         pass
 
-This uses a :class:`~hypothesis.settings` object which causes the test to receive a much larger
-set of examples than normal.
+..
+  This uses a :class:`~hypothesis.settings` object which causes the test to receive a much larger
+  set of examples than normal.
 
-This may be applied either before or after the given and the results are
-the same. The following is exactly equivalent:
+これは :class:`~hypothesis.settings` オブジェクトを使用し、テストが通常よりもはるかに大きなサンプルのセットを受け取るようにします。
+
+..
+  This may be applied either before or after the given and the results are
+  the same. The following is exactly equivalent:
+
+これは、指定された前でも後でも適用でき、結果は同じです。以下は全く同等のコードです。
 
 
 .. code:: python
@@ -37,55 +57,99 @@ the same. The following is exactly equivalent:
     @given(integers())
     def test_this_thoroughly(x):
         pass
+
+..
+  ------------------
+  Available settings
+  ------------------
 
 ------------------
-Available settings
+設定可能な項目
 ------------------
 
 .. autoclass:: hypothesis.settings
     :members:
     :exclude-members: register_profile, get_profile, load_profile
 
+..
+  .. _phases:
+
+..
+  ~~~~~~~~~~~~~~~~~~~~~
+  Controlling what runs
+  ~~~~~~~~~~~~~~~~~~~~~
+
 .. _phases:
 
-~~~~~~~~~~~~~~~~~~~~~
-Controlling what runs
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
+実行されるものの制御
+~~~~~~~~~~~~~~~~~~~~~~~
 
-Hypothesis divides tests into logically distinct phases:
+..
+  Hypothesis divides tests into logically distinct phases:
 
-1. Running explicit examples :ref:`provided with the @example decorator <providing-explicit-examples>`.
-2. Rerunning a selection of previously failing examples to reproduce a previously seen error
-3. Generating new examples.
-4. Mutating examples for :ref:`targeted property-based testing <targeted-search>`.
-5. Attempting to shrink an example found in previous phases (other than phase 1 - explicit examples cannot be shrunk).
-   This turns potentially large and complicated examples which may be hard to read into smaller and simpler ones.
-6. Attempting to explain the cause of the failure, by identifying suspicious lines of code
-   (e.g. the earliest lines which are never run on passing inputs, and always run on failures).
-   This relies on :func:`python:sys.settrace`, and is therefore automatically disabled on
-   PyPy or if you are using :pypi:`coverage` or a debugger.  If there are no clearly
-   suspicious lines of code, :pep:`we refuse the temptation to guess <20>`.
+Hypothesisは、テストを論理的に異なるフェーズに分割します。
 
-The phases setting provides you with fine grained control over which of these run,
-with each phase corresponding to a value on the :class:`~hypothesis.Phase` enum:
+..
+  1. Running explicit examples :ref:`provided with the @example decorator <providing-explicit-examples>`.
+  2. Rerunning a selection of previously failing examples to reproduce a previously seen error
+  3. Generating new examples.
+  4. Mutating examples for :ref:`targeted property-based testing <targeted-search>`.
+  5. Attempting to shrink an example found in previous phases (other than phase 1 - explicit examples cannot be shrunk).
+     This turns potentially large and complicated examples which may be hard to read into smaller and simpler ones.
+  6. Attempting to explain the cause of the failure, by identifying suspicious lines of code
+     (e.g. the earliest lines which are never run on passing inputs, and always run on failures).
+     This relies on :func:`python:sys.settrace`, and is therefore automatically disabled on
+     PyPy or if you are using :pypi:`coverage` or a debugger.  If there are no clearly
+     suspicious lines of code, :pep:`we refuse the temptation to guess <20>`.
+
+1. :ref:`@example デコレーターで提供される<providing-explicit-examples>` 明示的なサンプルを実行する
+2. 以前に失敗したサンプルを選んで再実行し、以前に見たエラーを再現する。
+3. 新しいサンプルを生成する。
+4. :ref:`標的型属性ベーステスト <targeted-search>` のためのサンプルを変異させる。
+5. 以前のフェーズで見つかったサンプルを収縮しようとする（フェーズ1以外 - 明示的なサンプルは収縮できません）。
+   これは、読みにくい可能性のある大きくて複雑な例を、小さくて単純な例に変えるものである。
+6. 不審なコード行を特定することによって、失敗の原因を説明しようとする（例えば、入力が通ると決して実行されず、失敗すると常に実行される最も早い行）。
+   これは :func:`python:sys.settrace` に依存しているので、PyPy や :pypi:`coverage` やデバッガを使っている場合は自動的に無効化されます。
+   明らかに怪しいコード行がない場合、 :pep:`we refuse the temptation to guess <20>` となります。
+
+..
+  The phases setting provides you with fine grained control over which of these run,
+  with each phase corresponding to a value on the :class:`~hypothesis.Phase` enum:
+
+フェーズを設定することで、各フェーズが :class:`~hypothesis.Phase` の値に対応し、これらの実行をきめ細かく制御することができます。
 
 .. autoclass:: hypothesis.Phase
    :members:
 
-The phases argument accepts a collection with any subset of these. e.g.
-``settings(phases=[Phase.generate, Phase.shrink])`` will generate new examples
-and shrink them, but will not run explicit examples or reuse previous failures,
-while ``settings(phases=[Phase.explicit])`` will only run the explicit
-examples.
+..
+  The phases argument accepts a collection with any subset of these. e.g.
+  ``settings(phases=[Phase.generate, Phase.shrink])`` will generate new examples
+  and shrink them, but will not run explicit examples or reuse previous failures,
+  while ``settings(phases=[Phase.explicit])`` will only run the explicit
+  examples.
+
+phases 引数は、これらの任意の部分集合を持つコレクションを受け入れます。例えば、 ``settings(phases=[Phase.generate, Phase.shrink])`` は新しい例を生成し、収縮しますが、明示的な例を実行したり、以前の失敗を再利用したりはしません。一方、 ``settings(phases=[Phase.explicit])`` は明示的な例のみを実行します。
+
+..
+  .. _verbose-output:
+
+..
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Seeing intermediate result
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. _verbose-output:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-Seeing intermediate result
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
+中間結果を見る
+~~~~~~~~~~~~~~~~~~~~~~
 
-To see what's going on while Hypothesis runs your tests, you can turn
-up the verbosity setting.
+..
+  To see what's going on while Hypothesis runs your tests, you can turn
+  up the verbosity setting.
+
+Hypothesisがテストを実行している間、何が起こっているかを見るために、冗長性の設定を上げることができます。
 
 .. code-block:: pycon
 
@@ -114,20 +178,35 @@ up the verbosity setting.
     Shrunk example to [1]
     [1]
 
-The four levels are quiet, normal, verbose and debug. normal is the default,
-while in quiet mode Hypothesis will not print anything out, not even the final
-falsifying example. debug is basically verbose but a bit more so. You probably
-don't want it.
+..
+  The four levels are quiet, normal, verbose and debug. normal is the default,
+  while in quiet mode Hypothesis will not print anything out, not even the final
+  falsifying example. debug is basically verbose but a bit more so. You probably
+  don't want it.
 
-If you are using :pypi:`pytest`, you may also need to
-:doc:`disable output capturing for passing tests <pytest:how-to/capture-stdout-stderr>`.
+レベルは、quiet、normal、verbose、debugの4つです。normalモードはデフォルトで、quietモードではHypothesisは何も表示せず、最後の反例さえも表示しません。debugは基本的に冗長ですが、もう少しだけ冗長なだけです。おそらく必要ないでしょう。
+
+..
+  If you are using :pypi:`pytest`, you may also need to
+  :doc:`disable output capturing for passing tests <pytest:how-to/capture-stdout-stderr>`.
+
+もし :pypi:`pytest` を使用しているならば、 :doc:`パスしたテストを把握するための出力をオフにすること <pytest:how-to/capture-stdout-stderr>` も必要でしょう。
+
+..
+  -------------------------
+  Building settings objects
+  -------------------------
 
 -------------------------
-Building settings objects
+設定オブジェクトを作る
 -------------------------
 
-Settings can be created by calling :class:`~hypothesis.settings` with any of the available settings
-values. Any absent ones will be set to defaults:
+..
+  Settings can be created by calling :class:`~hypothesis.settings` with any of the available settings
+  values. Any absent ones will be set to defaults:
+
+設定は :class:`~hypothesis.settings` に利用可能な設定値を指定して呼び出すことで作成することができます。
+設定値がない場合は、デフォルトに設定されます。
 
 .. code-block:: pycon
 
@@ -137,9 +216,12 @@ values. Any absent ones will be set to defaults:
     >>> settings(max_examples=10).max_examples
     10
 
-You can also pass a 'parent' settings object as the first argument,
-and any settings you do not specify as keyword arguments will be
-copied from the parent settings:
+..
+  You can also pass a 'parent' settings object as the first argument,
+  and any settings you do not specify as keyword arguments will be
+  copied from the parent settings:
+
+また、最初の引数として「親」設定オブジェクトを渡すことができ、キーワード引数として指定しなかった設定は、親設定からコピーされます。
 
 .. code-block:: pycon
 
@@ -152,38 +234,69 @@ copied from the parent settings:
     >>> child.deadline is None
     True
 
+..
+  ----------------
+  Default settings
+  ----------------
+
 ----------------
-Default settings
+デフォルト設定
 ----------------
 
-At any given point in your program there is a current default settings,
-available as ``settings.default``. As well as being a settings object in its own
-right, all newly created settings objects which are not explicitly based off
-another settings are based off the default, so will inherit any values that are
-not explicitly set from it.
+..
+  At any given point in your program there is a current default settings,
+  available as ``settings.default``. As well as being a settings object in its own
+  right, all newly created settings objects which are not explicitly based off
+  another settings are based off the default, so will inherit any values that are
+  not explicitly set from it.
 
-You can change the defaults by using profiles.
+プログラムの任意の時点に、現在のデフォルトの設定があり、 ``settings.default`` として提供されています。
+それ自体が設定オブジェクトであると同時に、他の設定を明示的に継承していない、新しく作成されたすべての設定オブジェクトは、デフォルトをベースにしているので、明示的に設定されていない値はすべてデフォルトから継承されます。
+
+..
+  You can change the defaults by using profiles.
+
+プロファイルを使用することで、デフォルトを変更することができます。
+
+..
+  .. _settings_profiles:
+
+..
+  ~~~~~~~~~~~~~~~~~
+  Settings profiles
+  ~~~~~~~~~~~~~~~~~
 
 .. _settings_profiles:
 
-~~~~~~~~~~~~~~~~~
-Settings profiles
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
+設定プロファイル
+~~~~~~~~~~~~~~~~~~
 
-Depending on your environment you may want different default settings.
-For example: during development you may want to lower the number of examples
-to speed up the tests. However, in a CI environment you may want more examples
-so you are more likely to find bugs.
+..
+  Depending on your environment you may want different default settings.
+  For example: during development you may want to lower the number of examples
+  to speed up the tests. However, in a CI environment you may want more examples
+  so you are more likely to find bugs.
 
-Hypothesis allows you to define different settings profiles. These profiles
-can be loaded at any time.
+環境によっては、異なるデフォルト設定が必要な場合があります。
+例えば、開発時にはテストのスピードを上げるためにサンプル数を少なくしたいかもしれません。しかし、CI環境では、バグを発見しやすくするためにサンプル数を増やしたいと思うかもしれません。
+
+..
+  Hypothesis allows you to define different settings profiles. These profiles
+  can be loaded at any time.
+
+Hypothesisでは、様々な設定プロファイルを定義することができます。
+これらのプロファイルは、いつでも読み込むことができます。
 
 .. automethod:: hypothesis.settings.register_profile
 .. automethod:: hypothesis.settings.get_profile
 .. automethod:: hypothesis.settings.load_profile
 
-Loading a profile changes the default settings but will not change the behaviour
-of tests that explicitly change the settings.
+..
+  Loading a profile changes the default settings but will not change the behaviour
+  of tests that explicitly change the settings.
+
+プロファイルを読み込むとデフォルトの設定は変更されますが、明示的に設定を変更したテストの動作は変更されません。
 
 .. code-block:: pycon
 
@@ -195,18 +308,27 @@ of tests that explicitly change the settings.
     >>> settings().max_examples
     1000
 
-Instead of loading the profile and overriding the defaults you can retrieve profiles for
-specific tests.
+..
+  Instead of loading the profile and overriding the defaults you can retrieve profiles for
+  specific tests.
+
+プロファイルを読み込んでデフォルトを上書きする代わりに、特定のテストのプロファイルを取得することができます。
 
 .. code-block:: pycon
 
     >>> settings.get_profile("ci").max_examples
     1000
 
-Optionally, you may define the environment variable to load a profile for you.
-This is the suggested pattern for running your tests on CI.
-The code below should run in a `conftest.py` or any setup/initialization section of your test suite.
-If this variable is not defined the Hypothesis defined defaults will be loaded.
+..
+  Optionally, you may define the environment variable to load a profile for you.
+  This is the suggested pattern for running your tests on CI.
+  The code below should run in a `conftest.py` or any setup/initialization section of your test suite.
+  If this variable is not defined the Hypothesis defined defaults will be loaded.
+
+オプションで、プロファイルを読み込むための環境変数を定義することができます。
+これは CI 上でテストを実行するための推奨パターンです。
+以下のコードは `conftest.py` やテストスイートの setup/initialization セクションで実行されるはずです。
+この変数が定義されていない場合、Hypothesisで定義されたデフォルトが読み込まれます。
 
 .. code-block:: pycon
 
@@ -217,8 +339,11 @@ If this variable is not defined the Hypothesis defined defaults will be loaded.
     >>> settings.register_profile("debug", max_examples=10, verbosity=Verbosity.verbose)
     >>> settings.load_profile(os.getenv(u"HYPOTHESIS_PROFILE", "default"))
 
-If you are using the hypothesis pytest plugin and your profiles are registered
-by your conftest you can load one with the command line option ``--hypothesis-profile``.
+..
+  If you are using the hypothesis pytest plugin and your profiles are registered
+  by your conftest you can load one with the command line option ``--hypothesis-profile``.
+
+Hypothesis pytest プラグインを使用していて、プロファイルがconftestによって登録されている場合、コマンドラインオプション ``--hypothesis-profile`` でプロファイルを読み込むことができます。
 
 .. code:: bash
 
