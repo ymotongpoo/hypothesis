@@ -129,15 +129,27 @@ Hypothesisは、関連するタイプのデータが何であれ、これを作�
 
 .. autofunction:: hypothesis.extra.django.from_form
 
+..
+  ---------------
+  Tips and tricks
+  ---------------
+
 ---------------
-Tips and tricks
+ヒントとコツ
 ---------------
 
-Custom field types
-==================
+..
+  Custom field types
+  ==================
 
-If you have a custom Django field type you can register it with Hypothesis's
-model deriving functionality by registering a default strategy for it:
+カスタムフィールド型
+======================
+
+..
+  If you have a custom Django field type you can register it with Hypothesis's
+  model deriving functionality by registering a default strategy for it:
+
+Django のカスタムフィールド型がある場合、そのデフォルトストラテジーを登録することで Hypothesis のモデル派生機能に登録することができます。
 
 .. code-block:: pycon
 
@@ -152,20 +164,31 @@ model deriving functionality by registering a default strategy for it:
     >>> x.customish
     'hi'
 
-Note that this mapping is on exact type. Subtypes will not inherit it.
+..
+  Note that this mapping is on exact type. Subtypes will not inherit it.
+
+このマッピングは正確な型であることに注意してください。サブタイプには継承されません。
 
 .. autofunction:: hypothesis.extra.django.register_field_strategy
 
 .. autofunction:: hypothesis.extra.django.from_field
 
+..
+  Generating child models
+  =======================
 
-Generating child models
+子モデルを生成する
 =======================
 
-For the moment there's no explicit support in hypothesis-django for generating
-dependent models. i.e. a Company model will generate no Shops. However if you
-want to generate some dependent models as well, you can emulate this by using
-the *flatmap* function as follows:
+..
+  For the moment there's no explicit support in hypothesis-django for generating
+  dependent models. i.e. a Company model will generate no Shops. However if you
+  want to generate some dependent models as well, you can emulate this by using
+  the *flatmap* function as follows:
+
+今のところ、 hypothesis-django には依存モデルを生成するための明示的なサポートはありません。
+つまり Company モデルは Shop モデルは生成しません。
+しかし、従属モデルも生成したい場合は、以下のように *flatmap* 関数を使ってエミュレートすることができます。
 
 .. code:: python
 
@@ -178,54 +201,91 @@ the *flatmap* function as follows:
 
   company_with_shops_strategy = from_model(Company).flatmap(generate_with_shops)
 
-Let's unpack what this is doing:
+..
+  Let's unpack what this is doing:
 
-The way flatmap works is that we draw a value from the original strategy, then
-apply a function to it which gives us a new strategy. We then draw a value from
-*that* strategy. So in this case we're first drawing a company, and then we're
-drawing a list of shops belonging to that company: The *just* strategy is a
-strategy such that drawing it always produces the individual value, so
-``from_model(Shop, company=just(company))`` is a strategy that generates a Shop belonging
-to the original company.
+これが何をしているのか、紐解いてみましょう。
 
-So the following code would give us a list of shops all belonging to the same
-company:
+..
+  The way flatmap works is that we draw a value from the original strategy, then
+  apply a function to it which gives us a new strategy. We then draw a value from
+  *that* strategy. So in this case we're first drawing a company, and then we're
+  drawing a list of shops belonging to that company: The *just* strategy is a
+  strategy such that drawing it always produces the individual value, so
+  ``from_model(Shop, company=just(company))`` is a strategy that generates a Shop belonging
+  to the original company.
+
+flatmapの仕組みは、元のストラテジーの値を描画し、それに関数を適用して新しいストラテジーを生成します。
+そして、 *その* ストラテジーの値を描画します。
+つまり、この場合、まず会社を描き、その会社に属する店のリストを描くことになります。
+*just* ストラテジーは、それを描画すると常に個々の値を生成するようなストラテジーです。
+したがって、 ``from_model(Shop, company=just(company))`` は、元の会社に属する Shop を生成するストラテジーとなります。
+
+..
+  So the following code would give us a list of shops all belonging to the same
+  company:
+
+つまり、以下のコードでは、すべて同じ会社に属するショップのリストを得ることができます。
 
 .. code:: python
 
   from_model(Company).flatmap(lambda c: lists(from_model(Shop, company=just(c))))
 
-The only difference from this and the above is that we want the company, not
-the shops. This is where the inner map comes in. We build the list of shops
-and then throw it away, instead returning the company we started for. This
-works because the models that Hypothesis generates are saved in the database,
-so we're essentially running the inner strategy purely for the side effect of
-creating those children in the database.
+..
+  The only difference from this and the above is that we want the company, not
+  the shops. This is where the inner map comes in. We build the list of shops
+  and then throw it away, instead returning the company we started for. This
+  works because the models that Hypothesis generates are saved in the database,
+  so we're essentially running the inner strategy purely for the side effect of
+  creating those children in the database.
 
+これと唯一違うのは、お店ではなく、会社が欲しいということです。
+ここでインナーマップの出番です。お店のリストを作成した後、それを捨てて、かわりに最初に作成した会社を返します。
+これは、Hypothesisが生成するモデルがデータベースに保存されているため、本質的に、データベースに子プロセスを作成するという副作用のためだけにインナーストラテジーを実行していることになります。
+
+..
+  .. _django-generating-primary-key:
+
+..
+  Generating primary key values
+  =============================
 
 .. _django-generating-primary-key:
 
-Generating primary key values
+主キー値を生成する
 =============================
 
-If your model includes a custom primary key that you want to generate
-using a strategy (rather than a default auto-increment primary key)
-then Hypothesis has to deal with the possibility of a duplicate
-primary key.
+..
+  If your model includes a custom primary key that you want to generate
+  using a strategy (rather than a default auto-increment primary key)
+  then Hypothesis has to deal with the possibility of a duplicate
+  primary key.
 
-If a model strategy generates a value for the primary key field,
-Hypothesis will create the model instance with
-:meth:`~django:django.db.models.query.QuerySet.update_or_create`,
-overwriting any existing instance in the database for this test case
-with the same primary key.
+もしモデルに、（デフォルトの自動インクリメント主キーではなく）ストラテジーを使って生成したいカスタム主キーが含まれている場合、Hypothesisは主キーの重複の可能性に対処する必要があります。
 
+..
+  If a model strategy generates a value for the primary key field,
+  Hypothesis will create the model instance with
+  :meth:`~django:django.db.models.query.QuerySet.update_or_create`,
+  overwriting any existing instance in the database for this test case
+  with the same primary key.
 
-On the subject of ``MultiValueField``
+モデルストラテジーが主キーフィールドの値を生成した場合、Hypothesis は :meth:`~django:django.db.models.query.QuerySet.update_or_create` でモデルインスタンスを作成し、このテストケース用のデータベースにある同じ主キーの既存インスタンスを全て上書きします。
+
+..
+  On the subject of ``MultiValueField``
+  =====================================
+
+``MultiValueField`` について
 =====================================
 
-Django forms feature the :class:`~django:django.forms.MultiValueField`
-which allows for several fields to be combined under a single named field, the
-default example of this is the :class:`~django:django.forms.SplitDateTimeField`.
+..
+  Django forms feature the :class:`~django:django.forms.MultiValueField`
+  which allows for several fields to be combined under a single named field, the
+  default example of this is the :class:`~django:django.forms.SplitDateTimeField`.
+
+Django フォームは :class:`~django:django.forms.MultiValueField` を備えており、いくつかのフィールドを一つの名前付きフィールドの下にまとめることができます。
+このデフォルトの例は :class:`~django:django.forms.SplitDateTimeField` です。
 
 .. code:: python
 
@@ -233,13 +293,18 @@ default example of this is the :class:`~django:django.forms.SplitDateTimeField`.
       name = forms.CharField()
       birth_date_time = forms.SplitDateTimeField()
 
-``from_form`` supports ``MultiValueField`` subclasses directly, however if you
-want to define your own strategy be forewarned that Django binds data for a
-``MultiValueField`` in a peculiar way. Specifically each sub-field is expected
-to have its own entry in ``data`` addressed by the field name
-(e.g. ``birth_date_time``) and the index of the sub-field within the
-``MultiValueField``, so form ``data`` for the example above might look
-like this:
+..
+  ``from_form`` supports ``MultiValueField`` subclasses directly, however if you
+  want to define your own strategy be forewarned that Django binds data for a
+  ``MultiValueField`` in a peculiar way. Specifically each sub-field is expected
+  to have its own entry in ``data`` addressed by the field name
+  (e.g. ``birth_date_time``) and the index of the sub-field within the
+  ``MultiValueField``, so form ``data`` for the example above might look
+  like this:
+
+``from_form`` は ``MultiValueField`` サブクラスを直接サポートしていますが、もし独自のストラテジーを立てたいなら、 Django は ``MultiValueField`` のデータを特殊な方法でバインドするので注意してください。
+具体的には、各サブフィールドは ``data`` にフィールド名（例えば ``birth_date_time``）と ``MultiValueField`` 内でのサブフィールドのインデックスで指定された独自のエントリを持つことが期待されるので、上記の例では ``data`` フォームは以下のようになるでしょう。
+このようになります。
 
 .. code:: python
 
@@ -249,8 +314,11 @@ like this:
       "birth_date_time_1": "15:18:00",  # the time, as the second sub-field
   }
 
-Thus, if you want to define your own strategies for such a field you must
-address your sub-fields appropriately:
+..
+  Thus, if you want to define your own strategies for such a field you must
+  address your sub-fields appropriately:
+
+したがって、このようなフィールド向けに独自のストラテジーを定める場合は、サブフィールドに適切に対処する必要があります。
 
 .. code:: python
 
