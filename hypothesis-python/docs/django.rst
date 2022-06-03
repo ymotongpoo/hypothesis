@@ -1,48 +1,75 @@
-.. _hypothesis-django:
+..
+  .. _hypothesis-django:
 
-===========================
-Hypothesis for Django users
-===========================
+..
+  ===========================
+  Hypothesis for Django users
+  ===========================
 
-Hypothesis offers a number of features specific for Django testing, available
-in the ``hypothesis[django]`` :doc:`extra </extras>`.  This is tested
-against each supported series with mainstream or extended support -
-if you're still getting security patches, you can test with Hypothesis.
+=================================
+Djangoユーザー向けのHypothesis
+=================================
+
+..
+  Hypothesis offers a number of features specific for Django testing, available
+  in the ``hypothesis[django]`` :doc:`extra </extras>`.  This is tested
+  against each supported series with mainstream or extended support -
+  if you're still getting security patches, you can test with Hypothesis.
+
+Hypothesis は Django のテストに特化した機能を提供しており、 ``hypothesis[django]`` :doc:`extra </extras>` で利用可能です。
+これは、メインストリームまたは拡張サポートのある各サポートシリーズに対してテストされます - セキュリティパッチをまだ取得している場合、Hypothesisでテストすることができます。
 
 .. class:: hypothesis.extra.django.TestCase
 
-Using it is quite straightforward: All you need to do is subclass
-:class:`hypothesis.extra.django.TestCase` or
-:class:`hypothesis.extra.django.TransactionTestCase` or
-:class:`~hypothesis.extra.django.LiveServerTestCase` or
-:class:`~hypothesis.extra.django.StaticLiveServerTestCase`
-and you can use :func:`@given <hypothesis.given>` as normal,
-and the transactions will be per example
-rather than per test function as they would be if you used :func:`@given <hypothesis.given>` with a normal
-django test suite (this is important because your test function will be called
-multiple times and you don't want them to interfere with each other). Test cases
-on these classes that do not use
-:func:`@given <hypothesis.given>` will be run as normal.
+..
+  Using it is quite straightforward: All you need to do is subclass
+  :class:`hypothesis.extra.django.TestCase` or
+  :class:`hypothesis.extra.django.TransactionTestCase` or
+  :class:`~hypothesis.extra.django.LiveServerTestCase` or
+  :class:`~hypothesis.extra.django.StaticLiveServerTestCase`
+  and you can use :func:`@given <hypothesis.given>` as normal,
+  and the transactions will be per example
+  rather than per test function as they would be if you used :func:`@given <hypothesis.given>` with a normal
+  django test suite (this is important because your test function will be called
+  multiple times and you don't want them to interfere with each other). Test cases
+  on these classes that do not use
+  :func:`@given <hypothesis.given>` will be run as normal.
+
+使い方はとても簡単です。
+必要なのは :class:`hypothesis.extra.django.TestCase` や :class:`hypothesis.extra.django.TransactionTestCase` 、 :class:`~hypothesis.extra.django.LiveServerTestCase` 、 :class:`~hypothesis.extra.django.StaticLiveServerTestCase` をサブクラスとして、通常通り :func:`@given <hypothesis.given>` が使うだけです。
+そして、トランザクションは、通常の Django テストスイートで :func:`@given <hypothesis.given>` を使った場合のように、テスト関数ごとではなくサンプルごとになります（テスト関数は複数回呼ばれるので、互いに干渉しないようにしたいので、これは重要です）。
+これらのクラスで :func:`@given <hypothesis.given>` を使っていないテストケースは、通常通り実行されます。
 
 .. class:: hypothesis.extra.django.TransactionTestCase
 .. class:: hypothesis.extra.django.LiveServerTestCase
 .. class:: hypothesis.extra.django.StaticLiveServerTestCase
 
-We recommend avoiding :class:`~hypothesis.extra.django.TransactionTestCase`
-unless you really have to run each test case in a database transaction.
-Because Hypothesis runs this in a loop, the performance problems it normally has
-are significantly exacerbated and your tests will be really slow.
-If you are using :class:`~hypothesis.extra.django.TransactionTestCase`,
-you may need to use ``@settings(suppress_health_check=[HealthCheck.too_slow])``
-to avoid :doc:`errors due to slow example generation </healthchecks>`.
+..
+  We recommend avoiding :class:`~hypothesis.extra.django.TransactionTestCase`
+  unless you really have to run each test case in a database transaction.
+  Because Hypothesis runs this in a loop, the performance problems it normally has
+  are significantly exacerbated and your tests will be really slow.
+  If you are using :class:`~hypothesis.extra.django.TransactionTestCase`,
+  you may need to use ``@settings(suppress_health_check=[HealthCheck.too_slow])``
+  to avoid :doc:`errors due to slow example generation </healthchecks>`.
 
-Having set up a test class, you can now pass :func:`@given <hypothesis.given>`
-a strategy for Django models:
+本当にデータベースのトランザクションで各テストケースを実行しなければならないのでなければ、 :class:`~hypothesis.extra.django.TransactionTestCase` は避けることをお勧めします。
+Hypothesis はこれをループで実行するため、通常抱えているパフォーマンスの問題が大幅に悪化し、テストが本当に遅くなってしまいます。
+もし :class:`~hypothesis.extra.django.TransactionTestCase` を使用している場合には、 :doc:`サンプルの生成が遅いせいで発生するエラー </healthchecks>` を避けるために ``@settings(suppress_health_check=[HealthCheck.too_slow]) `` が必要になる場合があります。
+
+..
+  Having set up a test class, you can now pass :func:`@given <hypothesis.given>`
+  a strategy for Django models:
+
+テストクラスを設定したら、Django のモデルに対するストラテジーとして :func:`@given <hypothesis.given>` を渡せます。
 
 .. autofunction:: hypothesis.extra.django.from_model
 
-For example, using :gh-file:`the trivial django project we have for testing
-<hypothesis-python/tests/django/toystore/models.py>`:
+..
+  For example, using :gh-file:`the trivial django project we have for testing
+  <hypothesis-python/tests/django/toystore/models.py>`:
+
+例えば、 :gh-file:`私たちがテスト用につかっている小さなDjangoプロジェクト <hypothesis-python/tests/django/toystore/models.py>` を使用する場合はこのようになります。
 
 .. code-block:: pycon
 
@@ -58,23 +85,38 @@ For example, using :gh-file:`the trivial django project we have for testing
     >>> c.age
     -873375803
 
-Hypothesis has just created this with whatever the relevant type of data is.
+..
+  Hypothesis has just created this with whatever the relevant type of data is.
 
-Obviously the customer's age is implausible, which is only possible because
-we have not used (eg) :class:`~django:django.core.validators.MinValueValidator`
-to set the valid range for this field (or used a
-:class:`~django:django.db.models.PositiveSmallIntegerField`, which would only
-need a maximum value validator).
+Hypothesisは、関連するタイプのデータが何であれ、これを作成しただけです。
 
-If you *do* have validators attached, Hypothesis will only generate examples
-that pass validation.  Sometimes that will mean that we fail a
-:class:`~hypothesis.HealthCheck` because of the filtering, so let's explicitly
-pass a strategy to skip validation at the strategy level:
+..
+  Obviously the customer's age is implausible, which is only possible because
+  we have not used (eg) :class:`~django:django.core.validators.MinValueValidator`
+  to set the valid range for this field (or used a
+  :class:`~django:django.db.models.PositiveSmallIntegerField`, which would only
+  need a maximum value validator).
+
+これは、このフィールドの有効範囲を設定するために、（例えば） :class:`~django:django.core.validators.MinValueValidator` を使っていない（もしくは :class:`~django:db.models.PositiveSmallIntegerField` という、最大値のバリデータしか必要のないフィールドを使っていない）から可能なだけなのです。
+
+..
+  If you *do* have validators attached, Hypothesis will only generate examples
+  that pass validation.  Sometimes that will mean that we fail a
+  :class:`~hypothesis.HealthCheck` because of the filtering, so let's explicitly
+  pass a strategy to skip validation at the strategy level:
+
+もしバリデータが付属している場合、Hypothesisは検証をパスしたサンプルのみを生成します。
+フィルタリングのために :class:`~hypothesis.HealthCheck` に失敗することもあるので、ストラテジーレベルで検証をスキップするストラテジーを明示的に渡してあげましょう。
+
+..
+  .. note::
+      Inference from validators will be much more powerful when :issue:`1116`
+      is implemented, but there will always be some edge cases that require you
+      to pass an explicit strategy.
 
 .. note::
-    Inference from validators will be much more powerful when :issue:`1116`
-    is implemented, but there will always be some edge cases that require you
-    to pass an explicit strategy.
+    :issue:`1116` が実装されると、検証からの推論がより強力になります。
+    しかし、明示的なストラテジーを渡さなければならないようなエッジケースは常に存在します。
 
 .. code-block:: pycon
 
