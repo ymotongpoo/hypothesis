@@ -1,100 +1,191 @@
+..
+  =============================
+  What you can generate and how
+  =============================
+
 =============================
-What you can generate and how
+何を、どのように生成するか
 =============================
 
-*Most things should be easy to generate and everything should be possible.*
+..
+  *Most things should be easy to generate and everything should be possible.*
 
-To support this principle Hypothesis provides strategies for most built-in
-types with arguments to constrain or adjust the output, as well as higher-order
-strategies that can be composed to generate more complex types.
+*ほとんどのものが簡単に生成でき、すべてが可能であるべきです。*
 
-This document is a guide to what strategies are available for generating data
-and how to build them. Strategies have a variety of other important internal
-features, such as how they simplify, but the data they can generate is the only
-public part of their API.
+..
+  To support this principle Hypothesis provides strategies for most built-in
+  types with arguments to constrain or adjust the output, as well as higher-order
+  strategies that can be composed to generate more complex types.
 
-~~~~~~~~~~~~~~~
-Core strategies
-~~~~~~~~~~~~~~~
+この原則を支えるために、Hypothesisは出力を制約したり調整するための引数を持つほとんどの組み込み型用のストラテジーと、より複雑な型を生成するために組み合わせることができる高次のストラテジーを提供します。
 
-Functions for building strategies are all available in the hypothesis.strategies
-module. The salient functions from it are as follows:
+..
+  This document is a guide to what strategies are available for generating data
+  and how to build them. Strategies have a variety of other important internal
+  features, such as how they simplify, but the data they can generate is the only
+  public part of their API.
+
+このドキュメントは、データを生成するためにどのようなストラテジーが利用可能で、どのように構築するのかについてのガイドです。
+ストラテジーには、どのように簡略化するかなど、他にも様々な重要な内部機能がありますが、生成できるデータはAPIの中で唯一公開されている部分です。
+
+..
+  ~~~~~~~~~~~~~~~
+  Core strategies
+  ~~~~~~~~~~~~~~~
+
+~~~~~~~~~~~~~~~~~~~
+コアストラテジー
+~~~~~~~~~~~~~~~~~~~
+
+..
+  Functions for building strategies are all available in the hypothesis.strategies
+  module. The salient functions from it are as follows:
+
+ストラテジーを構築するための関数は、すべて ``hypothesis.strategy`` モジュールで利用可能です。
+特に注目すべき関数は以下の通りです。
 
 .. automodule:: hypothesis.strategies
   :members:
   :exclude-members: SearchStrategy
 
+..
+  ~~~~~~~~~~~~~~~~~~~~~~
+  Provisional strategies
+  ~~~~~~~~~~~~~~~~~~~~~~
+
 ~~~~~~~~~~~~~~~~~~~~~~
-Provisional strategies
+暫定的なストラテジー
 ~~~~~~~~~~~~~~~~~~~~~~
 
 .. automodule:: hypothesis.provisional
   :members:
   :exclude-members: DomainNameStrategy
 
+..
+  .. _shrinking:
+
+..
+  ~~~~~~~~~
+  Shrinking
+  ~~~~~~~~~
+
 .. _shrinking:
 
 ~~~~~~~~~
-Shrinking
+収縮
 ~~~~~~~~~
 
-When using strategies it is worth thinking about how the data *shrinks*.
-Shrinking is the process by which Hypothesis tries to produce human readable
-examples when it finds a failure - it takes a complex example and turns it
-into a simpler one.
+..
+  When using strategies it is worth thinking about how the data *shrinks*.
+  Shrinking is the process by which Hypothesis tries to produce human readable
+  examples when it finds a failure - it takes a complex example and turns it
+  into a simpler one.
 
-Each strategy defines an order in which it shrinks - you won't usually need to
-care about this much, but it can be worth being aware of as it can affect what
-the best way to write your own strategies is.
+ストラテジーを使うとき、データがどのように *収縮（shrink）* されるかを考えることは価値があります。
+収縮とは、Hypothesisが失敗を発見したときに、人間が読めるような例を作ろうとするプロセスで、複雑な例をより単純なものに変えるのです。
 
-The exact shrinking behaviour is not a guaranteed part of the API, but it
-doesn't change that often and when it does it's usually because we think the
-new way produces nicer examples.
+..
+  Each strategy defines an order in which it shrinks - you won't usually need to
+  care about this much, but it can be worth being aware of as it can affect what
+  the best way to write your own strategies is.
 
-Possibly the most important one to be aware of is
-:func:`~hypothesis.strategies.one_of`, which has a preference for values
-produced by strategies earlier in its argument list. Most of the others should
-largely "do the right thing" without you having to think about it.
+各ストラテジーは収縮する順番を定義します。
+通常はあまり気にする必要はありませんが、ストラテジーの書き方に影響を与えるので、意識しておくとよいでしょう。
 
+..
+  The exact shrinking behaviour is not a guaranteed part of the API, but it
+  doesn't change that often and when it does it's usually because we think the
+  new way produces nicer examples.
 
-~~~~~~~~~~~~~~~~~~~
-Adapting strategies
-~~~~~~~~~~~~~~~~~~~
+正確な収縮動作はAPIで保証されているわけではありませんが、それほど頻繁に変更されるわけではなく、変更される場合はたいてい、新しい方法の方がより良いサンプルを生成できると考えられるからです。
 
-Often it is the case that a strategy doesn't produce exactly what you want it
-to and you need to adapt it. Sometimes you can do this in the test, but this
-hurts reuse because you then have to repeat the adaption in every test.
+..
+  Possibly the most important one to be aware of is
+  :func:`~hypothesis.strategies.one_of`, which has a preference for values
+  produced by strategies earlier in its argument list. Most of the others should
+  largely "do the right thing" without you having to think about it.
 
-Hypothesis gives you ways to build strategies from other strategies given
-functions for transforming the data.
+おそらく最も注意しなければならないのは :func:`~hypothesis.strategies.one_of` で、これは引数リストの早い段階でストラテジーによって生成された値を優先します。
+他のほとんどは、特に考えなくても「正しいことをする」はずです。
 
--------
-Mapping
--------
+..
+  ~~~~~~~~~~~~~~~~~~~
+  Adapting strategies
+  ~~~~~~~~~~~~~~~~~~~
 
-``map`` is probably the easiest and most useful of these to use. If you have a
-strategy ``s`` and a function ``f``, then an example ``s.map(f).example()`` is
-``f(s.example())``, i.e. we draw an example from ``s`` and then apply ``f`` to it.
+~~~~~~~~~~~~~~~~~~~~~
+ストラテジーの適応
+~~~~~~~~~~~~~~~~~~~~~
 
-e.g.:
+..
+  Often it is the case that a strategy doesn't produce exactly what you want it
+  to and you need to adapt it. Sometimes you can do this in the test, but this
+  hurts reuse because you then have to repeat the adaption in every test.
+
+あるストラテジーが思い通りにならないことがよくあり、その戦略を適応させる必要があります。
+テスト中にこれを行うこともできますが、その場合、すべてのテストで適応を繰り返さなければならないため、再利用に支障をきたします。
+
+..
+  Hypothesis gives you ways to build strategies from other strategies given
+  functions for transforming the data.
+
+Hypothesisは、データを変換するための関数が与えられた他のストラテジーからストラテジーを構築する方法を与えます。
+
+..
+  -------
+  Mapping
+  -------
+
+----------------
+マッピング
+----------------
+
+..
+  ``map`` is probably the easiest and most useful of these to use. If you have a
+  strategy ``s`` and a function ``f``, then an example ``s.map(f).example()`` is
+  ``f(s.example())``, i.e. we draw an example from ``s`` and then apply ``f`` to it.
+
+``map`` はおそらくこれらの中で最も使いやすく、便利なものです。
+ストラテジー ``s`` と関数 ``f`` があれば、例 ``s.map(f).example()`` は ``f(s.example())`` となる。
+つまり、 ``s`` から例を描き、それに ``f`` を適用するのである。
+
+..
+  e.g.:
+
+たとえば、次のような形で使えます。
 
 .. code-block:: pycon
 
     >>> lists(integers()).map(sorted).example()
     [-25527, -24245, -23118, -93, -70, -7, 0, 39, 40, 65, 88, 112, 6189, 9480, 19469, 27256, 32526, 1566924430]
 
-Note that many things that you might use mapping for can also be done with
-:func:`~hypothesis.strategies.builds`, and if you find yourself indexing
-into a tuple within ``.map()`` it's probably time to use that instead.
+..
+  Note that many things that you might use mapping for can also be done with
+  :func:`~hypothesis.strategies.builds`, and if you find yourself indexing
+  into a tuple within ``.map()`` it's probably time to use that instead.
 
-.. _filtering:
+マッピングを使用する多くのことは :func:`~hypothesis.strategies.builds` でも可能であることに注意してください。
+もし ``.map()`` の中でタプルのインデックスを作成しているのであれば、その代わりにマッピングを使用することをお勧めします。
 
----------
-Filtering
----------
+..
+  .. _filtering:
 
-``filter`` lets you reject some examples. ``s.filter(f).example()`` is some
-example of ``s`` such that ``f(example)`` is truthy.
+..
+  ---------
+  Filtering
+  ---------
+
+----------------
+フィルタリング
+----------------
+
+..
+  ``filter`` lets you reject some examples. ``s.filter(f).example()`` is some
+  example of ``s`` such that ``f(example)`` is truthy.
+
+``filter`` では、いくつかの例を拒否することができます。
+``s.filter(f).example()`` は、 ``f(example)`` が常に真になるような例です。
+
 
 .. code-block:: pycon
 
@@ -103,8 +194,11 @@ example of ``s`` such that ``f(example)`` is truthy.
     >>> integers().filter(lambda x: x > 11).example()
     23324
 
-It's important to note that ``filter`` isn't magic and if your condition is too
-hard to satisfy then this can fail:
+..
+  It's important to note that ``filter`` isn't magic and if your condition is too
+  hard to satisfy then this can fail:
+
+注意すべきは、 ``filter`` は魔法ではないので、条件を満たすのが難しすぎる場合は失敗する可能性があるということです。
 
 .. code-block:: pycon
 
@@ -113,12 +207,19 @@ hard to satisfy then this can fail:
         ...
     hypothesis.errors.Unsatisfiable: Could not find any valid examples in 20 tries
 
-In general you should try to use ``filter`` only to avoid corner cases that you
-don't want rather than attempting to cut out a large chunk of the search space.
+..
+  In general you should try to use ``filter`` only to avoid corner cases that you
+  don't want rather than attempting to cut out a large chunk of the search space.
 
-A technique that often works well here is to use map to first transform the data
-and then use ``filter`` to remove things that didn't work out. So for example if
-you wanted pairs of integers (x,y) such that x < y you could do the following:
+一般に、 ``filter`` は、探索空間の大きな塊を切り取ろうとするのではなく、望まないコーナーケースを避けるためにのみ使用するようにすべきです。
+
+..
+  A technique that often works well here is to use map to first transform the data
+  and then use ``filter`` to remove things that didn't work out. So for example if
+  you wanted pairs of integers (x,y) such that x < y you could do the following:
+
+ここでよく使われるテクニックは、まず map を使ってデータを変換し、次に ``filter`` を使ってうまくいかないものを削除する、というものです。
+例えば、 x < y となるような整数 (x,y) のペアが必要な場合、以下のようにすることができます。
 
 
 .. code-block:: pycon
@@ -126,21 +227,39 @@ you wanted pairs of integers (x,y) such that x < y you could do the following:
     >>> tuples(integers(), integers()).map(sorted).filter(lambda x: x[0] < x[1]).example()
     [-8543729478746591815, 3760495307320535691]
 
+..
+  .. _flatmap:
+
+..
+  ----------------------------
+  Chaining strategies together
+  ----------------------------
+
 .. _flatmap:
 
 ----------------------------
-Chaining strategies together
+ストラテジーを連鎖する
 ----------------------------
 
-Finally there is ``flatmap``. ``flatmap`` draws an example, then turns that
-example into a strategy, then draws an example from *that* strategy.
+..
+  Finally there is ``flatmap``. ``flatmap`` draws an example, then turns that
+  example into a strategy, then draws an example from *that* strategy.
 
-It may not be obvious why you want this at first, but it turns out to be
-quite useful because it lets you generate different types of data with
-relationships to each other.
+最後に、 ``flatmap`` があります。
+``flatmap`` はサンプルを描き、そのサンプルをストラテジーに変換し、そして *その* ストラテジーからサンプルを描画します。
 
-For example suppose we wanted to generate a list of lists of the same
-length:
+..
+  It may not be obvious why you want this at first, but it turns out to be
+  quite useful because it lets you generate different types of data with
+  relationships to each other.
+
+最初はなぜこれが必要なのかわからないかもしれませんが、互いに関係を持ったさまざまなタイプのデータを生成できるため、非常に便利であることがわかります。
+
+..
+  For example suppose we wanted to generate a list of lists of the same
+  length:
+
+例えば、同じ長さのリストのリストを生成したいとします。
 
 .. code-block:: pycon
 
@@ -156,38 +275,72 @@ length:
     >>> rectangle_lists.filter(lambda t: sum(len(s) for s in t) >= 10).example()
     [[0], [0], [0], [0], [0], [0], [0], [0], [0], [0]]
 
-In this example we first choose a length for our tuples, then we build a
-strategy which generates lists containing lists precisely of that length. The
-finds show what simple examples for this look like.
+..
+  In this example we first choose a length for our tuples, then we build a
+  strategy which generates lists containing lists precisely of that length. The
+  finds show what simple examples for this look like.
 
-Most of the time you probably don't want ``flatmap``, but unlike ``filter`` and
-``map`` which are just conveniences for things you could just do in your tests,
-``flatmap`` allows genuinely new data generation that you wouldn't otherwise be
-able to easily do.
+この例では、まずタプルの長さを選び、次にその長さのリストを正確に含むリストを生成するストラテジーを構築しています。
+そのための簡単な例として、次のようなものがあります。
 
-(If you know Haskell: Yes, this is more or less a monadic bind. If you don't
-know Haskell, ignore everything in these parentheses. You do not need to
-understand anything about monads to use this, or anything else in Hypothesis).
+..
+  Most of the time you probably don't want ``flatmap``, but unlike ``filter`` and
+  ``map`` which are just conveniences for things you could just do in your tests,
+  ``flatmap`` allows genuinely new data generation that you wouldn't otherwise be
+  able to easily do.
 
+ほとんどの場合、 ``flatmap`` は必要ないと思われますが、テスト中にできるような利便性の高い機能である ``filter`` や ``map`` とは異なり、 ``flatmap`` では、他の方法では簡単にできないような、純粋に新しいデータの生成を行うことができます。
+
+..
+  (If you know Haskell: Yes, this is more or less a monadic bind. If you don't
+  know Haskell, ignore everything in these parentheses. You do not need to
+  understand anything about monads to use this, or anything else in Hypothesis).
+
+（Haskellを知っている人向けに。そうです、これは多かれ少なかれモナド結合なのです。
+もしあなたがHaskellを知らないなら、この括弧の中はすべて無視してください。
+これを使うのにモナドについて何も理解する必要はありませんし、Hypothesisの中の他のものも同様です。）
+
+..
+  --------------
+  Recursive data
+  --------------
 
 --------------
-Recursive data
+再帰的データ
 --------------
 
-Sometimes the data you want to generate has a recursive definition. e.g. if you
-wanted to generate JSON data, valid JSON is:
+..
+  Sometimes the data you want to generate has a recursive definition. e.g. if you
+  wanted to generate JSON data, valid JSON is:
 
-1. Any float, any boolean, any unicode string.
-2. Any list of valid JSON data
-3. Any dictionary mapping unicode strings to valid JSON data.
+生成したいデータが再帰的な定義を持っていることがあります。
+例えば、JSONデータを生成したい場合、有効なJSONは以下の通りです。
 
-The problem is that you cannot call a strategy recursively and expect it to not just
-blow up and eat all your memory.  The other problem here is that not all unicode strings
-display consistently on different machines, so we'll restrict them in our doctest.
+..
+  1. Any float, any boolean, any unicode string.
+  2. Any list of valid JSON data
+  3. Any dictionary mapping unicode strings to valid JSON data.
 
-The way Hypothesis handles this is with the :func:`~hypothesis.strategies.recursive`
-strategy which you pass in a base case and a function that, given a strategy
-for your data type, returns a new strategy for it. So for example:
+1. 浮動小数点、真偽値、Unicode文字列のいずれでも可。
+2. 任意の有効なJSONデータのリスト
+3. Unicode文字列と有効なJSONデータとの対応付けを行う辞書
+
+..
+  The problem is that you cannot call a strategy recursively and expect it to not just
+  blow up and eat all your memory.  The other problem here is that not all unicode strings
+  display consistently on different machines, so we'll restrict them in our doctest.
+
+問題は、ストラテジーを再帰的に呼び出すことはできず、それがおそらく爆発してメモリを食い尽くしてしまうであろうことです。
+もう一つの問題は、すべてのUnicode文字列が異なるマシンで一貫して表示されるわけではないことで、doctestではそれらを制限することになることです。
+
+..
+  The way Hypothesis handles this is with the :func:`~hypothesis.strategies.recursive`
+  strategy which you pass in a base case and a function that, given a strategy
+  for your data type, returns a new strategy for it. So for example:
+
+Hypothesisはこれを :func:`~hypothesis.strategies.recursive` ストラテジーで処理します。
+このストラテジーには、ベースケースと、データ型に対するストラテジーが与えられたときに、そのストラテジーに対する新しいストラテジーを返す関数を渡します。
+例えば、以下のようになります。
 
 .. code-block:: pycon
 
@@ -206,11 +359,17 @@ for your data type, returns a new strategy for it. So for example:
             '8z]EIFA06^li^': 'LFE{Q',
             '9,': 'l{cA=/'}}
 
-That is, we start with our leaf data and then we augment it by allowing lists and dictionaries of anything we can generate as JSON data.
+..
+  That is, we start with our leaf data and then we augment it by allowing lists and dictionaries of anything we can generate as JSON data.
 
-The size control of this works by limiting the maximum number of values that can be drawn from the base strategy. So for example if
-we wanted to only generate really small JSON we could do this as:
+つまり、リーフデータから始めて、JSONデータとして生成できるものであれば、リストや辞書を許容して、リーフデータを増強するのです。
 
+..
+  The size control of this works by limiting the maximum number of values that can be drawn from the base strategy. So for example if
+  we wanted to only generate really small JSON we could do this as:
+
+このサイズコントロールは、基本ストラテジーから引き出せる値の最大数を制限することで機能します。
+したがって、例えば本当に小さなJSONだけを生成したい場合は、次のようにすることができます。
 
 .. code-block:: pycon
 
@@ -220,30 +379,53 @@ we wanted to only generate really small JSON we could do this as:
     >>> small_lists.example()
     [False]
 
+..
+  .. _composite-strategies:
+
+..
+  ~~~~~~~~~~~~~~~~~~~~
+  Composite strategies
+  ~~~~~~~~~~~~~~~~~~~~
+
 .. _composite-strategies:
 
 ~~~~~~~~~~~~~~~~~~~~
-Composite strategies
+合成ストラテジー
 ~~~~~~~~~~~~~~~~~~~~
 
-The :func:`@composite <hypothesis.strategies.composite>` decorator lets
-you combine other strategies in more or less
-arbitrary ways. It's probably the main thing you'll want to use for
-complicated custom strategies.
+..
+  The :func:`@composite <hypothesis.strategies.composite>` decorator lets
+  you combine other strategies in more or less
+  arbitrary ways. It's probably the main thing you'll want to use for
+  complicated custom strategies.
 
-The composite decorator works by converting a function that returns one
-example into a function that returns a strategy that produces such
-examples - which you can pass to :func:`@given <hypothesis.given>`, modify
-with ``.map`` or ``.filter``, and generally use like any other strategy.
+:func:`@composite <hypothesis.strategies.composite>` デコレーターを使用すると、他のストラテジーを多少なりとも任意に組み合わせることができます。
+おそらく、複雑なカスタムストラテジーのために使用するのがメインになるでしょう。
 
-It does this by giving you a special function ``draw`` as the first
-argument, which can be used just like the corresponding method of the
-:func:`~hypothesis.strategies.data` strategy within a test.  In fact,
-the implementation is almost the same - but defining a strategy with
-:func:`@composite <hypothesis.strategies.composite>` makes code reuse
-easier, and usually improves the display of failing examples.
+..
+  The composite decorator works by converting a function that returns one
+  example into a function that returns a strategy that produces such
+  examples - which you can pass to :func:`@given <hypothesis.given>`, modify
+  with ``.map`` or ``.filter``, and generally use like any other strategy.
 
-For example, the following gives you a list and an index into it:
+合成デコレータは、あるサンプルを返す関数を、そのようなサンプルを生成するストラテジーを返す関数に変換することで動作します。
+この関数は :func:`@given <hypothesis.given>` に渡すことができ、 ``.map`` や ``.filter`` で変更したり、他のストラテジーと同じように使用することができます。
+
+..
+  It does this by giving you a special function ``draw`` as the first
+  argument, which can be used just like the corresponding method of the
+  :func:`~hypothesis.strategies.data` strategy within a test.  In fact,
+  the implementation is almost the same - but defining a strategy with
+  :func:`@composite <hypothesis.strategies.composite>` makes code reuse
+  easier, and usually improves the display of failing examples.
+
+これは、第一引数に特別な関数 ``draw`` を与えることで、テスト内で :func:`~hypothesis.strategies.data` ストラテジーの対応するメソッドと同じように使用することができます。
+実際、実装はほとんど同じです。しかし、 :func:`@composite <hypothesis.strategies.composite>` でストラテジーを定義すると、コードの再利用が容易になり、通常は失敗例の表示も良くなります。
+
+..
+  For example, the following gives you a list and an index into it:
+
+例えば、次のようにリストとそれに対するインデックスが得られます。
 
 .. code-block:: pycon
 
@@ -254,10 +436,14 @@ For example, the following gives you a list and an index into it:
     ...     return (xs, i)
     ...
 
-``draw(s)`` is a function that should be thought of as returning ``s.example()``,
-except that the result is reproducible and will minimize correctly. The
-decorated function has the initial argument removed from the list, but will
-accept all the others in the expected order. Defaults are preserved.
+..
+  ``draw(s)`` is a function that should be thought of as returning ``s.example()``,
+  except that the result is reproducible and will minimize correctly. The
+  decorated function has the initial argument removed from the list, but will
+  accept all the others in the expected order. Defaults are preserved.
+
+``draw(s)`` は、結果が再現可能であることと、正し収縮されることを除けば、 ``s.example()`` を返すと考えるべき関数です。
+デコレートされた関数は、リストから最初の引数が削除されますが、他のすべての引数を期待される順序で受け取ることができます。デフォルトは維持されます。
 
 .. code-block:: pycon
 
@@ -271,11 +457,18 @@ accept all the others in the expected order. Defaults are preserved.
     >>> list_and_index(booleans()).example()
     ([True, False], 0)
 
-Note that the repr will work exactly like it does for all the built-in
-strategies: it will be a function that you can call to get the strategy in
-question, with values provided only if they do not match the defaults.
+..
+  Note that the repr will work exactly like it does for all the built-in
+  strategies: it will be a function that you can call to get the strategy in
+  question, with values provided only if they do not match the defaults.
 
-You can use :func:`assume <hypothesis.assume>` inside composite functions:
+reprは、すべての組み込みストラテジーとまったく同じように動作することに注意してください。
+これは、デフォルトと一致しない場合のみ値が提供され、問題のストラテジーを取得するために呼び出すことができる関数となります。
+
+..
+  You can use :func:`assume <hypothesis.assume>` inside composite functions:
+
+複合関数の内部では :func:`assume <hypothesis.assume>` を使用することができます。
 
 .. code-block:: python
 
@@ -286,13 +479,19 @@ You can use :func:`assume <hypothesis.assume>` inside composite functions:
         assume(x != y)
         return (x, y)
 
-This works as :func:`assume <hypothesis.assume>` normally would, filtering out any examples for which the
-passed in argument is falsey.
+..
+  This works as :func:`assume <hypothesis.assume>` normally would, filtering out any examples for which the
+  passed in argument is falsey.
 
-Take care that your function can cope with adversarial draws, or explicitly rejects
-them using the ``.filter()`` method or :func:`~hypothesis.assume` - our mutation
-and shrinking logic can do some strange things, and a naive implementation might
-lead to serious performance problems.  For example:
+これは :func:`assume <hypothesis.assume>` が通常行うように動作し、渡された引数が偽であるサンプルをフィルタリングして除外します。
+
+..
+  Take care that your function can cope with adversarial draws, or explicitly rejects
+  them using the ``.filter()`` method or :func:`~hypothesis.assume` - our mutation
+  and shrinking logic can do some strange things, and a naive implementation might
+  lead to serious performance problems.  For example:
+
+この関数は対立する抽選に対応できるか、あるいは ``.filter()`` メソッドや :func:`~hypothesis.assume` を使って明示的に拒否するようにしましょう。変異や収縮のロジックは奇妙なことを行うことがあり、ナイーブな実装では深刻なパフォーマンスの問題につながる可能性があります。 例えば
 
 .. code-block:: python
 
@@ -308,34 +507,57 @@ lead to serious performance problems.  For example:
             result.add(draw(elements.filter(lambda x: x not in result)))
         return result
 
-If :func:`@composite <hypothesis.strategies.composite>` is used to decorate a
-method or classmethod, the ``draw`` argument must come before ``self`` or ``cls``.
-While we therefore recommend writing strategies as standalone functions and using
-the :func:`~hypothesis.strategies.register_type_strategy` function to associate
-them with a class, methods are supported and the ``@composite`` decorator may be
-applied either before or after ``@classmethod`` or ``@staticmethod``.
-See :issue:`2578` and :pull:`2634` for more details.
+..
+  If :func:`@composite <hypothesis.strategies.composite>` is used to decorate a
+  method or classmethod, the ``draw`` argument must come before ``self`` or ``cls``.
+  While we therefore recommend writing strategies as standalone functions and using
+  the :func:`~hypothesis.strategies.register_type_strategy` function to associate
+  them with a class, methods are supported and the ``@composite`` decorator may be
+  applied either before or after ``@classmethod`` or ``@staticmethod``.
+  See :issue:`2578` and :pull:`2634` for more details.
 
+:func:`@composite <hypothesis.strategies.composite>` をメソッドやクラスメソッドのデコレートに使用する場合、 ``draw`` 引数は ``self`` または ``cls`` よりも前になければなりません。
+そのため、ストラテジーを独立した関数として記述し、クラスと関連付けるために :func:`~hypothesis.strategies.register_type_strategy` 関数を使用することを推奨しますが、メソッドもサポートしており、 ``@classmethod`` や ``@staticmethod`` の前でも後でも ``@composite`` デコレーターが適用されます。
+詳しくは :issue:`2578` と :pull:`2634` を参照してください。
+
+..
+  .. _interactive-draw:
+
+..
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Drawing interactively in tests
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. _interactive-draw:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Drawing interactively in tests
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+テストにおけるインタラクティブな描画
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-There is also the :func:`~hypothesis.strategies.data` strategy, which gives you a means of using
-strategies interactively. Rather than having to specify everything up front in
-:func:`@given <hypothesis.given>` you can draw from strategies in the body of your test.
+..
+  There is also the :func:`~hypothesis.strategies.data` strategy, which gives you a means of using
+  strategies interactively. Rather than having to specify everything up front in
+  :func:`@given <hypothesis.given>` you can draw from strategies in the body of your test.
 
-This is similar to :func:`@composite <hypothesis.strategies.composite>`, but
-even more powerful as it allows you to mix test code with example generation.
-The downside of this power is that :func:`~hypothesis.strategies.data` is
-incompatible with explicit :func:`@example(...) <hypothesis.example>`\ s -
-and the mixed code is often harder to debug when something goes wrong.
+また、 :func:`~hypothesis.strategies.data` というストラテジーもあり、ストラテジーを対話的に使用することができます。
+:func:`@given <hypothesis.given>` で全てを指定するのではなく、テストの本文の中でストラテジーを利用することができます。
 
-If you need values that are affected by previous draws but which *don't* depend
-on the execution of your test, stick to the simpler
-:func:`@composite <hypothesis.strategies.composite>`.
+..
+  This is similar to :func:`@composite <hypothesis.strategies.composite>`, but
+  even more powerful as it allows you to mix test code with example generation.
+  The downside of this power is that :func:`~hypothesis.strategies.data` is
+  incompatible with explicit :func:`@example(...) <hypothesis.example>`\ s -
+  and the mixed code is often harder to debug when something goes wrong.
+
+これは :func:`@composite <hypothesis.strategies.composite>` に似ていますが、テストコードとサンプル生成を混ぜることができるため、より強力なものとなっています。
+この強力な機能の欠点は、 :func:`~hypothesis.strategies.data` が明示的な :func:`@example(...) <hypothesis.example>` と互換性がなく、何か問題があったときに混合されたコードはデバッグが困難になることが多いということです。
+
+..
+  If you need values that are affected by previous draws but which *don't* depend
+  on the execution of your test, stick to the simpler
+  :func:`@composite <hypothesis.strategies.composite>`.
+
+もし、以前の描画の影響を受けつつも、テストの実行に依存しない値が必要な場合は、より単純な :func:`@composite <hypothesis.strategies.composite>` を極力使うようにしてください。
 
 .. code-block:: python
 
@@ -345,8 +567,12 @@ on the execution of your test, stick to the simpler
         y = data.draw(integers(min_value=x))
         assert x < y
 
-If the test fails, each draw will be printed with the falsifying example. e.g.
-the above is wrong (it has a boundary condition error), so will print:
+..
+  If the test fails, each draw will be printed with the falsifying example. e.g.
+  the above is wrong (it has a boundary condition error), so will print:
+
+テストが失敗した場合、それぞれの描画は、偽のサンプルとともに表示されます。
+例えば、上記は間違っているので（境界条件の誤りがある）、表示されます。
 
 .. code-block:: pycon
 
@@ -354,11 +580,18 @@ the above is wrong (it has a boundary condition error), so will print:
     Draw 1: 0
     Draw 2: 0
 
-As you can see, data drawn this way is simplified as usual.
+..
+  As you can see, data drawn this way is simplified as usual.
 
-Optionally, you can provide a label to identify values generated by each call
-to ``data.draw()``.  These labels can be used to identify values in the output
-of a falsifying example.
+このように描かれたデータは、いつものように簡略化されています。
+
+..
+  Optionally, you can provide a label to identify values generated by each call
+  to ``data.draw()``.  These labels can be used to identify values in the output
+  of a falsifying example.
+
+オプションとして、 ``data.draw()`` の各呼び出しによって生成される値を識別するためのラベルを指定することができます。
+これらのラベルは、作られたサンプルの出力に含まれる値を識別するために使用することができます。
 
 For instance:
 
@@ -370,7 +603,10 @@ For instance:
         y = data.draw(integers(min_value=x), label="Second number")
         assert x < y
 
-will produce the output:
+..
+  will produce the output:
+
+これは次のような出力になります。
 
 .. code-block:: pycon
 
