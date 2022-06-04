@@ -29,7 +29,7 @@ Hypothesis は `NumPy <https://numpy.org/>`_ のテストのための多くの�
   shapes and generate all kinds of fixed-size or compound dtypes.
 
 その中心となるのが :func:`~hypothesis.extra.numpy.arrays` ストラテジーで、指定した、あるいはストラテジーに与えた任意のdtype、形状（shape）、内容を持つ配列を生成します。
-できるだけ便利にするために、配列のshapeを生成し、あらゆる種類の固定サイズまたは複合dtypeを生成するためのストラテジーが提供されています。
+できるだけ便利にするために、配列の形状を生成し、あらゆる種類の固定サイズまたは複合dtypeを生成するためのストラテジーが提供されています。
 
 
 .. automodule:: hypothesis.extra.numpy
