@@ -49,7 +49,7 @@ Hypothesisは、多くの「ヘルスチェック」という形で、一般的�
 
 ヘルスチェックを選択的に無効にするには、 :obj:`~hypothesis.settings.suppress_health_check` 設定を使用します。
 このパラメータの引数は、HealthCheckクラスのクラスレベルのアトリビュートから抽出された要素を持つリストです。
-``HealthCheck.all()``の値を使用すると、すべてのヘルスチェックを無効にします。
+``HealthCheck.all()`` の値を使用すると、すべてのヘルスチェックを無効にします。
 
 .. autoclass:: hypothesis.HealthCheck
    :undoc-members:
