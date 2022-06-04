@@ -1,90 +1,160 @@
-================
-Stateful testing
-================
+..
+  ================
+  Stateful testing
+  ================
 
-With :func:`@given <hypothesis.given>`, your tests are still something that
-you mostly write yourself, with Hypothesis providing some data.
-With Hypothesis's *stateful testing*, Hypothesis instead tries to generate
-not just data but entire tests. You specify a number of primitive
-actions that can be combined together, and then Hypothesis will
-try to find sequences of those actions that result in a failure.
+====================
+ステートフルテスト
+====================
+
+..
+  With :func:`@given <hypothesis.given>`, your tests are still something that
+  you mostly write yourself, with Hypothesis providing some data.
+  With Hypothesis's *stateful testing*, Hypothesis instead tries to generate
+  not just data but entire tests. You specify a number of primitive
+  actions that can be combined together, and then Hypothesis will
+  try to find sequences of those actions that result in a failure.
+
+:func:`@given <hypothesis.given>` では、テストはHypothesisがデータを提供し、ほとんど自分で記述することに変わりはありません。
+Hypothesisの *ステートフルテスト* では、Hypothesisはデータだけでなくテスト全体も生成しようとします。
+一緒に組み合わせることができるいくつかの原始的なアクションを指定すると、Hypothesisはそれらのアクションのシーケンスから失敗につながるものを見つけようとします。
+
+..
+  .. tip::
+
+      Before reading this reference documentation, we recommend reading
+      `How not to Die Hard with Hypothesis <https://hypothesis.works/articles/how-not-to-die-hard-with-hypothesis/>`__
+      and `An Introduction to Rule-Based Stateful Testing <https://hypothesis.works/articles/rule-based-stateful-testing/>`__,
+      in that order. The implementation details will make more sense once you've seen
+      them used in practice, and know *why* each method or decorator is available.
 
 .. tip::
 
-    Before reading this reference documentation, we recommend reading
-    `How not to Die Hard with Hypothesis <https://hypothesis.works/articles/how-not-to-die-hard-with-hypothesis/>`__
-    and `An Introduction to Rule-Based Stateful Testing <https://hypothesis.works/articles/rule-based-stateful-testing/>`__,
-    in that order. The implementation details will make more sense once you've seen
-    them used in practice, and know *why* each method or decorator is available.
+    このリファレンスドキュメントを読む前に、 `How not to Die Hard with Hypothesis <https://hypothesis.works/articles/how-not-to-die-hard-with-hypothesis/>`__ と `An Introduction to Rule-Based Stateful Testing <https://hypothesis.works/articles/rule-based-stateful-testing/>`__ を順に読んでおくことをおすすめします。
+    実装の詳細は、実際に使われているのを見て、それぞれのメソッドやデコレータが *なぜ* 利用できるのかを知れば、より理解できるようになるでしょう。
+
+..
+  .. note::
+
+    This style of testing is often called *model-based testing*, but in Hypothesis
+    is called *stateful testing* (mostly for historical reasons - the original
+    implementation of this idea in Hypothesis was more closely based on
+    `ScalaCheck's stateful testing <https://github.com/typelevel/scalacheck/blob/main/doc/UserGuide.md#stateful-testing>`_
+    where the name is more apt).
+    Both of these names are somewhat misleading: You don't really need any sort of
+    formal model of your code to use this, and it can be just as useful for pure APIs
+    that don't involve any state as it is for stateful ones.
+
+    It's perhaps best to not take the name of this sort of testing too seriously.
+    Regardless of what you call it, it is a powerful form of testing which is useful
+    for most non-trivial APIs.
 
 .. note::
 
-  This style of testing is often called *model-based testing*, but in Hypothesis
-  is called *stateful testing* (mostly for historical reasons - the original
-  implementation of this idea in Hypothesis was more closely based on
-  `ScalaCheck's stateful testing <https://github.com/typelevel/scalacheck/blob/main/doc/UserGuide.md#stateful-testing>`_
-  where the name is more apt).
-  Both of these names are somewhat misleading: You don't really need any sort of
-  formal model of your code to use this, and it can be just as useful for pure APIs
-  that don't involve any state as it is for stateful ones.
+  このテストスタイルはしばしば *モデルベーステスト* と呼ばれますが、Hypothesisでは *ステートフルテスト* と呼ばれます（主に歴史的な理由からで、Hypothesisにおけるこのアイデアのオリジナルの実装は `ScalaCheckのステートフルテスト <https://github.com/typelevel/scalacheck/blob/main/doc/UserGuide.md#stateful-testing>`_ に近いもので、名前もこれに由来します）。
+  これらの名前はどちらもやや誤解を招きやすいものです。これを使うには、コードの正式なモデルのようなものは必要ありませんし、状態を伴わない純粋なAPIでも、状態を伴うものと同じように役に立ちます。
 
-  It's perhaps best to not take the name of this sort of testing too seriously.
-  Regardless of what you call it, it is a powerful form of testing which is useful
-  for most non-trivial APIs.
+  この種のテストの名前をあまり真剣に考えない方がいいかもしれません。
+  どのように呼ぶかは別として、これは強力なテストの一形態であり、ほとんどの非自明なAPIに有用です。
 
+
+..
+  .. _data-as-state-machine:
+
+..
+  -------------------------------
+  You may not need state machines
+  -------------------------------
 
 .. _data-as-state-machine:
 
 -------------------------------
-You may not need state machines
+状態機械は必要ないかもしれない
 -------------------------------
 
-The basic idea of stateful testing is to make Hypothesis choose actions as
-well as values for your test, and state machines are a great declarative way
-to do just that.
+..
+  The basic idea of stateful testing is to make Hypothesis choose actions as
+  well as values for your test, and state machines are a great declarative way
+  to do just that.
 
-For simpler cases though, you might not need them at all - a standard test
-with :func:`@given <hypothesis.given>` might be enough, since you can use
-:func:`~hypothesis.strategies.data` in branches or loops.  In fact, that's
-how the state machine explorer works internally.  For more complex workloads
-though, where a higher level API comes into it's own, keep reading!
+ステートフルテストの基本的な考え方は、Hypothesisにテスト用の値だけでなくアクションも選択させることであり、状態機械はまさにそれを行うための素晴らしい宣言的な方法です。
 
+..
+  For simpler cases though, you might not need them at all - a standard test
+  with :func:`@given <hypothesis.given>` might be enough, since you can use
+  :func:`~hypothesis.strategies.data` in branches or loops.  In fact, that's
+  how the state machine explorer works internally.  For more complex workloads
+  though, where a higher level API comes into it's own, keep reading!
+
+しかし、もっと単純なケースであれば、全く必要ないかもしれません。:func:`@given <hypothesis.given>` を使った標準的なテストで十分です。
+なぜなら、分岐やループの中で :func:`~hypothesis.strategies.data` を使うことができるからです。
+実際、状態機械エクスプローラーは内部的にそのように動作しています。
+しかし、より複雑なワークロードでは、より高度なAPIが必要になるので、引き続き読んでみてください。
+
+
+..
+  .. _rulebasedstateful:
+
+..
+  -------------------------
+  Rule-based state machines
+  -------------------------
 
 .. _rulebasedstateful:
 
 -------------------------
-Rule-based state machines
+ルールベースの状態機械
 -------------------------
 
 .. autoclass:: hypothesis.stateful.RuleBasedStateMachine
 
-A rule is very similar to a normal ``@given`` based test in that it takes
-values drawn from strategies and passes them to a user defined test function.
-The key difference is that where ``@given`` based tests must be independent,
-rules can be chained together - a single test run may involve multiple rule
-invocations, which may interact in various ways.
+..
+  A rule is very similar to a normal ``@given`` based test in that it takes
+  values drawn from strategies and passes them to a user defined test function.
+  The key difference is that where ``@given`` based tests must be independent,
+  rules can be chained together - a single test run may involve multiple rule
+  invocations, which may interact in various ways.
 
-Rules can take normal strategies as arguments, or a specific kind of strategy
-called a Bundle.  A Bundle is a named collection of generated values that can
-be reused by other operations in the test.
-They are populated with the results of rules, and may be used as arguments to
-rules, allowing data to flow from one rule to another, and rules to work on
-the results of previous computations or actions.
+ルールは通常の ``@given`` ベースのテストと非常に似ており、ストラテジーから値を取得し、それをユーザ定義のテスト関数に渡します。
+重要な違いは、 ``@given`` ベースのテストは独立していなければならないのに対し、ルールは連結して使用できることです。1つのテスト実行で複数のルールを起動することができ、それらはさまざまな方法で相互作用します。
 
-You can think of each value that gets added to any Bundle as being assigned to
-a new variable.  Drawing a value from the bundle strategy means choosing one of
-the corresponding variables and using that value, and
-:func:`~hypothesis.stateful.consumes` as a ``del`` statement for that variable.
-If you can replace use of Bundles with instance attributes of the class that
-is often simpler, but often Bundles are strictly more powerful.
+..
+  Rules can take normal strategies as arguments, or a specific kind of strategy
+  called a Bundle.  A Bundle is a named collection of generated values that can
+  be reused by other operations in the test.
+  They are populated with the results of rules, and may be used as arguments to
+  rules, allowing data to flow from one rule to another, and rules to work on
+  the results of previous computations or actions.
 
-The following rule based state machine example is a simplified version of a
-test for Hypothesis's example database implementation. An example database
-maps keys to sets of values, and in this test we compare one implementation of
-it to a simplified in memory model of its behaviour, which just stores the same
-values in a Python ``dict``. The test then runs operations against both the
-real database and the in-memory representation of it and looks for discrepancies
-in their behaviour.
+ルールは、通常のストラテジーを引数として受け取るか、Bundleと呼ばれる特定の種類のストラテジーを受け取ることができます。
+Bundleとは、生成された値の名前付きコレクションで、テスト内の他の操作で再利用することができます。
+Bundleにはルールの結果が格納され、ルールの引数として使用することができ、あるルールから別のルールにデータを流したり、以前の計算やアクションの結果に対してルールを動作させることができます。
+
+..
+  You can think of each value that gets added to any Bundle as being assigned to
+  a new variable.  Drawing a value from the bundle strategy means choosing one of
+  the corresponding variables and using that value, and
+  :func:`~hypothesis.stateful.consumes` as a ``del`` statement for that variable.
+  If you can replace use of Bundles with instance attributes of the class that
+  is often simpler, but often Bundles are strictly more powerful.
+
+任意のBundleに追加される各値は、新しい変数に割り当てられると考えることができます。
+Bundleストラテジーから値を引き出すということは、対応する変数の一つを選択して、その値を使用するということです。
+そして、 :func:`~hypothesis.stateful.consumes` をその変数の ``del`` 文として使用します。
+もし、Bundleの使用をクラスのインスタンス属性に置き換えることができれば、よりシンプルになりますが、多くの場合、Bundleの方が厳密には強力です。
+
+..
+  The following rule based state machine example is a simplified version of a
+  test for Hypothesis's example database implementation. An example database
+  maps keys to sets of values, and in this test we compare one implementation of
+  it to a simplified in memory model of its behaviour, which just stores the same
+  values in a Python ``dict``. The test then runs operations against both the
+  real database and the in-memory representation of it and looks for discrepancies
+  in their behaviour.
+
+以下のルールベースの状態機械の例は、Hypothesisのサンプルデータベースの実装のテストの簡略化したバージョンです。
+このテストでは、あるデータベースの実装を、Pythonの ``dict`` に同じ値を格納しただけの単純化されたインメモリモデルと比較します。
+このテストでは、実際のデータベースとインメモリ表現の両方に対して操作を実行し、それらの動作の不一致を探します。
 
 .. code:: python
 
