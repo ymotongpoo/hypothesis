@@ -55,7 +55,7 @@ Hypothesis は Django のテストに特化した機能を提供しており、 
 
 本当にデータベースのトランザクションで各テストケースを実行しなければならないのでなければ、 :class:`~hypothesis.extra.django.TransactionTestCase` は避けることをお勧めします。
 Hypothesis はこれをループで実行するため、通常抱えているパフォーマンスの問題が大幅に悪化し、テストが本当に遅くなってしまいます。
-もし :class:`~hypothesis.extra.django.TransactionTestCase` を使用している場合には、 :doc:`サンプルの生成が遅いせいで発生するエラー </healthchecks>` を避けるために ``@settings(suppress_health_check=[HealthCheck.too_slow]) `` が必要になる場合があります。
+もし :class:`~hypothesis.extra.django.TransactionTestCase` を使用している場合には、 :doc:`サンプルの生成が遅いせいで発生するエラー </healthchecks>` を避けるために ``@settings(suppress_health_check=[HealthCheck.too_slow])`` が必要になる場合があります。
 
 ..
   Having set up a test class, you can now pass :func:`@given <hypothesis.given>`
