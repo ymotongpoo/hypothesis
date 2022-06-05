@@ -215,15 +215,15 @@ Hypothesisの *ステートフルテスト* では、Hypothesisはデータだ�
   model for a particular key.
 
 この中で、キーと値の2つのバンドルを宣言します。
-このバンドルには、単にデータを代入する2つのルール (``k`` と ``v``) があります。
+このバンドルには、単にデータを代入する2つのルール（ ``k`` と ``v`` ）があります。
 そして、3つの非自明なルールがあります。
 ``save`` は値をキーの下に保存し、 ``delete`` は値をキーから削除する。
 どちらの場合も、データベースに存在する *べき* のモデルも更新されます。
 そして、 ``values_agree`` は、データベースの内容が特定のキーのモデルと一致するかどうかをチェックします。
 
 ..
-We can then integrate this into our test suite by getting a unittest TestCase
-from it:
+  We can then integrate this into our test suite by getting a unittest TestCase
+  from it:
 
 そして、そこから unittest の TestCase を取得することで、これをテストスイートに統合することができます。
 
