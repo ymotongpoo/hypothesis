@@ -1,22 +1,46 @@
+..
+  ==================
+  Some more examples
+  ==================
+
 ==================
-Some more examples
+その他の例
 ==================
 
-This is a collection of examples of how to use Hypothesis in interesting ways.
-It's small for now but will grow over time.
+..
+  This is a collection of examples of how to use Hypothesis in interesting ways.
+  It's small for now but will grow over time.
 
-All of these examples are designed to be run under :pypi:`pytest`,
-and :pypi:`nose` should work too.
+Hypothesisの面白い使い方の例の一覧です。
+今はまだ小さいですが、時間をかけて大きくしていく予定です。
+
+..
+  All of these examples are designed to be run under :pypi:`pytest`,
+  and :pypi:`nose` should work too.
+
+これらの例はすべて :pypi:`pytest` で実行するように設計されていますが、 :pypi:`nose` でも動作するはずです。
+
+..
+  ----------------------------------
+  How not to sort by a partial order
+  ----------------------------------
 
 ----------------------------------
-How not to sort by a partial order
+半順序でソートしない方法
 ----------------------------------
 
-The following is an example that's been extracted and simplified from a real
-bug that occurred in an earlier version of Hypothesis. The real bug was a lot
-harder to find.
+..
+  The following is an example that's been extracted and simplified from a real
+  bug that occurred in an earlier version of Hypothesis. The real bug was a lot
+  harder to find.
 
-Suppose we've got the following type:
+以下は、Hypothesisの以前のバージョンで発生した実際のバグを抽出し、簡略化した例です。
+実際のバグは、見つけるのがかなり大変でした。
+
+..
+  Suppose we've got the following type:
+
+次のような型があったとします。
 
 .. code:: python
 
@@ -34,17 +58,27 @@ Suppose we've got the following type:
             return other.value[: len(self.value)] == self.value
 
 
-Each node is a label and a sequence of some data, and we have the relationship
-sorts_before meaning the data of the left is an initial segment of the right.
-So e.g. a node with value ``[1, 2]`` will sort before a node with value ``[1, 2, 3]``,
-but neither of ``[1, 2]`` nor ``[1, 3]`` will sort before the other.
+..
+  Each node is a label and a sequence of some data, and we have the relationship
+  sorts_before meaning the data of the left is an initial segment of the right.
+  So e.g. a node with value ``[1, 2]`` will sort before a node with value ``[1, 2, 3]``,
+  but neither of ``[1, 2]`` nor ``[1, 3]`` will sort before the other.
 
-We have a list of nodes, and we want to topologically sort them with respect to
-this ordering. That is, we want to arrange the list so that if ``x.sorts_before(y)``
-then x appears earlier in the list than y. We naively think that the easiest way
-to do this is to extend the  partial order defined here to a total order by
-breaking ties arbitrarily and then using a normal sorting algorithm. So we
-define the following code:
+各ノードはラベルとデータの列で、左側のデータが右側のデータの初期セグメントであることを意味する sorts_before の関係があります。
+つまり、例えば ``[1, 2]`` という値を持つノードは ``[1, 2, 3]`` という値を持つノードよりも前にソートされますが、 ``[1, 2]`` と ``[1, 3]`` はどちらか一方だけが前にソートされるわけではありません。
+
+..
+  We have a list of nodes, and we want to topologically sort them with respect to
+  this ordering. That is, we want to arrange the list so that if ``x.sorts_before(y)``
+  then x appears earlier in the list than y. We naively think that the easiest way
+  to do this is to extend the  partial order defined here to a total order by
+  breaking ties arbitrarily and then using a normal sorting algorithm. So we
+  define the following code:
+
+ノードのリストがあり、この順番でトポロジカルにソートしたいのです。
+つまり、もし ``x.sorts_before(y)`` ならば、x が y よりも先にリスト内に現れるようにしたいのです。
+これを行う最も簡単な方法は、ここで定義した半順序を拡張して、同順はどちらをとってもよくし、通常のソートアルゴリズムを使用して全順序とすることだと、素朴に考えています。
+そこで、次のようなコードを定義します。
 
 .. code:: python
 
@@ -68,12 +102,21 @@ define the following code:
     def sort_nodes(xs):
         xs.sort(key=TopoKey)
 
-This takes the order defined by ``sorts_before`` and extends it by breaking ties by
-comparing the node labels.
+..
+  This takes the order defined by ``sorts_before`` and extends it by breaking ties by
+  comparing the node labels.
 
-But now we want to test that it works.
+これは ``sorts_before`` で定義された順序を、ノードのラベルを比較することで同順を解除することで拡張したものです。
 
-First we write a function to verify that our desired outcome holds:
+..
+  But now we want to test that it works.
+
+しかし、今度はそれが機能するかどうかをテストしてみましょう。
+
+..
+  First we write a function to verify that our desired outcome holds:
+
+まず、目的の結果が成立することを確認するための関数を書きます。
 
 .. code:: python
 
@@ -84,13 +127,22 @@ First we write a function to verify that our desired outcome holds:
                   return False
       return True
 
-This will return false if it ever finds a pair in the wrong order and
-return true otherwise.
+..
+  This will return false if it ever finds a pair in the wrong order and
+  return true otherwise.
 
-Given this function, what we want to do with Hypothesis is assert that for all
-sequences of nodes, the result of calling ``sort_nodes`` on it is sorted.
+これは、間違った順序でペアを見つけた場合はfalseを、そうでない場合はtrueを返します。
 
-First we need to define a strategy for Node:
+..
+  Given this function, what we want to do with Hypothesis is assert that for all
+  sequences of nodes, the result of calling ``sort_nodes`` on it is sorted.
+
+この関数が与えられたとき、Hypothesisでやりたいことは、すべてのノードのシーケンスに対して、 ``sort_nodes`` を呼び出した結果がソートされていることを主張することです。
+
+..
+  First we need to define a strategy for Node:
+
+まず、Nodeのストラテジーを定義する必要があります。
 
 .. code:: python
 
@@ -98,12 +150,19 @@ First we need to define a strategy for Node:
 
   NodeStrategy = st.builds(Node, st.integers(), st.lists(st.booleans(), max_size=10))
 
-We want to generate *short* lists of values so that there's a decent chance of
-one being a prefix of the other (this is also why the choice of bool as the
-elements). We then define a strategy which builds a node out of an integer and
-one of those short lists of booleans.
+..
+  We want to generate *short* lists of values so that there's a decent chance of
+  one being a prefix of the other (this is also why the choice of bool as the
+  elements). We then define a strategy which builds a node out of an integer and
+  one of those short lists of booleans.
 
-We can now write a test:
+私たちは、1つが他の値の接頭辞である可能性が十分にあるように、値の*短い*リストを生成したいのです（これが、要素にboolを選択した理由でもあります）。
+そこで、整数と短い論理値のリストの1つからノードを生成するストラテジーを定義します。
+
+..
+  We can now write a test:
+
+これでテストが書けるようになりました。
 
 .. code:: python
 
@@ -115,19 +174,30 @@ We can now write a test:
       sort_nodes(xs)
       assert is_prefix_sorted(xs)
 
-this immediately fails with the following example:
+..
+  this immediately fails with the following example:
+
+これは、次のサンプルですぐに失敗します。
 
 .. code:: python
 
   [Node(0, (False, True)), Node(0, (True,)), Node(0, (False,))]
 
+..
+  The reason for this is that because False is not a prefix of (True, True) nor vice
+  versa, sorting things the first two nodes are equal because they have equal labels.
+  This makes the whole order non-transitive and produces basically nonsense results.
 
-The reason for this is that because False is not a prefix of (True, True) nor vice
-versa, sorting things the first two nodes are equal because they have equal labels.
-This makes the whole order non-transitive and produces basically nonsense results.
+この理由は、Falseは(True, True)の接頭辞でもなければその逆でもないため、最初の2つのノードはラベルが等しいので、ソートするものが等しくなってしまうからです。
+このため、全体の順序が非遷移的になり、基本的に無意味な結果が得られます。
 
+..
 But this is pretty unsatisfying. It only works because they have the same label. Perhaps
 we actually wanted our labels to be unique. Let's change the test to do that.
+
+しかし、これではかなり不満が残ります。同じラベルだから成立するのです。
+もしかしたら、本当はラベルが一意であることを望んでいたかもしれません。
+そうなるようにテストを変更してみましょう。
 
 .. code:: python
 
@@ -135,8 +205,11 @@ we actually wanted our labels to be unique. Let's change the test to do that.
         table = {node.label: node for node in nodes}
         return list(table.values())
 
-We define a function to deduplicate nodes by labels, and can now map that over a strategy
-for lists of nodes to give us a strategy for lists of nodes with unique labels:
+..
+  We define a function to deduplicate nodes by labels, and can now map that over a strategy
+  for lists of nodes to give us a strategy for lists of nodes with unique labels:
+
+ラベルによってノードを重複排除する関数を定義し、それをノードのリストに対する戦略にマッピングすることで、一意のラベルを持つノードのリストに対する戦略を得ることができる。
 
 .. code:: python
 
@@ -145,20 +218,34 @@ for lists of nodes to give us a strategy for lists of nodes with unique labels:
         sort_nodes(xs)
         assert is_prefix_sorted(xs)
 
-Hypothesis quickly gives us an example of this *still* being wrong:
+..
+  Hypothesis quickly gives us an example of this *still* being wrong:
+
+Hypothesisはすぐに、これが*まだ*間違っているサンプルを示しています。
 
 .. code:: python
 
   [Node(0, (False,)), Node(-1, (True,)), Node(-2, (False, False))]
 
 
-Now this is a more interesting example. None of the nodes will sort equal. What is
-happening here is that the first node is strictly less than the last node because
-(False,) is a prefix of (False, False). This is in turn strictly less than the middle
-node because neither is a prefix of the other and -2 < -1. The middle node is then
-less than the first node because -1 < 0.
+..
+  Now this is a more interesting example. None of the nodes will sort equal. What is
+  happening here is that the first node is strictly less than the last node because
+  (False,) is a prefix of (False, False). This is in turn strictly less than the middle
+  node because neither is a prefix of the other and -2 < -1. The middle node is then
+  less than the first node because -1 < 0.
 
-So, convinced that our implementation is broken, we write a better one:
+さて、これはもっと面白いサンプルです。
+どのノードも等しくソートされることはありません。
+ここで起こっていることは、最初のノードが最後のノードよりも厳密に小さいということです。
+なぜなら、(False,) は (False, False) の接頭語だからです。
+これは、どちらも接頭辞がなく、-2 < -1であるため、厳密には真ん中のノードより小さくなります。
+そして、-1 < 0 なので、真ん中のノードは最初のノードより小さくなります。
+
+..
+  So, convinced that our implementation is broken, we write a better one:
+
+そこで、この実装が壊れていることを確信し、より良い実装を書くことにしました。
 
 .. code:: python
 
@@ -171,13 +258,22 @@ So, convinced that our implementation is broken, we write a better one:
                 xs[j], xs[j + 1] = xs[j + 1], xs[j]
                 j -= 1
 
-This is just insertion sort slightly modified - we swap a node backwards until swapping
-it further would violate the order constraints. The reason this works is because our
-order is a partial order already (this wouldn't produce a valid result for a general
-topological sorting - you need the transitivity).
+..
+  This is just insertion sort slightly modified - we swap a node backwards until swapping
+  it further would violate the order constraints. The reason this works is because our
+  order is a partial order already (this wouldn't produce a valid result for a general
+  topological sorting - you need the transitivity).
 
-We now run our test again and it passes, telling us that this time we've successfully
-managed to sort some nodes without getting it completely wrong. Go us.
+これは挿入ソートを少し修正したものです。
+ノードをさらに入れ替えると順序の制約に違反するようになるまで、ノードを後ろ向きに入れ替えます。
+これがうまくいくのは、私たちの順序がすでに半順序だからです（これは一般的なトポロジカルソートでは有効な結果を生成しません - あなたは他動性を必要とします）。
+
+..
+  We now run our test again and it passes, telling us that this time we've successfully
+  managed to sort some nodes without getting it completely wrong. Go us.
+
+このテストはパスして、これは、完全に間違うことなく、いくつかのノードを並べ替えることに成功したことを示しています。
+さあ、行ってみましょう。
 
 --------------------
 Time zone arithmetic
