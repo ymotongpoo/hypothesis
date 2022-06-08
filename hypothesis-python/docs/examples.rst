@@ -275,14 +275,23 @@ Hypothesisはすぐに、これが*まだ*間違っているサンプルを示�
 このテストはパスして、これは、完全に間違うことなく、いくつかのノードを並べ替えることに成功したことを示しています。
 さあ、行ってみましょう。
 
+..
+  --------------------
+  Time zone arithmetic
+  --------------------
+
 --------------------
-Time zone arithmetic
+タイムゾーンの計算
 --------------------
 
-This is an example of some tests for :pypi:`pytz` which check that various timezone
-conversions behave as you would expect them to. These tests should all pass,
-and are mostly a demonstration of some useful sorts of thing to test with
-Hypothesis, and how the :func:`~hypothesis.strategies.datetimes` strategy works.
+..
+  This is an example of some tests for :pypi:`pytz` which check that various timezone
+  conversions behave as you would expect them to. These tests should all pass,
+  and are mostly a demonstration of some useful sorts of thing to test with
+  Hypothesis, and how the :func:`~hypothesis.strategies.datetimes` strategy works.
+
+これは :pypi:`pytz` のテストの例で、様々なタイムゾーンの変換が期待通りに動作することをチェックします。
+これらのテストは全て合格するはずです。また、Hypothesisでテストするのに便利ないくつかの種類と、 :func:`~hypothesis.strategies.datetimes` 戦略がどのように動作するかのデモンストレーションが主な内容になっています。
 
 .. code-block:: python
 
@@ -326,22 +335,39 @@ Hypothesis, and how the :func:`~hypothesis.strategies.datetimes` strategy works.
         a_day = timedelta(days=1)
         assert (dt + a_day).astimezone(tz) == dt.astimezone(tz) + a_day
 
--------------------
-Condorcet's paradox
--------------------
+..
+  -------------------
+  Condorcet's paradox
+  -------------------
 
-A classic paradox in voting theory, called Condorcet's paradox, is that
-majority preferences are not transitive. That is, there is a population
-and a set of three candidates A, B and C such that the majority of the
-population prefer A to B, B to C and C to A.
+------------------------
+コンドルセのパラドックス
+------------------------
 
-Wouldn't it be neat if we could use Hypothesis to provide an example of this?
+..
+  A classic paradox in voting theory, called Condorcet's paradox, is that
+  majority preferences are not transitive. That is, there is a population
+  and a set of three candidates A, B and C such that the majority of the
+  population prefer A to B, B to C and C to A.
 
-Well as you can probably guess from the presence of this section, we can!
-The main trick is to decide how we want to represent the result of an
-election - for this example, we'll use a list of "votes", where each
-vote is a list of candidates in the voters preferred order.
-Without further ado, here is the code:
+投票理論における古典的なパラドックスとして、コンドルセのパラドックスと呼ばれる、多数派の選好が推移的でないことがあります。
+すなわち、ある人口と3人の候補者A、B、Cの集合があり、人口の大多数がBよりAを、CよりBを、AよりCを好むとする。
+
+..
+  Wouldn't it be neat if we could use Hypothesis to provide an example of this?
+
+Hypothesisを使って、その例を示すことができれば、すてきだと思いませんか？
+
+..
+  Well as you can probably guess from the presence of this section, we can!
+  The main trick is to decide how we want to represent the result of an
+  election - for this example, we'll use a list of "votes", where each
+  vote is a list of candidates in the voters preferred order.
+  Without further ado, here is the code:
+
+このセクションの存在から推測できるように、それは可能です!
+主なコツは、選挙の結果をどのように表現するかを決めることです。この例では、「投票」のリストを使用します。各投票は、投票者が希望する順番に並べた候補者のリストです。
+さっそく、コードを書いてみましょう。
 
 .. code:: python
 
@@ -379,20 +405,33 @@ Without further ado, here is the code:
                 for z in graph.get(y, ()):
                     assert x not in graph.get(z, ())
 
-The example Hypothesis gives me on my first run (your mileage may of course
-vary) is:
+..
+  The example Hypothesis gives me on my first run (your mileage may of course
+  vary) is:
+
+最初の投票で仮説が教えてくれたサンプル（もちろんあなたの結果は異なるかもしれません）はこれです。
 
 .. code:: python
 
     [["A", "B", "C"], ["B", "C", "A"], ["C", "A", "B"]]
 
-Which does indeed do the job: The majority (votes 0 and 1) prefer B to C, the
-majority (votes 0 and 2) prefer A to B and the majority (votes 1 and 2) prefer
-C to A. This is in fact basically the canonical example of the voting paradox.
+..
+  Which does indeed do the job: The majority (votes 0 and 1) prefer B to C, the
+  majority (votes 0 and 2) prefer A to B and the majority (votes 1 and 2) prefer
+  C to A. This is in fact basically the canonical example of the voting paradox.
 
--------------------
-Fuzzing an HTTP API
--------------------
+これは実にうまくいっています。
+多数派（0票と1票）はCよりBを、多数派（0票と2票）はBよりAを、多数派（1票と2票）はAよりCを好んでいます。
+これは実際、投票パラドックスの典型的な例です。
+
+..
+  -------------------
+  Fuzzing an HTTP API
+  -------------------
+
+-----------------------
+HTTP APIのファジング
+-----------------------
 
 Hypothesis's support for testing HTTP services is somewhat nascent. There are
 plans for some fully featured things around this, but right now they're
