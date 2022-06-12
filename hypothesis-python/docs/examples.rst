@@ -433,20 +433,33 @@ Hypothesisを使って、その例を示すことができれば、すてきだ�
 HTTP APIのファジング
 -----------------------
 
-Hypothesis's support for testing HTTP services is somewhat nascent. There are
-plans for some fully featured things around this, but right now they're
-probably quite far down the line.
+..
+  Hypothesis's support for testing HTTP services is somewhat nascent. There are
+  plans for some fully featured things around this, but right now they're
+  probably quite far down the line.
 
-But you can do a lot yourself without any explicit support! Here's a script
-I wrote to throw arbitrary data against the API for an entirely fictitious service
-called Waspfinder (this is only lightly obfuscated and you can easily figure
-out who I'm actually talking about, but I don't want you to run this code and
-hammer their API without their permission).
+HypothesisのHTTPサービスのテストに対するサポートは、やや初期段階にあります。
+このあたりは、完全な機能を備えたものが計画されていますが、今はまだかなり先の話でしょう。
 
-All this does is use Hypothesis to generate arbitrary JSON data matching the
-format their API asks for and check for 500 errors. More advanced tests which
-then use the result and go on to do other things are definitely also possible.
-The :pypi:`schemathesis` package provides an excellent example of this!
+..
+  But you can do a lot yourself without any explicit support! Here's a script
+  I wrote to throw arbitrary data against the API for an entirely fictitious service
+  called Waspfinder (this is only lightly obfuscated and you can easily figure
+  out who I'm actually talking about, but I don't want you to run this code and
+  hammer their API without their permission).
+
+しかし、明示的なサポートがなくても、多くのことを自分で行うことができます!
+以下は、Waspfinderという全く架空のサービスのAPIに対して任意のデータを投げるために私が書いたスクリプトです（架空のサービス名は軽く改名されているだけなので、私が実際にどのサービスのことを言っているのかは簡単に分かりますが、このコードを実行して彼らの許可なくAPIを叩くことはしないで欲しいです）。
+
+..
+  All this does is use Hypothesis to generate arbitrary JSON data matching the
+  format their API asks for and check for 500 errors. More advanced tests which
+  then use the result and go on to do other things are definitely also possible.
+  The :pypi:`schemathesis` package provides an excellent example of this!
+
+このコードは、Hypothesisを使って、APIが要求するフォーマットに合致する任意のJSONデータを生成し、500エラーをチェックするだけです。
+その結果を使って他のことをするような、より高度なテストも間違いなく可能です。
+:pypi:`schemathesis`パッケージはこの素晴らしい例を提供してくれます!
 
 .. code:: python
 
