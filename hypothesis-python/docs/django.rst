@@ -6,6 +6,8 @@
   Hypothesis for Django users
   ===========================
 
+.. _hypothesis-django:
+
 =================================
 Djangoユーザー向けのHypothesis
 =================================

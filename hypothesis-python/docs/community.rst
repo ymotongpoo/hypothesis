@@ -13,7 +13,7 @@
   The major place for community discussion is `the mailing list <https://groups.google.com/forum/#!forum/hypothesis-users>`_.
 
 Hypothesisのコミュニティは今のところ小さいですが、あなたの質問に答え、あなたを助けてくれる優秀な人たちがたくさんいます。ぜひ参加してください。
-コミュニティでの主な議論の場は `メーリングリスト<https://groups.google.com/forum/#!forum/hypothesis-users>`_ です。
+コミュニティでの主な議論の場は `メーリングリスト <https://groups.google.com/forum/#!forum/hypothesis-users>`_ です。
 
 ..
   Feel free to use it to ask for help, provide feedback, or discuss anything remotely
