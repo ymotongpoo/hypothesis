@@ -1,30 +1,56 @@
-============
-Testimonials
-============
+..
+  ============
+  Testimonials
+  ============
 
-This is a page for listing people who are using Hypothesis and how excited they
-are about that. If that's you and your name is not on the list,
-:gh-file:`this file is in Git <hypothesis-python/docs/endorsements.rst>`
-and I'd love it if you sent me a pull request to fix that.
+===============
+ユーザーの声
+===============
+
+..
+  This is a page for listing people who are using Hypothesis and how excited they
+  are about that. If that's you and your name is not on the list,
+  :gh-file:`this file is in Git <hypothesis-python/docs/endorsements.rst>`
+  and I'd love it if you sent me a pull request to fix that.
+
+これは、Hypothesisを使っている人と、それについてどれだけ満足しているかをリストアップするためのページです。もしそれがあなたで、リストにあなたの名前がない場合は、 :gh-file:`このページはGitで管理されている <hypothesis-python/docs/endorsements.rst>` で、それを修正するためにプルリクエストを送ってくれるとうれしいです。
+
+..
+  ---------------------------------------------------------------------------------------
+  `Stripe <https://stripe.com>`_
+  ---------------------------------------------------------------------------------------
 
 ---------------------------------------------------------------------------------------
 `Stripe <https://stripe.com>`_
 ---------------------------------------------------------------------------------------
 
-At Stripe we use Hypothesis to test every piece of our machine
-learning model training pipeline (powered by scikit). Before we
-migrated, our tests were filled with hand-crafted pandas Dataframes
-that weren't representative at all of our actual very complex
-data. Because we needed to craft examples for each test, we took the
-easy way out and lived with extremely low test coverage.
+..
+  At Stripe we use Hypothesis to test every piece of our machine
+  learning model training pipeline (powered by scikit). Before we
+  migrated, our tests were filled with hand-crafted pandas Dataframes
+  that weren't representative at all of our actual very complex
+  data. Because we needed to craft examples for each test, we took the
+  easy way out and lived with extremely low test coverage.
 
-Hypothesis changed all that. Once we had our strategies for generating
-Dataframes of features it became trivial to slightly customize each
-strategy for new tests. Our coverage is now close to 90%.
+Stripeでは、機械学習モデルのトレーニングパイプライン（scikit-learnで構成されています）のすべての部分をテストするためにHypothesisを使用しています。
+移行前は、テストは手作りのpandas DataFrameで埋め尽くされており、実際の非常に複雑なデータを全く代表していませんでした。
+各テストでサンプルを作成する必要があったため、安易な方法を選択した結果、テストカバレッジが極端に低い状態が続いていました。
 
-Full-stop, property-based testing is profoundly more powerful - and
-has caught or prevented far more bugs - than our old style of
-example-based testing.
+..
+  Hypothesis changed all that. Once we had our strategies for generating
+  Dataframes of features it became trivial to slightly customize each
+  strategy for new tests. Our coverage is now close to 90%.
+
+しかし、Hypothesisはそれを一変させました。
+特徴のDataFrameを生成するストラテジーを手に入れたら、新しいテストのために各ストラテジーを少しカスタマイズするのは簡単なことでした。
+現在、我々のカバレッジは90%に近づいています。
+
+..
+  Full-stop, property-based testing is profoundly more powerful - and
+  has caught or prevented far more bugs - than our old style of
+  example-based testing.
+
+私が強調したいのは、属性ベーステストは、昔ながらの例題ベースのテストよりもはるかに強力で、多くのバグを発見・防止することができるということです。
 
 ---------------------------------------------------------------------------------------
 Kristian Glass - Director of Technology at `LaterPay GmbH <https://www.laterpay.net/>`_
