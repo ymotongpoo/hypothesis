@@ -52,49 +52,88 @@ Stripeでは、機械学習モデルのトレーニングパイプライン（sc
 
 私が強調したいのは、属性ベーステストは、昔ながらの例題ベースのテストよりもはるかに強力で、多くのバグを発見・防止することができるということです。
 
+..
+  ---------------------------------------------------------------------------------------
+  Kristian Glass - Director of Technology at `LaterPay GmbH <https://www.laterpay.net/>`_
+  ---------------------------------------------------------------------------------------
+
 ---------------------------------------------------------------------------------------
-Kristian Glass - Director of Technology at `LaterPay GmbH <https://www.laterpay.net/>`_
+Kristian Glass - `LaterPay GmbH <https://www.laterpay.net/>`_ 技術担当ディレクター
 ---------------------------------------------------------------------------------------
 
-Hypothesis has been brilliant for expanding the coverage of our test cases,
-and also for making them much easier to read and understand,
-so we're sure we're testing the things we want in the way we want.
+..
+  Hypothesis has been brilliant for expanding the coverage of our test cases,
+  and also for making them much easier to read and understand,
+  so we're sure we're testing the things we want in the way we want.
+
+Hypothesisは、テストケースのカバレッジを広げるだけでなく、読みやすく、理解しやすくしてくれるので、必要なものを必要な方法でテストしていることが確認できます。
+
+..
+  -----------------------------------------------
+  `Seth Morton <https://github.com/SethMMorton>`_
+  -----------------------------------------------
 
 -----------------------------------------------
 `Seth Morton <https://github.com/SethMMorton>`_
 -----------------------------------------------
 
-When I first heard about Hypothesis, I knew I had to include it in my two
-open-source Python libraries, `natsort <https://github.com/SethMMorton/natsort>`_
-and `fastnumbers <https://github.com/SethMMorton/fastnumbers>`_ . Quite frankly,
-I was a little appalled at the number of bugs and "holes" I found in the code. I can
-now say with confidence that my libraries are more robust to "the wild." In
-addition, Hypothesis gave me the confidence to expand these libraries to fully
-support Unicode input, which I never would have had the stomach for without such
-thorough testing capabilities. Thanks!
+..
+  When I first heard about Hypothesis, I knew I had to include it in my two
+  open-source Python libraries, `natsort <https://github.com/SethMMorton/natsort>`_
+  and `fastnumbers <https://github.com/SethMMorton/fastnumbers>`_ . Quite frankly,
+  I was a little appalled at the number of bugs and "holes" I found in the code. I can
+  now say with confidence that my libraries are more robust to "the wild." In
+  addition, Hypothesis gave me the confidence to expand these libraries to fully
+  support Unicode input, which I never would have had the stomach for without such
+  thorough testing capabilities. Thanks!
+
+私が初めてHypothesisのことを聞いたとき、私の2つのオープンソースPythonライブラリ、 `natsort <https://github.com/SethMMorton/natsort>`_ と `fastnumbers <https://github.com/SethMMorton/fastnumbers>`_ に含まれなければならないことを悟りました。
+率直に言って、私はコードの中に見つけた多くのバグと「穴」に少し愕然としました。
+今となっては、私のライブラリは「野生」に対してより堅牢であると自信を持って言うことができます。
+加えて、Hypothesisは私に、これらのライブラリを拡張してUnicode入力を完全にサポートする自信を与えてくれました。
+ありがとう！
+
+..
+  -------------------------------------------
+  `Sixty North <https://sixty-north.com/>`_
+  -------------------------------------------
 
 -------------------------------------------
 `Sixty North <https://sixty-north.com/>`_
 -------------------------------------------
 
-At Sixty North we use Hypothesis for testing
-`Segpy <https://github.com/sixty-north/segpy>`_ an open source Python library for
-shifting data between Python data structures and SEG Y files which contain
-geophysical data from the seismic reflection surveys used in oil and gas
-exploration.
+..
+  At Sixty North we use Hypothesis for testing
+  `Segpy <https://github.com/sixty-north/segpy>`_ an open source Python library for
+  shifting data between Python data structures and SEG Y files which contain
+  geophysical data from the seismic reflection surveys used in oil and gas
+  exploration.
 
-This is our first experience of property-based testing – as opposed to example-based
-testing.  Not only are our tests more powerful, they are also much better
-explanations of what we expect of the production code. In fact, the tests are much
-closer to being specifications.  Hypothesis has located real defects in our code
-which went undetected by traditional test cases, simply because Hypothesis is more
-relentlessly devious about test case generation than us mere humans!  We found
-Hypothesis particularly beneficial for Segpy because SEG Y is an antiquated format
-that uses legacy text encodings (EBCDIC) and even a legacy floating point format
-we implemented from scratch in Python.
+Sixty Northでは、石油・ガス探査で使用される反射法地震探査の物理データを含むSEG YファイルとPythonデータ構造との間でデータシフトを行うためのオープンソースPythonライブラリ、 `Segpy <https://github.com/sixty-north/segpy>`_ のテストにHypothesisを使用しています。
 
-Hypothesis is sure to find a place in most of our future Python codebases and many
-existing ones too.
+..
+  This is our first experience of property-based testing – as opposed to example-based
+  testing.  Not only are our tests more powerful, they are also much better
+  explanations of what we expect of the production code. In fact, the tests are much
+  closer to being specifications.  Hypothesis has located real defects in our code
+  which went undetected by traditional test cases, simply because Hypothesis is more
+  relentlessly devious about test case generation than us mere humans!  We found
+  Hypothesis particularly beneficial for Segpy because SEG Y is an antiquated format
+  that uses legacy text encodings (EBCDIC) and even a legacy floating point format
+  we implemented from scratch in Python.
+
+これは、例題ベースのテストとは対照的な、属性ベーステストを初めての経験。
+テストがより強力になっただけでなく、私たちがプロダクションコードに期待することをよりよく説明することができるようになりました。
+実際、テストはより仕様に近いものとなっています。
+Hypothesisは、従来のテストケースでは検出されなかったコードの不具合を発見してくれました。
+それは、Hypothesisが私たち人間よりも容赦なくテストケースを生成してくれるからです！
+SEG Yは、レガシーなテキストエンコーディング（EBCDIC）や、Pythonでゼロから実装したレガシーな浮動小数点フォーマットを使用する古めかしいフォーマットなので、HypothesisはSegpyに特に有益だと思いました。
+
+..
+  Hypothesis is sure to find a place in most of our future Python codebases and many
+  existing ones too.
+
+Hypothesisは、私たちの将来のPythonコードベースや、既存のコードベースの多くで、きっと役に立つことでしょう。
 
 -------------------------------------------
 `mulkieran <https://github.com/mulkieran>`_
