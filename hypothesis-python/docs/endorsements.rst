@@ -213,40 +213,72 @@ Hypothesisバンザイ！（少なくとも、属性ベーステストバンザ�
 Hypothesisを採用することで、 `bidict <https://github.com/jab/bidict>`_ のテストカバレッジが向上し、正しい動作が保たれているという確信を持ってコードに変更を加えることができるようになりました。
 Davidさん、素晴らしいテストツールをありがとうございました。
 
+..
+  --------------------------------------------
+  `Cory Benfield <https://github.com/Lukasa>`_
+  --------------------------------------------
+
 --------------------------------------------
 `Cory Benfield <https://github.com/Lukasa>`_
 --------------------------------------------
 
-Hypothesis is the single most powerful tool in my toolbox for working with
-algorithmic code, or any software that produces predictable output from a wide
-range of sources. When using it with
-`Priority <https://python-hyper.org/projects/priority/en/latest/>`_, Hypothesis consistently found
-errors in my assumptions and extremely subtle bugs that would have taken months
-of real-world use to locate. In some cases, Hypothesis found subtle deviations
-from the correct output of the algorithm that may never have been noticed at
-all.
+..
+  Hypothesis is the single most powerful tool in my toolbox for working with
+  algorithmic code, or any software that produces predictable output from a wide
+  range of sources. When using it with
+  `Priority <https://python-hyper.org/projects/priority/en/latest/>`_, Hypothesis consistently found
+  errors in my assumptions and extremely subtle bugs that would have taken months
+  of real-world use to locate. In some cases, Hypothesis found subtle deviations
+  from the correct output of the algorithm that may never have been noticed at
+  all.
 
-When it comes to validating the correctness of your tools, nothing comes close
-to the thoroughness and power of Hypothesis.
+Hypothesisは、アルゴリズムコードや、様々なソースから予測可能な出力を生成するソフトウェアを扱う上で、私のツールボックスの中で唯一最も強力なツールです。
+`Priority <https://python-hyper.org/projects/priority/en/latest/>`_ とともに使用すると、Hypothesisは一貫して私の仮定に誤りがあることや、実際の使用では何ヶ月もかかるような極めて微妙なバグを発見してくれました。
+場合によっては、全く気付かなかったかもしれない、アルゴリズムの正しい出力からの微妙なずれを、Hypothesisは発見してくれました。
+
+..
+  When it comes to validating the correctness of your tools, nothing comes close
+  to the thoroughness and power of Hypothesis.
+
+ツールの正しさを検証する場合、Hypothesisの徹底した能力とパワーにかなうものはありません。
+
+..
+  ------------------------------------------
+  `Jon Moore <https://github.com/jonmoore>`_
+  ------------------------------------------
 
 ------------------------------------------
 `Jon Moore <https://github.com/jonmoore>`_
 ------------------------------------------
 
-One extremely satisfied user here. Hypothesis is a really solid implementation
-of property-based testing, adapted well to Python, and with good features
-such as failure-case shrinkers. I first used it on a project where we needed
-to verify that a vendor's Python and non-Python implementations of an algorithm
-matched, and it found about a dozen cases that previous example-based testing
-and code inspections had not. Since then I've been evangelizing for it at our firm.
+..
+  One extremely satisfied user here. Hypothesis is a really solid implementation
+  of property-based testing, adapted well to Python, and with good features
+  such as failure-case shrinkers. I first used it on a project where we needed
+  to verify that a vendor's Python and non-Python implementations of an algorithm
+  matched, and it found about a dozen cases that previous example-based testing
+  and code inspections had not. Since then I've been evangelizing for it at our firm.
+
+非常に満足しているユーザーの一人です。
+Hypothesisは属性ベーステストの本当に堅実な実装で、Pythonによく適応しており、失敗ケースの収縮などの良い機能を持っています。
+ベンダーであるアルゴリズムのPythonと非Pythonの実装が一致しているかどうかを検証する必要があるプロジェクトで初めて使いましたが、これまでの例題ベースのテストやコード検査では発見できなかった約12のケースを発見しました。それ以来、私はこのツールを社内で広めています。
+
+..
+  --------------------------------------------
+  `Russel Winder <https://www.russel.org.uk>`_
+  --------------------------------------------
 
 --------------------------------------------
 `Russel Winder <https://www.russel.org.uk>`_
 --------------------------------------------
 
-I am using Hypothesis as an integral part of my Python workshops. Testing is an integral part of Python
-programming and whilst unittest and, better, pytest can handle example-based testing, property-based
-testing is increasingly far more important than example-base testing, and Hypothesis fits the bill.
+..
+  I am using Hypothesis as an integral part of my Python workshops. Testing is an integral part of Python
+  programming and whilst unittest and, better, pytest can handle example-based testing, property-based
+  testing is increasingly far more important than example-base testing, and Hypothesis fits the bill.
+
+私はPythonワークショップの不可欠な部分としてHypothesisを使っています。
+テストはPythonプログラミングの不可欠な部分であり、unittestや、より優れたpytestは例題ベースのテストを扱うことができますが、属性ベーステストは例題ベースのテストよりもはるかに重要であり、Hypothesisはその要求に適合しています。
 
 ---------------------------------------------
 `Wellfire Interactive <https://wellfire.co>`_
