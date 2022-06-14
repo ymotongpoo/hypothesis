@@ -135,44 +135,83 @@ SEG Yは、レガシーなテキストエンコーディング（EBCDIC）や、
 
 Hypothesisは、私たちの将来のPythonコードベースや、既存のコードベースの多くで、きっと役に立つことでしょう。
 
+..
+  -------------------------------------------
+  `mulkieran <https://github.com/mulkieran>`_
+  -------------------------------------------
+
 -------------------------------------------
 `mulkieran <https://github.com/mulkieran>`_
 -------------------------------------------
 
-Just found out about this excellent QuickCheck for Python implementation and
-ran up a few tests for my `bytesize <https://github.com/mulkieran/bytesize>`_
-package last night. Refuted a few hypotheses in the process.
+..
+  Just found out about this excellent QuickCheck for Python implementation and
+  ran up a few tests for my `bytesize <https://github.com/mulkieran/bytesize>`_
+  package last night. Refuted a few hypotheses in the process.
 
-Looking forward to using it with a bunch of other projects as well.
+ちょうどこの素晴らしい QuickCheck for Python の実装について知り、昨晩、私の `bytesize <https://github.com/mulkieran/bytesize>`_ パッケージのためにいくつかのテストを実行したところです。その過程でいくつかの仮説に反論しました。
+
+..
+  Looking forward to using it with a bunch of other projects as well.
+
+他のプロジェクトでもたくさん使うことを楽しみにしています。
+
+..
+  -----------------------------------------------
+  `Adam Johnson <https://github.com/adamchainz>`_
+  -----------------------------------------------
 
 -----------------------------------------------
 `Adam Johnson <https://github.com/adamchainz>`_
 -----------------------------------------------
 
-I have written a small library to serialize ``dict``\s to MariaDB's dynamic
-columns binary format,
-`mariadb-dyncol <https://github.com/adamchainz/mariadb-dyncol>`_. When I first
-developed it, I thought I had tested it really well - there were hundreds of
-test cases, some of them even taken from MariaDB's test suite itself. I was
-ready to release.
+..
+  I have written a small library to serialize ``dict``\s to MariaDB's dynamic
+  columns binary format,
+  `mariadb-dyncol <https://github.com/adamchainz/mariadb-dyncol>`_. When I first
+  developed it, I thought I had tested it really well - there were hundreds of
+  test cases, some of them even taken from MariaDB's test suite itself. I was
+  ready to release.
 
-Lucky for me, I tried Hypothesis with David at the PyCon UK sprints. Wow! It
-found bug after bug after bug. Even after a first release, I thought of a way
-to make the tests do more validation, which revealed a further round of bugs!
-Most impressively, Hypothesis found a complicated off-by-one error in a
-condition with 4095 versus 4096 bytes of data - something that I would never
-have found.
+私は ``dict`` を MariaDB の動的カラムのバイナリフォーマットである `mariadb-dyncol <https://github.com/adamchainz/mariadb-dyncol>`_ にシリアライズするための小さなライブラリを書きました。
+最初にこれを開発したとき、私は本当によくテストしたと思いました - 何百ものテストケースがあり、そのうちのいくつかはMariaDBのテストスイート自体から取得したものです。
+私はリリースする準備ができていました。
 
-Long live Hypothesis! (Or at least, property-based testing).
+..
+  Lucky for me, I tried Hypothesis with David at the PyCon UK sprints. Wow! It
+  found bug after bug after bug. Even after a first release, I thought of a way
+  to make the tests do more validation, which revealed a further round of bugs!
+  Most impressively, Hypothesis found a complicated off-by-one error in a
+  condition with 4095 versus 4096 bytes of data - something that I would never
+  have found.
+
+ラッキーなことに、PyCon UKのスプリントでDavidと一緒にHypothesisを試したんです。
+すごい！それはバグに次ぐバグを発見してくれました。
+最初のリリースの後でも、私はテストにもっと検証をさせる方法を考え、さらにバグを発見しました！
+特に印象的だったのは、4095バイトと4096バイトのデータを比較したときに、Hypothesisが複雑なoff-by-oneエラーを発見してくれたことです。
+
+..
+  Long live Hypothesis! (Or at least, property-based testing).
+
+Hypothesisバンザイ！（少なくとも、属性ベーステストバンザイ！）
+
+..
+  -------------------------------------------
+  `Josh Bronson <https://github.com/jab>`_
+  -------------------------------------------
 
 -------------------------------------------
 `Josh Bronson <https://github.com/jab>`_
 -------------------------------------------
 
-Adopting Hypothesis improved `bidict <https://github.com/jab/bidict>`_'s
-test coverage and significantly increased our ability to make changes to
-the code with confidence that correct behavior would be preserved.
-Thank you, David, for the great testing tool.
+..
+  Adopting Hypothesis improved `bidict <https://github.com/jab/bidict>`_'s
+  test coverage and significantly increased our ability to make changes to
+  the code with confidence that correct behavior would be preserved.
+  Thank you, David, for the great testing tool.
+
+Hypothesisを採用することで、 `bidict <https://github.com/jab/bidict>`_ のテストカバレッジが向上し、正しい動作が保たれているという確信を持ってコードに変更を加えることができるようになりました。
+Davidさん、素晴らしいテストツールをありがとうございました。
 
 --------------------------------------------
 `Cory Benfield <https://github.com/Lukasa>`_
