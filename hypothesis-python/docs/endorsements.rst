@@ -280,78 +280,143 @@ Hypothesisは属性ベーステストの本当に堅実な実装で、Pythonに�
 私はPythonワークショップの不可欠な部分としてHypothesisを使っています。
 テストはPythonプログラミングの不可欠な部分であり、unittestや、より優れたpytestは例題ベースのテストを扱うことができますが、属性ベーステストは例題ベースのテストよりもはるかに重要であり、Hypothesisはその要求に適合しています。
 
+..
+  ---------------------------------------------
+  `Wellfire Interactive <https://wellfire.co>`_
+  ---------------------------------------------
+
 ---------------------------------------------
 `Wellfire Interactive <https://wellfire.co>`_
 ---------------------------------------------
 
-We've been using Hypothesis in a variety of client projects, from testing
-Django-related functionality to domain-specific calculations. It both speeds
-up and simplifies the testing process since there's so much less tedious and
-error-prone work to do in identifying edge cases. Test coverage is nice but
-test depth is even nicer, and it's much easier to get meaningful test depth
-using Hypothesis.
+..
+  We've been using Hypothesis in a variety of client projects, from testing
+  Django-related functionality to domain-specific calculations. It both speeds
+  up and simplifies the testing process since there's so much less tedious and
+  error-prone work to do in identifying edge cases. Test coverage is nice but
+  test depth is even nicer, and it's much easier to get meaningful test depth
+  using Hypothesis.
+
+私たちは、Django関連の機能テストからドメイン固有の計算まで、様々なクライアントプロジェクトでHypothesisを使用してきました。
+エッジケースを特定するための面倒な作業やエラーが発生しやすい作業が非常に少なくなるため、テストプロセスが高速化・簡略化されます。
+テストカバレッジは素晴らしいですが、テストの深さはもっと素晴らしいですし、Hypothesisを使えば意味のあるテストの深さを得るのがずっと簡単になります。
+
+..
+  --------------------------------------------------
+  `Cody Kochmann <https://github.com/CodyKochmann>`_
+  --------------------------------------------------
 
 --------------------------------------------------
 `Cody Kochmann <https://github.com/CodyKochmann>`_
 --------------------------------------------------
 
-Hypothesis is being used as the engine for random object generation with my
-open source function fuzzer
-`battle_tested <https://github.com/CodyKochmann/battle_tested>`_
-which maps all behaviors of a function allowing you to minimize the chance of
-unexpected crashes when running code in production.
+..
+  Hypothesis is being used as the engine for random object generation with my
+  open source function fuzzer
+  `battle_tested <https://github.com/CodyKochmann/battle_tested>`_
+  which maps all behaviors of a function allowing you to minimize the chance of
+  unexpected crashes when running code in production.
 
-With how efficient Hypothesis is at generating the edge cases that cause
-unexpected behavior occur,
-`battle_tested <https://github.com/CodyKochmann/battle_tested>`_
-is able to map out the entire behavior of most functions in less than a few
-seconds.
+Hypothesisは、私のオープンソース関数ファザー `battle_tested <https://github.com/CodyKochmann/battle_tested>`_ と共にランダムオブジェクト生成のエンジンとして使われており、関数の全ての振る舞いをマッピングして、コードを本番環境で運用する際に予期せぬクラッシュの可能性を最小にします。
 
-Hypothesis truly is a masterpiece. I can't thank you enough for building it.
+..
+  With how efficient Hypothesis is at generating the edge cases that cause
+  unexpected behavior occur,
+  `battle_tested <https://github.com/CodyKochmann/battle_tested>`_
+  is able to map out the entire behavior of most functions in less than a few
+  seconds.
 
+Hypothesisが予期せぬ動作を引き起こすエッジケースを効率的に生成するため、 `battle_tested <https://github.com/CodyKochmann/battle_tested>`_ は、ほとんどの関数の動作全体を数秒以内にマップすることができます。
+
+..
+  Hypothesis truly is a masterpiece. I can't thank you enough for building it.
+
+Hypothesisは本当に傑作です。それを作ってくれたことに感謝してもしきれません。
+
+..
+  ---------------------------------------------------
+  `xMerchise Autrement <https://github.com/merchise>`_
+  ---------------------------------------------------
 
 ---------------------------------------------------
 `Merchise Autrement <https://github.com/merchise>`_
 ---------------------------------------------------
 
-Just minutes after our first use of hypothesis `we uncovered a subtle bug`__
-in one of our most used library.  Since then, we have increasingly used
-hypothesis to improve the quality of our testing in libraries and applications
-as well.
+..
+  Just minutes after our first use of hypothesis `we uncovered a subtle bug`__
+  in one of our most used library.  Since then, we have increasingly used
+  hypothesis to improve the quality of our testing in libraries and applications
+  as well.
+
+Hypothesisを初めて使った数分後に、私たちが最もよく使うライブラリの1つに `微妙なバグがあることが判明しました`__ 。
+それ以来、私たちはライブラリやアプリケーションのテストの質を向上させるためのテスト品質を向上させるために、ますますHypothesisを利用するようになりました。
 
 __ https://github.com/merchise/xoutil/commit/0a4a0f529812fed363efb653f3ade2d2bc203945
+
+..
+  ----------------------------------------------
+  `Florian Kromer <https://github.com/fkromer>`_
+  ----------------------------------------------
 
 ----------------------------------------------
 `Florian Kromer <https://github.com/fkromer>`_
 ----------------------------------------------
 
-At `Roboception GmbH <https://roboception.com/en/>`_ I use Hypothesis to
-implement fully automated stateless and stateful reliability tests for the
-`3D sensor rc_visard <https://roboception.com/en/rc_visard-en/>`_ and
-`robotic software components <https://roboception.com/en/rc_reason-en/>`_ .
+..
+  At `Roboception GmbH <https://roboception.com/en/>`_ I use Hypothesis to
+  implement fully automated stateless and stateful reliability tests for the
+  `3D sensor rc_visard <https://roboception.com/en/rc_visard-en/>`_ and
+  `robotic software components <https://roboception.com/en/rc_reason-en/>`_ .
 
-Thank you very much for creating the (probably) most powerful property-based
-testing framework.
+Roboception GmbH `<https://roboception.com/en/>`_ では、 `3Dセンサー rc_visard <https://roboception.com/en/rc_visard-en/>`_ と `ロボットソフトウェア部品 <https://roboception.com/en/rc_reason-en/>` のために、完全に自動化されたステートレスおよびステートフルの信頼性テストを実装するのにHypothesisを使用しています。
+
+..
+  Thank you very much for creating the (probably) most powerful property-based
+  testing framework.
+
+（おそらく）最も強力なプロパティベースのテストフレームワークを作成していただき、本当にありがとうございました。
+
+..
+  -------------------------------------------
+  `Reposit Power <https://repositpower.com>`_
+  -------------------------------------------
 
 -------------------------------------------
 `Reposit Power <https://repositpower.com>`_
 -------------------------------------------
 
-With a micro-service architecture, testing between services is made easy using Hypothesis
-in integration testing. Ensuring everything is running smoothly is vital to help maintain
-a secure network of Virtual Power Plants.
+..
+  With a micro-service architecture, testing between services is made easy using Hypothesis
+  in integration testing. Ensuring everything is running smoothly is vital to help maintain
+  a secure network of Virtual Power Plants.
 
-It allows us to find potential bugs and edge cases with relative ease
-and minimal overhead. As our architecture relies on services communicating effectively, Hypothesis
-allows us to strictly test for the kind of data which moves around our services, particularly
-our backend Python applications.
+マイクロサービスアーキテクチャでは、統合テストで Hypothesis を使用することで、サービス間のテストを簡単に行うことができます。
+仮想発電所の安全なネットワークを維持するためには、すべてがスムーズに動いていることを確認することが重要です。
 
+..
+  It allows us to find potential bugs and edge cases with relative ease
+  and minimal overhead. As our architecture relies on services communicating effectively, Hypothesis
+  allows us to strictly test for the kind of data which moves around our services, particularly
+  our backend Python applications.
+
+これにより、潜在的なバグやエッジケースを比較的容易に、かつ最小限のオーバーヘッドで発見することができます。
+私たちのアーキテクチャはサービスが効果的に通信することに依存しているので、Hypothesisは私たちのサービス、特にバックエンドのPythonアプリケーションの周りを移動するデータの種類を厳密にテストすることを可能にします。
+
+..
+  -------------------------------------------
+  `Your name goes here <http://example.com>`_
+  -------------------------------------------
 
 -------------------------------------------
-`Your name goes here <http://example.com>`_
+`あなたの名前がここに記載されます <http://example.com>`_
 -------------------------------------------
 
-I know there are many more, because I keep finding out about new people I'd never
-even heard of using Hypothesis. If you're looking to way to give back to a tool you
-love, adding your name here only takes a moment and would really help a lot. As per
-instructions at the top, just send me a pull request and I'll add you to the list.
+..
+  I know there are many more, because I keep finding out about new people I'd never
+  even heard of using Hypothesis. If you're looking to way to give back to a tool you
+  love, adding your name here only takes a moment and would really help a lot. As per
+  instructions at the top, just send me a pull request and I'll add you to the list.
+
+この他にも、Hypothesisを使ったことのない人たちをどんどん見つけています。
+もし、あなたが大好きなツールに恩返しをしたいと思ってくれたなら、少しだけ時間を割いて、ここにあなたの名前を追加していただければ、本当に助かると思います。
+冒頭の説明の通り、プルリクエストを送っていただければ、リストに追加します。
