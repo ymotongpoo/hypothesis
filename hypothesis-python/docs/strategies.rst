@@ -186,63 +186,115 @@ Hypothesisと :pypi:`hypothesis-jsonschema` を搭載し、先行プロジェク
 
 :pypi:`icontract-hypothesis` には :doc:`ghostwriter <ghostwriter>` が含まれており、テストファイルや `icontract-hypothesis-vim <https://github.com/mristin/icontract-hypothesis-vim>`_, `icontract-hypothesis-pycharm <https://github.com/mristin/icontract-hypothesis-pycharm>`_, そして `icontract-hypothesis-vscode <https://github.com/mristin/icontract-hypothesis-vscode>`_ などの IDE 統合に使用できます - どんな型名付き関数に対しても、なにかにライセンス契約をすることなく、数キーで素早く「スモークテスト」が実行できるのです!
 
+..
+  --------------------
+  Writing an extension
+  --------------------
+
 --------------------
-Writing an extension
+拡張を書く
 --------------------
 
-*See* :gh-file:`CONTRIBUTING.rst` *for more information.*
+..
+  *See* :gh-file:`CONTRIBUTING.rst` *for more information.*
 
-New strategies can be added to Hypothesis, or published as an external package
-on PyPI - either is fine for most strategies. If in doubt, ask!
+*詳細は* :gh-file:`CONTRIBUTING.rst` *を参照してください。*
 
-It's generally much easier to get things working outside, because there's more
-freedom to experiment and fewer requirements in stability and API style. We're
-happy to review and help with external packages as well as pull requests!
+..
+  New strategies can be added to Hypothesis, or published as an external package
+  on PyPI - either is fine for most strategies. If in doubt, ask!
 
-If you're thinking about writing an extension, please name it
-``hypothesis-{something}`` - a standard prefix makes the community more
-visible and searching for extensions easier.  And make sure you use the
-``Framework :: Hypothesis`` trove classifier!
+新しいストラテジーはHypothesisに追加するか、PyPIで外部パッケージとして公開することができます。
+疑問があれば質問してください。
 
-On the other hand, being inside gets you access to some deeper implementation
-features (if you need them) and better long-term guarantees about maintenance.
-We particularly encourage pull requests for new composable primitives that
-make implementing other strategies easier, or for widely used types in the
-standard library. Strategies for other things are also welcome; anything with
-external dependencies just goes in ``hypothesis.extra``.
+..
+  It's generally much easier to get things working outside, because there's more
+  freedom to experiment and fewer requirements in stability and API style. We're
+  happy to review and help with external packages as well as pull requests!
 
-Tools such as assertion helpers may also need to check whether the current
-test is using Hypothesis:
+外部ではより自由に実験ができ、安定性やAPIスタイルに関する要件も少ないため、一般に物事を動かすのはずっと簡単です。
+私たちは、外部パッケージのレビューやプルリクエストを喜んでお手伝いします!
+
+..
+  If you're thinking about writing an extension, please name it
+  ``hypothesis-{something}`` - a standard prefix makes the community more
+  visible and searching for extensions easier.  And make sure you use the
+  ``Framework :: Hypothesis`` trove classifier!
+
+もしあなたが拡張機能を書こうと考えているなら、 ``hypothesis-{something}`` という名前を付けてください。
+標準的な接頭辞があれば、コミュニティはより見やすくなり、拡張機能の検索も簡単になります。
+そして、必ず ``Framework :: Hypothesis`` クラシファイアを使ってください!
+
+..
+  On the other hand, being inside gets you access to some deeper implementation
+  features (if you need them) and better long-term guarantees about maintenance.
+  We particularly encourage pull requests for new composable primitives that
+  make implementing other strategies easier, or for widely used types in the
+  standard library. Strategies for other things are also welcome; anything with
+  external dependencies just goes in ``hypothesis.extra``.
+
+一方、内部にいることで、（必要であれば）より深い実装機能を利用することができ、メンテナンスに関してより良い長期保証を得ることができます。
+私たちは特に、他のストラテジーの実装を容易にする新しい合成可能なプリミティブや、標準ライブラリで広く使われている型に対するプルリクエストを推奨します。
+また、他のものに対するストラテジーも歓迎します。外部との依存関係があるものは、 ``hypothesis.extra`` に入れてください。
+
+..
+  Tools such as assertion helpers may also need to check whether the current
+  test is using Hypothesis:
+
+アサーションヘルパーなどのツールは、現在のテストがHypothesisを使用しているかどうかをチェックする必要がある場合もあります。
 
 .. autofunction:: hypothesis.currently_in_test_context
 
 
+..
+  .. _entry-points:
+
+..
+  --------------------------------------------------
+  Hypothesis integration via setuptools entry points
+  --------------------------------------------------
+
 .. _entry-points:
 
---------------------------------------------------
-Hypothesis integration via setuptools entry points
---------------------------------------------------
+--------------------------------------------------------------------------
+setuptoolsのエントリーポイント経由でのHypothesisとのインテグレーション
+--------------------------------------------------------------------------
 
-If you would like to ship Hypothesis strategies for a custom type - either as
-part of the upstream library, or as a third-party extension, there's a catch:
-:func:`~hypothesis.strategies.from_type` only works after the corresponding
-call to :func:`~hypothesis.strategies.register_type_strategy`, and you'll have
-the same problem with :func:`~hypothesis.register_random`.  This means that
-either
+..
+  If you would like to ship Hypothesis strategies for a custom type - either as
+  part of the upstream library, or as a third-party extension, there's a catch:
+  :func:`~hypothesis.strategies.from_type` only works after the corresponding
+  call to :func:`~hypothesis.strategies.register_type_strategy`, and you'll have
+  the same problem with :func:`~hypothesis.register_random`.  This means that
+  either
 
-- you have to try importing Hypothesis to register the strategy when *your*
-  library is imported, though that's only useful at test time, or
-- the user has to call a 'register the strategies' helper that you provide
-  before running their tests
+もし、カスタムタイプのHypothesisストラテジーをアップストリームライブラリーの一部として、あるいはサードパーティの拡張として配布したい場合には、次のような問題があります。 :func:`~hypothesis.strategies.from_type` は :func:`~hypothesis.strategies.register_type_strategy` を呼び出した後にのみ機能し、 :func:`~hypothesis.register_random` でも同じ問題が発生します。 これは、以下のどちらかを意味します。
 
-`Entry points <https://amir.rachum.com/blog/2017/07/28/python-entry-points/>`__
-are Python's standard way of automating the latter: when you register a
-``"hypothesis"`` entry point in your ``setup.py``, we'll import and run it
-automatically when *hypothesis* is imported.  Nothing happens unless Hypothesis
-is already in use, and it's totally seamless for downstream users!
+..
+  - you have to try importing Hypothesis to register the strategy when *your*
+    library is imported, though that's only useful at test time, or
+  - the user has to call a 'register the strategies' helper that you provide
+    before running their tests
 
-Let's look at an example.  You start by adding a function somewhere in your
-package that does all the Hypothesis-related setup work:
+- Hypothesisをインポートして、自分のライブラリがインポートされたときにストラテジーを登録するようにしなければならない。
+- ユーザはテストを実行する前に、あなたが提供する「ストラテジーの登録」ヘルパーを呼び出さなければならない。
+
+..
+  `Entry points <https://amir.rachum.com/blog/2017/07/28/python-entry-points/>`__
+  are Python's standard way of automating the latter: when you register a
+  ``"hypothesis"`` entry point in your ``setup.py``, we'll import and run it
+  automatically when *hypothesis* is imported.  Nothing happens unless Hypothesis
+  is already in use, and it's totally seamless for downstream users!
+
+`エントリーポイント <https://amir.rachum.com/blog/2017/07/28/python-entry-points/>`__ は後者を自動化するPythonの標準的な方法です。
+``"hypothesis"`` エントリーポイントを ``setup.py`` に登録すると、 *hypothesis* がインポートされたときに自動的にそれをインポートして実行させます。
+Hypothesisが既に使用されていない限り何も起こりませんし、下流のユーザーにとっても全くシームレスなのです!
+
+..
+  Let's look at an example.  You start by adding a function somewhere in your
+  package that does all the Hypothesis-related setup work:
+
+例を見てみましょう。 まず、パッケージのどこかに、Hypothesis関連の設定作業を行う関数を追加します。
 
 .. code-block:: python
 
@@ -260,7 +312,10 @@ package that does all the Hypothesis-related setup work:
 
         st.register_type_strategy(MyCustomType, st.integers(min_value=0))
 
-and then tell ``setuptools`` that this is your ``"hypothesis"`` entry point:
+..
+  and then tell ``setuptools`` that this is your ``"hypothesis"`` entry point:
+
+``setuptools`` にこれが ``"hypothesis"`` のエントリーポイントであることを知らせます。
 
 .. code-block:: python
 
@@ -272,27 +327,45 @@ and then tell ``setuptools`` that this is your ``"hypothesis"`` entry point:
     # Or name a specific function too, and Hypothesis will call it for you
     entry_points = {"hypothesis": ["_ = mymodule:_hypothesis_setup_hook"]}
 
-And that's all it takes!
+..
+  And that's all it takes!
+
+そして、それだけでいいのです！
+
+..
+  .. note::
+      On Python 3.7, where the ``importlib.metadata`` module
+      is not in the standard library, loading entry points requires either the
+      :pypi:`importlib_metadata` (preferred) or :pypi:`setuptools` (fallback)
+      package to be installed.
 
 .. note::
-    On Python 3.7, where the ``importlib.metadata`` module
-    is not in the standard library, loading entry points requires either the
-    :pypi:`importlib_metadata` (preferred) or :pypi:`setuptools` (fallback)
-    package to be installed.
+    Python 3.7 では、 ``importlib.metadata`` モジュールが標準ライブラリにないので、エントリーポイントを読み込むには :pypi:`importlib_metadata` （推奨）または :pypi:`setuptools`（フォールバック）パッケージのどちらかをインストールする必要があります。
 
+..
+  Interaction with :pypi:`pytest-cov`
+  -----------------------------------
 
-Interaction with :pypi:`pytest-cov`
+:pypi:`pytest-cov` とのやり取り
 -----------------------------------
 
-Because pytest does not load plugins from entrypoints in any particular order,
-using the Hypothesis entrypoint may import your module before :pypi:`pytest-cov`
-starts.  `This is a known issue <https://github.com/pytest-dev/pytest/issues/935>`__,
-but there are workarounds.
+..
+  Because pytest does not load plugins from entrypoints in any particular order,
+  using the Hypothesis entrypoint may import your module before :pypi:`pytest-cov`
+  starts.  `This is a known issue <https://github.com/pytest-dev/pytest/issues/935>`__,
+  but there are workarounds.
 
-You can use :command:`coverage run pytest ...` instead of :command:`pytest --cov ...`,
-opting out of the pytest plugin entirely.  Alternatively, you can ensure that Hypothesis
-is loaded after coverage measurement is started by disabling the entrypoint, and
-loading our pytest plugin from your ``conftest.py`` instead::
+pytestは特定の順番でエントリーポイントからプラグインをロードしないので、Hypothesisエントリーポイントを使用すると、 :pypi:`pytest-cov` が開始する前にあなたのモジュールをインポートするかもしれません。
+`これは既知の問題です <https://github.com/pytest-dev/pytest/issues/935>`__ が、回避策はあります。
+
+..
+  You can use :command:`coverage run pytest ...` instead of :command:`pytest --cov ...`,
+  opting out of the pytest plugin entirely.  Alternatively, you can ensure that Hypothesis
+  is loaded after coverage measurement is started by disabling the entrypoint, and
+  loading our pytest plugin from your ``conftest.py`` instead::
+
+:command:`pytest --cov ...` の代わりに :command:`coverage run pytest ...` を使用すると、pytestプラグインを完全にオプトアウトすることができます。
+また、エントリーポイントを無効にし、代わりに ``conftest.py`` から pytest プラグインを読み込むことで、カバレッジ測定開始後に Hypothesis を確実にロードすることができます。::
 
     echo "pytest_plugins = ['hypothesis.extra.pytestplugin']\n" > tests/conftest.py
     pytest -p "no:hypothesispytest" ...
