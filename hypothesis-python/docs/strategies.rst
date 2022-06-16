@@ -1,56 +1,113 @@
-=============================
-Projects extending Hypothesis
-=============================
+..
+  =============================
+  Projects extending Hypothesis
+  =============================
 
-Hypothesis has been eagerly used and extended by the open source community.
-This page lists extensions and applications; you can find more or newer
-packages by searching PyPI `by keyword <https://pypi.org/search/?q=hypothesis>`_
-or `filter by classifier <https://pypi.org/search/?c=Framework+%3A%3A+Hypothesis>`_,
-or search `libraries.io <https://libraries.io/search?languages=Python&q=hypothesis>`_.
+====================================
+Hypothesisを拡張するプロジェクト
+====================================
 
-If there's something missing which you think should be here, let us know!
+..
+  Hypothesis has been eagerly used and extended by the open source community.
+  This page lists extensions and applications; you can find more or newer
+  packages by searching PyPI `by keyword <https://pypi.org/search/?q=hypothesis>`_
+  or `filter by classifier <https://pypi.org/search/?c=Framework+%3A%3A+Hypothesis>`_,
+  or search `libraries.io <https://libraries.io/search?languages=Python&q=hypothesis>`_.
+
+Hypothesisはオープンソースコミュニティによって熱心に利用され、拡張されてきました。
+このページでは拡張とアプリケーションをリストアップしています。
+PyPIで `キーワード <https://pypi.org/search/?q=hypothesis>`_ や `クラシファイア <https://pypi.org/search/?c=Framework+%3A%3A+Hypothesis>`_ のフィルターを使って検索したり、 `libraries.io <https://libraries.io/search?languages=Python&q=hypothesis>`_ を検索すると、より多くのパッケージや新しいパッケージを見つけることができます。
+
+..
+  If there's something missing which you think should be here, let us know!
+
+もし、「ここにあるべき」というものがあれば、ぜひ教えてください。
+
+..
+  .. note::
+      Being listed on this page does not imply that the Hypothesis
+      maintainers endorse a package.
 
 .. note::
-    Being listed on this page does not imply that the Hypothesis
-    maintainers endorse a package.
+    このページに掲載されていることは、Hypothesisの管理者がそのパッケージを推奨していることを意味するものではありません。
+
+..
+  -------------------
+  External strategies
+  -------------------
 
 -------------------
-External strategies
+外部のストラテジー
 -------------------
 
-Some packages provide strategies directly:
+..
+  Some packages provide strategies directly:
 
-* :pypi:`hypothesis-fspaths` - strategy to generate filesystem paths.
-* :pypi:`hypothesis-geojson` - strategy to generate `GeoJson <https://geojson.org/>`_.
-* :pypi:`hypothesis-geometry` - strategies to generate geometric objects.
-* :pypi:`hs-dbus-signature` - strategy to generate arbitrary
-  `D-Bus signatures <https://dbus.freedesktop.org>`_.
-* :pypi:`hypothesis-sqlalchemy` - strategies to generate :pypi:`SQLAlchemy` objects.
-* :pypi:`hypothesis-ros` - strategies to generate messages and parameters for the `Robot Operating System <https://www.ros.org/>`_.
-* :pypi:`hypothesis-csv` - strategy to generate CSV files.
-* :pypi:`hypothesis-networkx` - strategy to generate :pypi:`networkx` graphs.
-* :pypi:`hypothesis-bio` - strategies for bioinformatics data, such as DNA, codons, FASTA, and FASTQ formats.
-* :pypi:`hypothesmith` - strategy to generate syntatically-valid Python code.
+パッケージによっては、ストラテジーを直接提供するものもあります。
 
-Others provide a function to infer a strategy from some other schema:
+..
+  * :pypi:`hypothesis-fspaths` - strategy to generate filesystem paths.
+  * :pypi:`hypothesis-geojson` - strategy to generate `GeoJson <https://geojson.org/>`_.
+  * :pypi:`hypothesis-geometry` - strategies to generate geometric objects.
+  * :pypi:`hs-dbus-signature` - strategy to generate arbitrary
+    `D-Bus signatures <https://dbus.freedesktop.org>`_.
+  * :pypi:`hypothesis-sqlalchemy` - strategies to generate :pypi:`SQLAlchemy` objects.
+  * :pypi:`hypothesis-ros` - strategies to generate messages and parameters for the `Robot Operating System <https://www.ros.org/>`_.
+  * :pypi:`hypothesis-csv` - strategy to generate CSV files.
+  * :pypi:`hypothesis-networkx` - strategy to generate :pypi:`networkx` graphs.
+  * :pypi:`hypothesis-bio` - strategies for bioinformatics data, such as DNA, codons, FASTA, and FASTQ formats.
+  * :pypi:`hypothesmith` - strategy to generate syntatically-valid Python code.
 
-* :pypi:`hypothesis-jsonschema` - infer strategies from `JSON schemas <https://json-schema.org/>`_.
-* :pypi:`lollipop-hypothesis` - infer strategies from :pypi:`lollipop` schemas.
-* :pypi:`hypothesis-drf` - infer strategies from a :pypi:`djangorestframework` serialiser.
-* :pypi:`hypothesis-graphql` - infer strategies from `GraphQL schemas <https://graphql.org/>`_.
-* :pypi:`hypothesis-mongoengine` - infer strategies from a :pypi:`mongoengine` model.
-* :pypi:`hypothesis-pb` - infer strategies from `Protocol Buffer
-  <https://developers.google.com/protocol-buffers/>`_ schemas.
+* :pypi:`hypothesis-fspaths` - ファイルシステムのパスを生成するストラテジー
+* :pypi:`hypothesis-geojson` - `GeoJson <https://geojson.org/>`_ を生成するストラテジー
+* :pypi:`hypothesis-geometry` - 幾何学オブジェクトを生成するストラテジー
+* :pypi:`hs-dbus-signature` -  任意の `D-Busシグネチャ <https://dbus.freedesktop.org>`_ を生成するストラテジー
+* :pypi:`hypothesis-sqlalchemy` - :pypi:`SQLAlchemy` オブジェクトを生成するストラテジー
+* :pypi:`hypothesis-ros` - `Robot Operating System <https://www.ros.org/>`_ のメッセージとパラメータを生成するストラテジー
+* :pypi:`hypothesis-csv` - CSVファイルを生成するストラテジー
+* :pypi:`hypothesis-networkx` - :pypi:`networkx` グラフを生成するストラテジー
+* :pypi:`hypothesis-bio` -  DNA、codons、FASTA、FASTQ形式のバイオインフォマティクスデータを生成するストラテジー
+* :pypi:`hypothesmith` - 構文的に正しいPythonコードを生成するストラテジー
 
-Or some other custom integration, such as a :ref:`"hypothesis" entry point <entry-points>`:
+..
+  Others provide a function to infer a strategy from some other schema:
 
-* :pypi:`deal` is a design-by-contract library with built-in Hypothesis support.
-* :pypi:`icontract-hypothesis` infers strategies from :pypi:`icontract` code contracts.
-* :pypi:`Pandera` schemas all have a ``.strategy()`` method, which returns a strategy for
-  matching :class:`~pandas:pandas.DataFrame`\ s.
-* :pypi:`Pydantic` automatically registers constrained types - so
-  :func:`~hypothesis.strategies.builds` and :func:`~hypothesis.strategies.from_type`
-  "just work" regardless of the underlying implementation.
+また、他のスキーマからストラテジーを推論する機能を提供するものもある。
+
+..
+  * :pypi:`hypothesis-jsonschema` - infer strategies from `JSON schemas <https://json-schema.org/>`_.
+  * :pypi:`lollipop-hypothesis` - infer strategies from :pypi:`lollipop` schemas.
+  * :pypi:`hypothesis-drf` - infer strategies from a :pypi:`djangorestframework` serialiser.
+  * :pypi:`hypothesis-graphql` - infer strategies from `GraphQL schemas <https://graphql.org/>`_.
+  * :pypi:`hypothesis-mongoengine` - infer strategies from a :pypi:`mongoengine` model.
+  * :pypi:`hypothesis-pb` - infer strategies from `Protocol Buffer
+    <https://developers.google.com/protocol-buffers/>`_ schemas.
+
+* :pypi:`hypothesis-jsonschema` - `JSONスキーマ <https://json-schema.org/>`_ からストラテジーを推論する
+* :pypi:`lollipop-hypothesis` - :pypi:`lollipop` スキーマからストラテジーを推論する
+* :pypi:`hypothesis-drf` - :pypi:`djangorestframework` シリアライザからストラテジーを推論する
+* :pypi:`hypothesis-graphql` - `GraphQLスキーマ <https://graphql.org/>`_ からストラテジーを推論する
+* :pypi:`hypothesis-mongoengine` - :pypi:`mongoengine` モデルからストラテジーを推論する
+* :pypi:`hypothesis-pb` - `Protocol Buffer <https://developers.google.com/protocol-buffers/>`_ スキーマからストラテジーを推論する
+
+..
+  Or some other custom integration, such as a :ref:`"hypothesis" entry point <entry-points>`:
+
+他にも :ref:`"hypothesis" エントリーポイント <entry-points>` のような他のカスタムインテグレーションがあります。
+
+..
+  * :pypi:`deal` is a design-by-contract library with built-in Hypothesis support.
+  * :pypi:`icontract-hypothesis` infers strategies from :pypi:`icontract` code contracts.
+  * :pypi:`Pandera` schemas all have a ``.strategy()`` method, which returns a strategy for
+    matching :class:`~pandas:pandas.DataFrame`\ s.
+  * :pypi:`Pydantic` automatically registers constrained types - so
+    :func:`~hypothesis.strategies.builds` and :func:`~hypothesis.strategies.from_type`
+    "just work" regardless of the underlying implementation.
+
+* :pypi:`deal` はコントラクト単位の設計を行うライブラリで、組み込みの Hypothesis をサポート
+* :pypi:`icontract-hypothesis` は :pypi:`icontract` のコードコントラクトからストラテジーを推論する
+* :pypi:`Pandera` スキーマは全て ``.strategy()`` メソッドを持つ。このメソッドは :class:`~pandas:pandas.DataFrame` のマッチングのためのストラテジーを返す。
+* :pypi:`Pydantic` は制約付きの型を自動的に登録する。そのため、 :func:`~hypothesis.strategies.builds` や :func:`~hypothesis.strategies.from_type` は実装に関係なく動作することができる。
 
 -----------------
 Other cool things
