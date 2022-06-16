@@ -1,17 +1,30 @@
-=====================================
-Open source projects using Hypothesis
-=====================================
+..
+  =====================================
+  Open source projects using Hypothesis
+  =====================================
 
-The following is a non-exhaustive list of open source projects I know are
-using Hypothesis. If you're aware of any others please add them to the list!
-The only inclusion criterion right now is that if it's a Python library
-then it should be available on PyPI.
+=================================================
+Hypothesisを利用したオープンソースプロジェクト
+=================================================
 
-You can find hundreds more from `the Hypothesis page at libraries.io
-<https://libraries.io/pypi/hypothesis>`_, and :gh-file:`thousands on GitHub <network/dependents>`.
-Hypothesis has `over 100,000 downloads per week <https://pypistats.org/packages/hypothesis>`__,
-and was used by `more than 4% of Python users surveyed by the PSF in 2020
-<https://www.jetbrains.com/lp/python-developers-survey-2020/>`__.
+..
+  The following is a non-exhaustive list of open source projects I know are
+  using Hypothesis. If you're aware of any others please add them to the list!
+  The only inclusion criterion right now is that if it's a Python library
+  then it should be available on PyPI.
+
+以下は、私が知っているHypothesisを使用しているオープンソースプロジェクトの非網羅的なリストです。
+もし、他に知っているものがあれば、ぜひリストに追加してください。Pythonのライブラリであれば、PyPIで利用可能であることが唯一の基準です。
+
+..
+  You can find hundreds more from `the Hypothesis page at libraries.io
+  <https://libraries.io/pypi/hypothesis>`_, and :gh-file:`thousands on GitHub <network/dependents>`.
+  Hypothesis has `over 100,000 downloads per week <https://pypistats.org/packages/hypothesis>`__,
+  and was used by `more than 4% of Python users surveyed by the PSF in 2020
+  <https://www.jetbrains.com/lp/python-developers-survey-2020/>`__.
+
+さらに `libraries.io <https://libraries.io/pypi/hypothesis>`_ の Hypothesis ページから数百を、また :gh-file:`数千のGitHubプロジェクト <network/dependents>` も入手可能です。
+Hypothesisは `週に10万回以上ダウンロードされ <https://pypistats.org/packages/hypothesis>`__ 、 `2020年にPSFが調査したPythonユーザーの4%以上が使用しました <https://www.jetbrains.com/lp/python-developers-survey-2020/>`__。
 
 * `aur <https://github.com/cdown/aur>`_
 * `argon2_cffi <https://github.com/hynek/argon2-cffi>`_
