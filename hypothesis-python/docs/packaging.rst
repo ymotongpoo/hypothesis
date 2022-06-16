@@ -46,7 +46,7 @@ Hypothesisは、非常に頻繁にリリーススケジュールが組まれて�
   be considered complete releases. Requests to include additional files in them will not be granted. Their absence
   is not a bug.
 
-これらは :gh-link:`the GitHub releases page <releases>` から入手することができます。
+これらは :gh-link:`GitHubのリリースページ <releases>` から入手することができます。
 PyPI にある tarball は :pypi:`pip` のような Python ツールからのインストールを想定しており、完全なリリースとみなすべきではありません。
 追加ファイルを含めるというリクエストは承認されません。これらのファイルがないことはバグではありません。
 
@@ -75,7 +75,7 @@ Pythonバージョン
   We also support the latest versions of PyPy for Python 3.
 
 Hypothesisは様々なバージョンのPythonで動作するように設計されています。
-`上流でサポートされているすべてのバージョンのCPython <https://devguide.python.org/#status-of-python-branches>`_をサポートしています。
+`上流でサポートされているすべてのバージョンのCPython <https://devguide.python.org/#status-of-python-branches>`_ をサポートしています。
 また、Python 3用のPyPyの最新バージョンもサポートしています。
 
 ..
