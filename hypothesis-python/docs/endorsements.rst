@@ -407,9 +407,9 @@ Roboception GmbH `<https://roboception.com/en/>`_ では、 `3Dセンサー rc_v
   `Your name goes here <http://example.com>`_
   -------------------------------------------
 
--------------------------------------------
+------------------------------------------------------------------
 `あなたの名前がここに記載されます <http://example.com>`_
--------------------------------------------
+------------------------------------------------------------------
 
 ..
   I know there are many more, because I keep finding out about new people I'd never
