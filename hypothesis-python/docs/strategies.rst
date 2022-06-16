@@ -109,47 +109,82 @@ PyPIで `キーワード <https://pypi.org/search/?q=hypothesis>`_ や `クラ�
 * :pypi:`Pandera` スキーマは全て ``.strategy()`` メソッドを持つ。このメソッドは :class:`~pandas:pandas.DataFrame` のマッチングのためのストラテジーを返す。
 * :pypi:`Pydantic` は制約付きの型を自動的に登録する。そのため、 :func:`~hypothesis.strategies.builds` や :func:`~hypothesis.strategies.from_type` は実装に関係なく動作することができる。
 
------------------
-Other cool things
------------------
+..
+  -----------------
+  Other cool things
+  -----------------
 
-:pypi:`schemathesis` is a tool for testing web applications built with `Open API / Swagger specifications <https://swagger.io/>`_.
-It reads the schema and generates test cases which will ensure that the application is compliant with its schema.
-The application under test could be written in any language, the only thing you need is a valid API schema in a supported format.
-Includes CLI and convenient :pypi:`pytest` integration.
-Powered by Hypothesis and :pypi:`hypothesis-jsonschema`, inspired by the earlier :pypi:`swagger-conformance` library.
+---------------------------------
+その他のかっこいいプロジェクト
+---------------------------------
 
-`Trio <https://trio.readthedocs.io/>`_ is an async framework with "an obsessive
-focus on usability and correctness", so naturally it works with Hypothesis!
-:pypi:`pytest-trio` includes :ref:`a custom hook <custom-function-execution>`
-that allows ``@given(...)`` to work with Trio-style async test functions, and
-:pypi:`hypothesis-trio` includes stateful testing extensions to support
-concurrent programs.
+..
+  :pypi:`schemathesis` is a tool for testing web applications built with `Open API / Swagger specifications <https://swagger.io/>`_.
+  It reads the schema and generates test cases which will ensure that the application is compliant with its schema.
+  The application under test could be written in any language, the only thing you need is a valid API schema in a supported format.
+  Includes CLI and convenient :pypi:`pytest` integration.
+  Powered by Hypothesis and :pypi:`hypothesis-jsonschema`, inspired by the earlier :pypi:`swagger-conformance` library.
 
-:pypi:`pymtl3` is "an open-source Python-based hardware generation, simulation,
-and verification framework with multi-level hardware modeling support", which
-ships with Hypothesis integrations to check that all of those levels are
-equivalent, from function-level to register-transfer level and even to hardware.
+:pypi:`schemathesis` は `Open API / Swagger 仕様書 <https://swagger.io/>`_ で作られたウェブアプリケーションをテストするためのツールです。
+スキーマを読み込み、アプリケーションがそのスキーマに準拠していることを保証するテストケースを生成します。
+テスト対象のアプリケーションはどのような言語でも書くことができ、必要なのはサポートされている形式の有効なAPIスキーマだけです。
+CLIと便利な :pypi:`pytest` のインテグレーションが含まれています。
+Hypothesisと :pypi:`hypothesis-jsonschema` を搭載し、先行プロジェクトの :pypi:`swagger-conformance` ライブラリにインスパイアされています。
 
-:pypi:`libarchimedes` makes it easy to use Hypothesis in
-`the Hy language <https://github.com/hylang/hy>`_, a Lisp embedded in Python.
+..
+  `Trio <https://trio.readthedocs.io/>`_ is an async framework with "an obsessive
+  focus on usability and correctness", so naturally it works with Hypothesis!
+  :pypi:`pytest-trio` includes :ref:`a custom hook <custom-function-execution>`
+  that allows ``@given(...)`` to work with Trio-style async test functions, and
+  :pypi:`hypothesis-trio` includes stateful testing extensions to support
+  concurrent programs.
 
-:pypi:`battle_tested` is a fuzzing tool that will show you how your code can
-fail - by trying all kinds of inputs and reporting whatever happens.
+`Trio <https://trio.readthedocs.io/>`_ は「使いやすさと正確さに徹底的にこだわった」非同期フレームワークです。
+:pypi:`pytest-trio` には :ref:`カスタムフック <custom-function-execution>` があり、 ``@given(...)`` が Trio形式の非同期テスト関数と連動できるようになっています。
+また :pypi:`hypothesis-trio` には並列プログラムをサポートするステートフルテスト拡張が含まれています。
 
-:pypi:`pytest-subtesthack` functions as a workaround for :issue:`377`.
+..
+  :pypi:`pymtl3` is "an open-source Python-based hardware generation, simulation,
+  and verification framework with multi-level hardware modeling support", which
+  ships with Hypothesis integrations to check that all of those levels are
+  equivalent, from function-level to register-transfer level and even to hardware.
 
-:pypi:`returns` uses Hypothesis to verify that Higher Kinded Types correctly
-implement functor, applicative, monad, and other laws; allowing a declarative
-approach to be combined with traditional pythonic code.
+:pypi:`pymtl3` は「マルチレベルのハードウェアモデリングをサポートするオープンソースのPythonベースのハードウェア生成、シミュレーション、検証フレームワーク」で、関数レベルからレジスタ転送レベル、さらにはハードウェアまで、すべてのレベルが同等であることをチェックするHypothesisとのインテグレーションを搭載しています。
 
-:pypi:`icontract-hypothesis` includes a :doc:`ghostwriter <ghostwriter>` for test files
-and IDE integrations such as `icontract-hypothesis-vim <https://github.com/mristin/icontract-hypothesis-vim>`_,
-`icontract-hypothesis-pycharm <https://github.com/mristin/icontract-hypothesis-pycharm>`_,
-and
-`icontract-hypothesis-vscode <https://github.com/mristin/icontract-hypothesis-vscode>`_ -
-you can run a quick 'smoke test' with only a few keystrokes for any type-annotated
-function, even if it doesn't have any contracts!
+..
+  :pypi:`libarchimedes` makes it easy to use Hypothesis in
+  `the Hy language <https://github.com/hylang/hy>`_, a Lisp embedded in Python.
+
+:pypi:`libarchimedes` は Python に埋め込まれた Lisp である `Hy 言語 <https://github.com/hylang/hy>`_ で Hypothesis を簡単に使えるようにします。
+
+..
+  :pypi:`battle_tested` is a fuzzing tool that will show you how your code can
+  fail - by trying all kinds of inputs and reporting whatever happens.
+
+:pypi:`battle_tested` はファジングツールで、あなたのコードがどのように失敗しうるかを、あらゆる種類の入力を試し、何が起こったかを報告します。
+
+..
+  :pypi:`pytest-subtesthack` functions as a workaround for :issue:`377`.
+
+:pypi:`pytest-subtesthack` は :issue:`377` のワークアラウンドとして機能します。
+
+..
+  :pypi:`returns` uses Hypothesis to verify that Higher Kinded Types correctly
+  implement functor, applicative, monad, and other laws; allowing a declarative
+  approach to be combined with traditional pythonic code.
+
+:pypi:`returns` はHigher Kinded Typesがファンクタ、アプリケーティブ、モナド、その他の法則を正しく実装しているかどうかを検証するためにHypothesisを使用します。これにより、宣言的アプローチを従来のPythonicなコードと結合することができます。
+
+..
+  :pypi:`icontract-hypothesis` includes a :doc:`ghostwriter <ghostwriter>` for test files
+  and IDE integrations such as `icontract-hypothesis-vim <https://github.com/mristin/icontract-hypothesis-vim>`_,
+  `icontract-hypothesis-pycharm <https://github.com/mristin/icontract-hypothesis-pycharm>`_,
+  and
+  `icontract-hypothesis-vscode <https://github.com/mristin/icontract-hypothesis-vscode>`_ -
+  you can run a quick 'smoke test' with only a few keystrokes for any type-annotated
+  function, even if it doesn't have any contracts!
+
+:pypi:`icontract-hypothesis` には :doc:`ghostwriter <ghostwriter>` が含まれており、テストファイルや `icontract-hypothesis-vim <https://github.com/mristin/icontract-hypothesis-vim>`_, `icontract-hypothesis-pycharm <https://github.com/mristin/icontract-hypothesis-pycharm>`_, そして `icontract-hypothesis-vscode <https://github.com/mristin/icontract-hypothesis-vscode>`_ などの IDE 統合に使用できます - どんな型名付き関数に対しても、なにかにライセンス契約をすることなく、数キーで素早く「スモークテスト」が実行できるのです!
 
 --------------------
 Writing an extension
