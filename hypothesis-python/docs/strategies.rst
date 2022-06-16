@@ -340,7 +340,7 @@ Hypothesisが既に使用されていない限り何も起こりませんし、�
       package to be installed.
 
 .. note::
-    Python 3.7 では、 ``importlib.metadata`` モジュールが標準ライブラリにないので、エントリーポイントを読み込むには :pypi:`importlib_metadata` （推奨）または :pypi:`setuptools`（フォールバック）パッケージのどちらかをインストールする必要があります。
+    Python 3.7 では、 ``importlib.metadata`` モジュールが標準ライブラリにないので、エントリーポイントを読み込むには :pypi:`importlib_metadata` （推奨）または :pypi:`setuptools` （フォールバック）パッケージのどちらかをインストールする必要があります。
 
 ..
   Interaction with :pypi:`pytest-cov`
