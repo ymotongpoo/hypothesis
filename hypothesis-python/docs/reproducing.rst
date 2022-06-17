@@ -1,55 +1,106 @@
+..
+  ====================
+  Reproducing failures
+  ====================
+
 ====================
-Reproducing failures
+失敗を再現する
 ====================
 
-One of the things that is often concerning for people using randomized testing
-is the question of how to reproduce failing test cases.
+..
+  One of the things that is often concerning for people using randomized testing
+  is the question of how to reproduce failing test cases.
+
+ランダム化テストを使っている人がよく悩むのが、失敗したテストケースをどうやって再現するかという問題です。
+
+..
+  .. note::
+      It is better to think about the data Hypothesis generates as being
+      *arbitrary*, rather than *random*.  We deliberately generate any valid
+      data that seems likely to cause errors, so you shouldn't rely on any
+      expected distribution of or relationships between generated data.
+      You can read about "swarm testing" and "coverage guided fuzzing" if
+      you're interested, because you don't need to know for Hypothesis!
 
 .. note::
-    It is better to think about the data Hypothesis generates as being
-    *arbitrary*, rather than *random*.  We deliberately generate any valid
-    data that seems likely to cause errors, so you shouldn't rely on any
-    expected distribution of or relationships between generated data.
-    You can read about "swarm testing" and "coverage guided fuzzing" if
-    you're interested, because you don't need to know for Hypothesis!
+    Hypothesisが生成するデータは、 *ランダム* ではなく、 *任意* であると考えた方がよいでしょう。
+    エラーを起こしそうな有効なデータを意図的に生成しているので、生成されたデータの予想される分布や関係には依存しない方がよいでしょう。
+    群れテスト」や「カバレッジガイド付きファジング」については、Hypothesisでは知る必要がないので、興味があれば読んでみてください
 
-Fortunately Hypothesis has a number of features to support reproducing test failures. The one you
-will use most commonly when developing locally is :doc:`the example database <database>`,
-which means that you shouldn't have to think about the problem at all for local
-use - test failures will just automatically reproduce without you having to do
-anything.
+..
+  Fortunately Hypothesis has a number of features to support reproducing test failures. The one you
+  will use most commonly when developing locally is :doc:`the example database <database>`,
+  which means that you shouldn't have to think about the problem at all for local
+  use - test failures will just automatically reproduce without you having to do
+  anything.
 
-The example database is perfectly suitable for sharing between machines, but
-there currently aren't very good work flows for that, so Hypothesis provides a
-number of ways to make examples reproducible by adding them to the source code
-of your tests. This is particularly useful when e.g. you are trying to run an
-example that has failed on your CI, or otherwise share them between machines.
+幸いなことに、Hypothesisにはテストの失敗の再現をサポートする機能がいくつもあります。
+ローカルで開発する際に最もよく使うのは :doc:`サンプルデータベース <database>` です。
+つまり、ローカルで使う場合は問題について全く考える必要がなく、何もしなくてもテストの失敗が自動的に再現されるのです。
+
+..
+  The example database is perfectly suitable for sharing between machines, but
+  there currently aren't very good work flows for that, so Hypothesis provides a
+  number of ways to make examples reproducible by adding them to the source code
+  of your tests. This is particularly useful when e.g. you are trying to run an
+  example that has failed on your CI, or otherwise share them between machines.
+
+サンプルデータベースはマシン間で共有するのに完全に適していますが、現在のところそのためのあまり良いワークフローはありません。
+そこでHypothesisでは、テストのソースコードにサンプルを追加して再現可能にする方法をいくつか提供しています。
+これは、例えばCIで失敗したサンプルを実行しようとする場合や、マシン間でサンプルを共有する場合に特に便利です。
+
+..
+  .. _providing-explicit-examples:
+
+..
+  ---------------------------
+  Providing explicit examples
+  ---------------------------
+
 
 .. _providing-explicit-examples:
 
 ---------------------------
-Providing explicit examples
+明示的な事例を提供する
 ---------------------------
 
-The simplest way to reproduce a failed test is to ask Hypothesis to run the
-failing example it printed.  For example, if ``Falsifying example: test(n=1)``
-was printed you can decorate ``test`` with ``@example(n=1)``.
+..
+  The simplest way to reproduce a failed test is to ask Hypothesis to run the
+  failing example it printed.  For example, if ``Falsifying example: test(n=1)``
+  was printed you can decorate ``test`` with ``@example(n=1)``.
 
-``@example`` can also be used to ensure a specific example is *always* executed
-as a regression test or to cover some edge case - basically combining a
-Hypothesis test and a traditional parametrized test.
+失敗したテストを再現する最も簡単な方法は、Hypothesisが表示した失敗例を実行するように依頼することです。
+例えば、 ``Falsifying example: test(n=1)`` が出力された場合、 ``test`` を ``@example(n=1)`` でデコレートすることができます。
+
+..
+  ``@example`` can also be used to ensure a specific example is *always* executed
+  as a regression test or to cover some edge case - basically combining a
+  Hypothesis test and a traditional parametrized test.
+
+また、 ``@example`` は、特定の例がリグレッションテストとして *常に* 実行されるようにしたり、あるエッジケースをカバーするために使用することができます。
 
 .. autofunction:: hypothesis.example
 
-Hypothesis will run all examples you've asked for first. If any of them fail it
-will not go on to look for more examples.
+..
+  Hypothesis will run all examples you've asked for first. If any of them fail it
+  will not go on to look for more examples.
 
-It doesn't matter whether you put the example decorator before or after given.
-Any permutation of the decorators in the above will do the same thing.
+Hypothesisは、まず、あなたが求めたすべての例を実行します。
+もしどれかが失敗したら、それ以上の例を探しに行くことはありません。
 
-Note that examples can be positional or keyword based. If they're positional then
-they will be filled in from the right when calling, so either of the following
-styles will work as expected:
+..
+  It doesn't matter whether you put the example decorator before or after given.
+  Any permutation of the decorators in the above will do the same thing.
+
+例のデコレータを given の前に置くか後に置くかは問題ではありません。上のデコレータの並べ替えで、同じことができるのです。
+
+..
+  Note that examples can be positional or keyword based. If they're positional then
+  they will be filled in from the right when calling, so either of the following
+  styles will work as expected:
+
+例には、実引数とキーワード引数があることに注意してください。
+もし実引数であれば、呼び出し時に右から埋められるので、以下のどちらのスタイルも期待通りに動作します。
 
 .. code:: python
 
@@ -70,27 +121,44 @@ styles will work as expected:
       def test_some_code(self, x):
           pass
 
-As with ``@given``, it is not permitted for a single example to be a mix of
-positional and keyword arguments.
-Either are fine, and you can use one in one example and the other in another
-example if for some reason you really want to, but a single example must be
-consistent.
+..
+  As with ``@given``, it is not permitted for a single example to be a mix of
+  positional and keyword arguments.
+  Either are fine, and you can use one in one example and the other in another
+  example if for some reason you really want to, but a single example must be
+  consistent.
+
+``@given`` と同様に、一つの例で実引数とキーワード引数を混在させることは許されません。
+どちらを使っても構いませんし、何らかの理由で本当に使いたいのであれば、ある例で一方を使い、別の例でもう一方を使うこともできますが、一つの例では一貫性がなければなりません。
+
+..
+  .. _reproducing-with-seed:
+
+..
+  -------------------------------------
+  Reproducing a test run with ``@seed``
+  -------------------------------------
 
 .. _reproducing-with-seed:
 
--------------------------------------
-Reproducing a test run with ``@seed``
--------------------------------------
+------------------------------------------
+``@seed`` を使ってテストの実行を再現する
+------------------------------------------
 
 .. autofunction:: hypothesis.seed
 
-When a test fails unexpectedly, usually due to a health check failure,
-Hypothesis will print out a seed that led to that failure, if the test is not
-already running with a fixed seed. You can then recreate that failure using either
-the ``@seed`` decorator or (if you are running :pypi:`pytest`) with
-``--hypothesis-seed``.  For example, the following test function and
-:class:`~hypothesis.stateful.RuleBasedStateMachine` will each check the
-same examples each time they are executed, thanks to ``@seed()``:
+..
+  When a test fails unexpectedly, usually due to a health check failure,
+  Hypothesis will print out a seed that led to that failure, if the test is not
+  already running with a fixed seed. You can then recreate that failure using either
+  the ``@seed`` decorator or (if you are running :pypi:`pytest`) with
+  ``--hypothesis-seed``.  For example, the following test function and
+  :class:`~hypothesis.stateful.RuleBasedStateMachine` will each check the
+  same examples each time they are executed, thanks to ``@seed()``:
+
+テストが予期せず失敗したとき、通常はヘルスチェックの失敗が原因ですが、テストがまだ固定シードで実行されていない場合、Hypothesisはその失敗につながったシードを出力します。
+このとき、 ``@seed`` デコレータか、（ :pypi:`pytest` を実行している場合は） ``--hypothesis-seed`` を使用して、その失敗を再現することができます。
+例えば、次のテスト関数と :class:`~hypothesis.stateful.RuleBasedStateMachine` は ``@seed()`` により、実行するたびに同じ例をチェックすることになります。
 
 .. code-block:: python
 
@@ -104,26 +172,45 @@ same examples each time they are executed, thanks to ``@seed()``:
     class MyModel(RuleBasedStateMachine):
         ...
 
-The seed will not be printed if you could simply use ``@example`` instead.
+..
+  The seed will not be printed if you could simply use ``@example`` instead.
+
+代わりに ``@example`` を使用すれば、シードは表示されません。
+
+..
+  .. _reproduce_failure:
+
+..
+  -------------------------------------------------------
+  Reproducing an example with ``@reproduce_failure``
+  -------------------------------------------------------
 
 .. _reproduce_failure:
 
 -------------------------------------------------------
-Reproducing an example with ``@reproduce_failure``
+``@reproduce_failure`` でサンプルを再現する
 -------------------------------------------------------
 
-Hypothesis has an opaque binary representation that it uses for all examples it
-generates. This representation is not intended to be stable across versions or
-with respect to changes in the test, but can be used to to reproduce failures
-with the ``@reproduce_failure`` decorator.
+..
+  Hypothesis has an opaque binary representation that it uses for all examples it
+  generates. This representation is not intended to be stable across versions or
+  with respect to changes in the test, but can be used to to reproduce failures
+  with the ``@reproduce_failure`` decorator.
+
+Hypothesis は不透明なバイナリ表現を持っており、生成するすべてのサンプルにそれを使用します。
+この表現は、バージョンやテストの変更に対して安定であることは意図していませんが、 ``@reproduce_failure`` デコレータを使用して失敗を再現することは可能です。
 
 .. autofunction:: hypothesis.reproduce_failure
 
-The intent is that you should never write this decorator by hand, but it is
-instead provided by Hypothesis.
-When a test fails with a falsifying example, Hypothesis may print out a
-suggestion to use ``@reproduce_failure`` on the test to recreate the problem
-as follows:
+..
+  The intent is that you should never write this decorator by hand, but it is
+  instead provided by Hypothesis.
+  When a test fails with a falsifying example, Hypothesis may print out a
+  suggestion to use ``@reproduce_failure`` on the test to recreate the problem
+  as follows:
+
+このデコレータは決して手で書いてはいけないという意図で、代わりにHypothesisによって提供されています。
+テストが偽ったサンプルで失敗した場合、Hypothesisは以下のように ``@reproduce_failure`` をテストに使って問題を再現するよう提案するメッセージを出力することがあります。
 
 .. code-block:: pycon
 
@@ -143,11 +230,17 @@ as follows:
 
     You can reproduce this example by temporarily adding @reproduce_failure(..., b'AAAA//AAAAAAAAEA') as a decorator on your test case
 
-Adding the suggested decorator to the test should reproduce the failure (as
-long as everything else is the same - changing the versions of Python or
-anything else involved, might of course affect the behaviour of the test! Note
-that changing the version of Hypothesis will result in a different error -
-each ``@reproduce_failure`` invocation is specific to a Hypothesis version).
+..
+  Adding the suggested decorator to the test should reproduce the failure (as
+  long as everything else is the same - changing the versions of Python or
+  anything else involved, might of course affect the behaviour of the test! Note
+  that changing the version of Hypothesis will result in a different error -
+  each ``@reproduce_failure`` invocation is specific to a Hypothesis version).
 
-By default these messages are not printed.
-If you want to see these you must set the :attr:`~hypothesis.settings.print_blob` setting to ``True``.
+提案されたデコレータをテストに追加すると、（他のすべてが同じである限り）失敗が再現されるはずです（Pythonのバージョンや他の関係するものを変更すると、もちろんテストの動作に影響を与えるかもしれません！Hypothesisのバージョンを変更すると、別のエラーが発生することに注意してください - ``@reproduce_failure`` の呼び出しは、それぞれHypothesisのバージョンに固有です）。
+
+..
+  By default these messages are not printed.
+  If you want to see these you must set the :attr:`~hypothesis.settings.print_blob` setting to ``True``.
+
+デフォルトではこれらのメッセージは表示されません。もし表示させたい場合は、 :attr:`~hypothesis.settings.print_blob` 設定を ``True`` に設定する必要があります。
