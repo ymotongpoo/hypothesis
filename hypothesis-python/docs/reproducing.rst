@@ -1,29 +1,53 @@
+..
+  ====================
+  Reproducing failures
+  ====================
+
 ====================
-Reproducing failures
+失敗を再現する
 ====================
 
-One of the things that is often concerning for people using randomized testing
-is the question of how to reproduce failing test cases.
+..
+  One of the things that is often concerning for people using randomized testing
+  is the question of how to reproduce failing test cases.
+
+ランダム化テストを使っている人がよく悩むのが、失敗したテストケースをどうやって再現するかという問題です。
+
+..
+  .. note::
+      It is better to think about the data Hypothesis generates as being
+      *arbitrary*, rather than *random*.  We deliberately generate any valid
+      data that seems likely to cause errors, so you shouldn't rely on any
+      expected distribution of or relationships between generated data.
+      You can read about "swarm testing" and "coverage guided fuzzing" if
+      you're interested, because you don't need to know for Hypothesis!
 
 .. note::
-    It is better to think about the data Hypothesis generates as being
-    *arbitrary*, rather than *random*.  We deliberately generate any valid
-    data that seems likely to cause errors, so you shouldn't rely on any
-    expected distribution of or relationships between generated data.
-    You can read about "swarm testing" and "coverage guided fuzzing" if
-    you're interested, because you don't need to know for Hypothesis!
+    Hypothesisが生成するデータは、*ランダム*ではなく、*任意*であると考えた方がよいでしょう。
+    エラーを起こしそうな有効なデータを意図的に生成しているので、生成されたデータの予想される分布や関係には依存しない方がよいでしょう。
+    群れテスト」や「カバレッジガイド付きファジング」については、Hypothesisでは知る必要がないので、興味があれば読んでみてください
 
-Fortunately Hypothesis has a number of features to support reproducing test failures. The one you
-will use most commonly when developing locally is :doc:`the example database <database>`,
-which means that you shouldn't have to think about the problem at all for local
-use - test failures will just automatically reproduce without you having to do
-anything.
+..
+  Fortunately Hypothesis has a number of features to support reproducing test failures. The one you
+  will use most commonly when developing locally is :doc:`the example database <database>`,
+  which means that you shouldn't have to think about the problem at all for local
+  use - test failures will just automatically reproduce without you having to do
+  anything.
 
-The example database is perfectly suitable for sharing between machines, but
-there currently aren't very good work flows for that, so Hypothesis provides a
-number of ways to make examples reproducible by adding them to the source code
-of your tests. This is particularly useful when e.g. you are trying to run an
-example that has failed on your CI, or otherwise share them between machines.
+幸いなことに、Hypothesisにはテストの失敗の再現をサポートする機能がいくつもあります。
+ローカルで開発する際に最もよく使うのは :doc:`サンプルデータベース <database>` です。
+つまり、ローカルで使う場合は問題について全く考える必要がなく、何もしなくてもテストの失敗が自動的に再現されるのです。
+
+..
+  The example database is perfectly suitable for sharing between machines, but
+  there currently aren't very good work flows for that, so Hypothesis provides a
+  number of ways to make examples reproducible by adding them to the source code
+  of your tests. This is particularly useful when e.g. you are trying to run an
+  example that has failed on your CI, or otherwise share them between machines.
+
+サンプルデータベースはマシン間で共有するのに完全に適していますが、現在のところそのためのあまり良いワークフローはありません。
+そこでHypothesisでは、テストのソースコードにサンプルを追加して再現可能にする方法をいくつか提供しています。
+これは、例えばCIで失敗したサンプルを実行しようとする場合や、マシン間でサンプルを共有する場合に特に便利です。
 
 .. _providing-explicit-examples:
 
